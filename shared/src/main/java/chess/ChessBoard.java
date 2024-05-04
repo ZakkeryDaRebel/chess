@@ -38,6 +38,41 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        ChessGame.TeamColor teamWhite = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor teamBlack = ChessGame.TeamColor.BLACK;
+
+        ChessPiece.PieceType typeRook = ChessPiece.PieceType.ROOK;
+        ChessPiece.PieceType typeKnight = ChessPiece.PieceType.KNIGHT;
+        ChessPiece.PieceType typeBishop = ChessPiece.PieceType.BISHOP;
+        ChessPiece.PieceType typeQueen = ChessPiece.PieceType.QUEEN;
+        ChessPiece.PieceType typeKing = ChessPiece.PieceType.KING;
+        ChessPiece.PieceType typePawn = ChessPiece.PieceType.PAWN;
+
+
+        addPiece( new ChessPosition(0,0), new ChessPiece(teamWhite, typeRook));
+        addPiece( new ChessPosition(0,1), new ChessPiece(teamWhite, typeKnight));
+        addPiece( new ChessPosition(0,2), new ChessPiece(teamWhite, typeBishop));
+        addPiece( new ChessPosition(0,3), new ChessPiece(teamWhite, typeQueen));
+        addPiece( new ChessPosition(0,4), new ChessPiece(teamWhite, typeKing));
+        addPiece( new ChessPosition(0,5), new ChessPiece(teamWhite, typeBishop));
+        addPiece( new ChessPosition(0,6), new ChessPiece(teamWhite, typeKnight));
+        addPiece( new ChessPosition(0,7), new ChessPiece(teamWhite, typeRook));
+
+        for(int i = 0; i <= 7; i++) {
+            addPiece( new ChessPosition(1,i), new ChessPiece(teamWhite, typePawn));
+        }
+
+        addPiece( new ChessPosition(8,0), new ChessPiece(teamBlack, typeRook));
+        addPiece( new ChessPosition(8,1), new ChessPiece(teamBlack, typeKnight));
+        addPiece( new ChessPosition(8,2), new ChessPiece(teamBlack, typeBishop));
+        addPiece( new ChessPosition(8,3), new ChessPiece(teamBlack, typeQueen));
+        addPiece( new ChessPosition(8,4), new ChessPiece(teamBlack, typeKing));
+        addPiece( new ChessPosition(8,5), new ChessPiece(teamBlack, typeBishop));
+        addPiece( new ChessPosition(8,6), new ChessPiece(teamBlack, typeKnight));
+        addPiece( new ChessPosition(8,7), new ChessPiece(teamBlack, typeRook));
+
+        for(int i = 0; i <= 7; i++) {
+            addPiece( new ChessPosition(7,i), new ChessPiece(teamBlack, typePawn));
+        }
     }
 }
