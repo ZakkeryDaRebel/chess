@@ -1,12 +1,15 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 public class BishopValidMoves {
 
     Collection<ChessMove> possibleMoves;
 
     public BishopValidMoves(ChessBoard board, ChessPosition myPosition) {
+        possibleMoves =  new ArrayList<ChessMove>();
+
         //Up and to the right
         boolean valid = true;
         int i = 1;
