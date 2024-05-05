@@ -17,7 +17,7 @@ public class BishopValidMoves {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
             if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
-            } if(board.getPiece(testPos) == null) {
+            } else if(board.getPiece(testPos) == null) {
                 ChessMove newMove = new ChessMove(myPosition, testPos, null);
                 possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
@@ -34,9 +34,9 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() - i) > 7)) {
+            if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() - i) < 0)) {
                 valid = false;
-            } if(board.getPiece(testPos) == null) {
+            } else if(board.getPiece(testPos) == null) {
                 ChessMove newMove = new ChessMove(myPosition, testPos, null);
                 possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
@@ -53,9 +53,9 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            if (((myPosition.getRow() - i) > 7) || ((myPosition.getColumn() + i) > 7)) {
+            if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
-            } if(board.getPiece(testPos) == null) {
+            } else if(board.getPiece(testPos) == null) {
                 ChessMove newMove = new ChessMove(myPosition, testPos, null);
                 possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
@@ -72,9 +72,9 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            if (((myPosition.getRow() - i) > 7) || ((myPosition.getColumn() - i) > 7)) {
+            if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() - i) < 0)) {
                 valid = false;
-            } if(board.getPiece(testPos) == null) {
+            } else if(board.getPiece(testPos) == null) {
                 ChessMove newMove = new ChessMove(myPosition, testPos, null);
                 possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
