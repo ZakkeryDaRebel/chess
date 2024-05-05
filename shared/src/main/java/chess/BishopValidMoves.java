@@ -14,6 +14,9 @@ public class BishopValidMoves {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
             if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
+            } if(board.getPiece(testPos) == null) {
+                ChessMove newMove = new ChessMove(myPosition, testPos, null);
+                possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
@@ -30,6 +33,9 @@ public class BishopValidMoves {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
             if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() - i) > 7)) {
                 valid = false;
+            } if(board.getPiece(testPos) == null) {
+                ChessMove newMove = new ChessMove(myPosition, testPos, null);
+                possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
@@ -46,6 +52,9 @@ public class BishopValidMoves {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
             if (((myPosition.getRow() - i) > 7) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
+            } if(board.getPiece(testPos) == null) {
+                ChessMove newMove = new ChessMove(myPosition, testPos, null);
+                possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
@@ -62,6 +71,9 @@ public class BishopValidMoves {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
             if (((myPosition.getRow() - i) > 7) || ((myPosition.getColumn() - i) > 7)) {
                 valid = false;
+            } if(board.getPiece(testPos) == null) {
+                ChessMove newMove = new ChessMove(myPosition, testPos, null);
+                possibleMoves.add(newMove);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
