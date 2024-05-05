@@ -18,13 +18,11 @@ public class BishopValidMoves {
             if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
             } else if(board.getPiece(testPos) == null) {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             }
             i++;
         }
@@ -37,13 +35,11 @@ public class BishopValidMoves {
             if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() - i) < 0)) {
                 valid = false;
             } else if(board.getPiece(testPos) == null) {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             }
             i++;
         }
@@ -56,13 +52,11 @@ public class BishopValidMoves {
             if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() + i) > 7)) {
                 valid = false;
             } else if(board.getPiece(testPos) == null) {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             }
             i++;
         }
@@ -75,16 +69,20 @@ public class BishopValidMoves {
             if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() - i) < 0)) {
                 valid = false;
             } else if(board.getPiece(testPos) == null) {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             } else if (board.getPiece(testPos).getPieceType() == board.getPiece(myPosition).getPieceType()) {
                 valid = false;
             } else {
-                ChessMove newMove = new ChessMove(myPosition, testPos, null);
-                possibleMoves.add(newMove);
+                addNewMove(myPosition, testPos);
             }
             i++;
         }
+    }
+
+    public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
+        ChessPosition correctPos = new ChessPosition(newPos.getRow() + 1, newPos.getColumn() + 1);
+        ChessMove newMove = new ChessMove(curPos, correctPos, null);
+        possibleMoves.add(newMove);
     }
 
     public Collection<ChessMove> getBishopMoves() {
