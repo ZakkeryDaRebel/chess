@@ -64,6 +64,7 @@ public class ChessPiece {
             //System.out.println(validMoves);
         } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
             RookValidMoves rVM = new RookValidMoves(board, myPosition);
+            validMoves = rVM.getRookMoves();
         } else {
 
         }
