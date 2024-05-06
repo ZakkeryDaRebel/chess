@@ -53,8 +53,8 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> possibleMoves;
         if(type == PieceType.BISHOP) {
-                BishopValidMoves bishopMoves = new BishopValidMoves(board,myPosition);
-                possibleMoves = bishopMoves.getBishopMoves();
+                BishopValidMoves bishopMoves = new BishopValidMoves(board,myPosition,possibleMoves);
+
         } else {
           possibleMoves = null;
         }
