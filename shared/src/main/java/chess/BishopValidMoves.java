@@ -75,7 +75,7 @@ public class BishopValidMoves {
         if(board.getPiece(testPosition) == null) {
             addNewMove(startPos, testPosition);
             return true;
-        } else if (board.getPiece(testPosition).getPieceType() == board.getPiece(startPos).getPieceType()) {
+        } else if (board.getPiece(testPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
             return false;
         } else {
             addNewMove(startPos, testPosition);
