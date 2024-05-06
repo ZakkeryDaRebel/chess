@@ -11,6 +11,7 @@ public class BishopValidMoves {
     public BishopValidMoves(ChessBoard board, ChessPosition myPosition) {
 
         validMoves = new ArrayList<>();
+        ValidMoves testClass = new ValidMoves();
 
         //Up and to the right
         boolean valid = true;
@@ -20,7 +21,7 @@ public class BishopValidMoves {
             if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() + i) > 8)) {
                 valid = false;
             } else {
-                valid = testMove(board, myPosition, testPos);
+                valid = testClass.testMove(validMoves, board, myPosition, testPos);
             }
             i++;
         }
@@ -33,7 +34,7 @@ public class BishopValidMoves {
             if (((myPosition.getRow() - i) < 1) || ((myPosition.getColumn() + i) > 8)) {
                 valid = false;
             } else {
-                valid = testMove(board, myPosition, testPos);
+                valid = testClass.testMove(validMoves, board, myPosition, testPos);
             }
             i++;
         }
@@ -46,7 +47,7 @@ public class BishopValidMoves {
             if (((myPosition.getRow() - i) < 1) || ((myPosition.getColumn() - i) < 1)) {
                 valid = false;
             } else {
-                valid = testMove(board, myPosition, testPos);
+                valid = testClass.testMove(validMoves, board, myPosition, testPos);
             }
             i++;
         }
@@ -59,7 +60,7 @@ public class BishopValidMoves {
             if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() - i) < 1)) {
                 valid = false;
             } else {
-                valid = testMove(board, myPosition, testPos);
+                valid = testClass.testMove(validMoves, board, myPosition, testPos);
             }
             i++;
         }
@@ -71,7 +72,7 @@ public class BishopValidMoves {
 
 
     //May delete later to put into a different more broad class, but for now it's here to test the Bishop moves
-    public boolean testMove(ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
+    /*public boolean testMove(ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
         if(board.getPiece(testPosition) == null) {
             addNewMove(startPos, testPosition);
             return true;
@@ -86,7 +87,7 @@ public class BishopValidMoves {
     public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
         ChessMove newMove = new ChessMove(curPos, newPos, null);
         validMoves.add(newMove);
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {

@@ -59,9 +59,11 @@ public class ChessPiece {
         Collection<ChessMove> validMoves = new ArrayList<>();
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
-            BishopValidMoves bBM = new BishopValidMoves(board, myPosition);
-            validMoves = bBM.getBishopMoves();
-            System.out.println(validMoves);
+            BishopValidMoves bVM = new BishopValidMoves(board, myPosition);
+            validMoves = bVM.getBishopMoves();
+            //System.out.println(validMoves);
+        } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
+            RookValidMoves rVM = new RookValidMoves(board, myPosition);
         } else {
 
         }
