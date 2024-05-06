@@ -61,6 +61,7 @@ public class ChessPiece {
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
             BishopValidMoves bBM = new BishopValidMoves(board, myPosition);
             validMoves = bBM.getBishopMoves();
+            System.out.println(validMoves);
         } else {
 
         }

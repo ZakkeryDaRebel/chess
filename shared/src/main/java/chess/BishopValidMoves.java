@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BishopValidMoves {
 
@@ -16,20 +17,7 @@ public class BishopValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() + i) > 7)) {
-                valid = false;
-            } else {
-                valid = testMove(board, myPosition, testPos);
-            }
-            i++;
-        }
-
-        //Up and to the left
-        valid = true;
-        i = 1;
-        while(valid) {
-            ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            if (((myPosition.getRow() + i) > 7) || ((myPosition.getColumn() - i) < 0)) {
+            if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() + i) > 8)) {
                 valid = false;
             } else {
                 valid = testMove(board, myPosition, testPos);
@@ -42,7 +30,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() + i) > 7)) {
+            if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() + i) > 8)) {
                 valid = false;
             } else {
                 valid = testMove(board, myPosition, testPos);
@@ -56,6 +44,19 @@ public class BishopValidMoves {
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
             if (((myPosition.getRow() - i) < 0) || ((myPosition.getColumn() - i) < 0)) {
+                valid = false;
+            } else {
+                valid = testMove(board, myPosition, testPos);
+            }
+            i++;
+        }
+
+        //Up and to the left
+        valid = true;
+        i = 1;
+        while(valid) {
+            ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
+            if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() - i) < 0)) {
                 valid = false;
             } else {
                 valid = testMove(board, myPosition, testPos);
@@ -85,5 +86,28 @@ public class BishopValidMoves {
     public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
         ChessMove newMove = new ChessMove(curPos, newPos, null);
         validMoves.add(newMove);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BishopValidMoves that = (BishopValidMoves) o;
+        return Objects.equals(validMoves, that.validMoves);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(validMoves);
+    }
+
+    @Override
+    public String toString() {
+        String output = "BishopValidMoves{" +
+                "validMoves= ";
+        for (ChessMove move : validMoves) {
+            output += "{ " + move.getStartPosition() + "," + move.getEndPosition() + "} ";
+        }
+        return output;
     }
 }
