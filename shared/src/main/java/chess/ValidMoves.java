@@ -1,15 +1,17 @@
 package chess;
 
 import java.util.Collection;
+import java.util.ArrayList;
 
 public class ValidMoves {
 
     private Collection<ChessMove>  validMoves;
 
     public ValidMoves(ChessBoard board, ChessPosition myPosition) {
+        validMoves = new ArrayList<>();
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
-            BishopValidMoves bBM = new BishopValidMoves(board, myPosition, validMoves);
+            BishopValidMoves bBM = new BishopValidMoves(board, myPosition);
             validMoves = bBM.getBishopMoves();
         } else {
 
