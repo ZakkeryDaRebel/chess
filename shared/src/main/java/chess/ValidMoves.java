@@ -22,21 +22,20 @@ public class ValidMoves {
         return validMoves;
     }
 
-    public boolean testMove(ChessBoard board, ChessPosition myPosition, ChessPosition testPosition) {
+    public boolean testMove(ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
         if(board.getPiece(testPosition) == null) {
-            addNewMove(myPosition, testPosition);
+            addNewMove(startPos, testPosition);
             return true;
-        } else if (board.getPiece(testPosition).getPieceType() == board.getPiece(myPosition).getPieceType()) {
+        } else if (board.getPiece(testPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
             return false;
         } else {
-            addNewMove(myPosition, testPosition);
+            addNewMove(startPos, testPosition);
             return false;
         }
     }
 
     public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
-        ChessPosition correctPos = new ChessPosition(newPos.getRow() + 1, newPos.getColumn() + 1);
-        ChessMove newMove = new ChessMove(curPos, correctPos, null);
+        ChessMove newMove = new ChessMove(curPos, newPos, null);
         validMoves.add(newMove);
     }
 }
