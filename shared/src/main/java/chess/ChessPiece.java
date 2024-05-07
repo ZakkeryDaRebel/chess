@@ -1,6 +1,5 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -56,7 +55,7 @@ public class ChessPiece {
         /*ValidMoves pieceMoves = new ValidMoves(board,myPosition);
         return pieceMoves.getValidMoves();
         */
-        Collection<ChessMove> validMoves = new ArrayList<>();
+        Collection<ChessMove> validMoves;
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
             BishopValidMoves bVM = new BishopValidMoves(board, myPosition);
@@ -69,13 +68,14 @@ public class ChessPiece {
             QueenValidMoves qVM = new QueenValidMoves(board, myPosition);
             validMoves = qVM.getQueenMoves();
         } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
-            KnightValidMoves kVM = new KnightValidMoves(board, myPosition);
-            validMoves = kVM.getKnightMoves();
+            KnightValidMoves nVM = new KnightValidMoves(board, myPosition);
+            validMoves = nVM.getKnightMoves();
         } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
             PawnValidMoves pVM = new PawnValidMoves(board, myPosition);
             validMoves = pVM.getPawnMoves();
         } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
-
+            KingValidMoves kVM = new KingValidMoves(board, myPosition);
+            validMoves = kVM.getKingMoves();
         } else {
             validMoves = null;
         }
