@@ -65,6 +65,9 @@ public class ChessPiece {
         } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
             RookValidMoves rVM = new RookValidMoves(board, myPosition);
             validMoves = rVM.getRookMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+            QueenValidMoves qVM = new QueenValidMoves(board, myPosition);
+            validMoves = qVM.getQueenMoves();
         } else {
 
         }
