@@ -71,8 +71,13 @@ public class ChessPiece {
         } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
             KnightValidMoves kVM = new KnightValidMoves(board, myPosition);
             validMoves = kVM.getKnightMoves();
-        } else {
+        } else if (piece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            PawnValidMoves pVM = new PawnValidMoves(board, myPosition);
+            validMoves = pVM.getPawnMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.KING) {
 
+        } else {
+            validMoves = null;
         }
         return validMoves;
     }

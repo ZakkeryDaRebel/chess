@@ -60,6 +60,7 @@ public class ChessMove {
     public String toString() {
         return "ChessMove{" +
                 ", endPos=" + endPos +
+                ", promotion=" + promotion +
                 '}';
     }
 }
