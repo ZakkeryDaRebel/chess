@@ -68,6 +68,9 @@ public class ChessPiece {
         } else if (piece.getPieceType() == ChessPiece.PieceType.QUEEN) {
             QueenValidMoves qVM = new QueenValidMoves(board, myPosition);
             validMoves = qVM.getQueenMoves();
+        } else if (piece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+            KnightValidMoves kVM = new KnightValidMoves(board, myPosition);
+            validMoves = kVM.getKnightMoves();
         } else {
 
         }

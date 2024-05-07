@@ -18,7 +18,7 @@ public class BishopValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() + i) > 8)) {
+            if ((testPos.getRow() > 8) || (testPos.getColumn() > 8)) {
                 valid = false;
             } else {
                 valid = testClass.testMove(validMoves, board, myPosition, testPos);
@@ -31,7 +31,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            if (((myPosition.getRow() - i) < 1) || ((myPosition.getColumn() + i) > 8)) {
+            if ((testPos.getRow() < 1) || (testPos.getColumn() > 8)) {
                 valid = false;
             } else {
                 valid = testClass.testMove(validMoves, board, myPosition, testPos);
@@ -44,7 +44,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            if (((myPosition.getRow() - i) < 1) || ((myPosition.getColumn() - i) < 1)) {
+            if ((testPos.getRow() < 1) || (testPos.getColumn() < 1)) {
                 valid = false;
             } else {
                 valid = testClass.testMove(validMoves, board, myPosition, testPos);
@@ -57,7 +57,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            if (((myPosition.getRow() + i) > 8) || ((myPosition.getColumn() - i) < 1)) {
+            if ((testPos.getRow() > 8) || (testPos.getColumn() < 1)) {
                 valid = false;
             } else {
                 valid = testClass.testMove(validMoves, board, myPosition, testPos);
