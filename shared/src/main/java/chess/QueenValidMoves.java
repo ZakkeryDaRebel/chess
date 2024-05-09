@@ -17,11 +17,7 @@ public class QueenValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn());
-            if (testPos.getRow() > 8) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -30,11 +26,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            if ((testPos.getRow() > 8) || (testPos.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -43,11 +35,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + i);
-            if (testPos.getColumn() > 8) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -56,11 +44,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            if ((testPos.getRow() < 1) || (testPos.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -69,11 +53,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn());
-            if (testPos.getRow() < 1) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -82,11 +62,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            if ((testPos.getRow() < 1) || (testPos.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -95,11 +71,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - i);
-            if(testPos.getColumn() < 1) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -108,11 +80,7 @@ public class QueenValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            if((testPos.getRow() > 8) || (testPos.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
     }

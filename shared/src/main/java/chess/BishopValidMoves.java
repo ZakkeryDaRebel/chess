@@ -18,11 +18,7 @@ public class BishopValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            if ((testPos.getRow() > 8) || (testPos.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -31,11 +27,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            if ((testPos.getRow() < 1) || (testPos.getColumn() > 8)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -44,11 +36,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            if ((testPos.getRow() < 1) || (testPos.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -57,11 +45,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            if ((testPos.getRow() > 8) || (testPos.getColumn() < 1)) {
-                valid = false;
-            } else {
-                valid = testClass.testMove(validMoves, board, myPosition, testPos);
-            }
+            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
             i++;
         }
     }
@@ -69,25 +53,6 @@ public class BishopValidMoves {
     public Collection<ChessMove> getBishopMoves() {
         return validMoves;
     }
-
-
-    //May delete later to put into a different more broad class, but for now it's here to test the Bishop moves
-    /*public boolean testMove(ChessBoard board, ChessPosition startPos, ChessPosition testPosition) {
-        if(board.getPiece(testPosition) == null) {
-            addNewMove(startPos, testPosition);
-            return true;
-        } else if (board.getPiece(testPosition).getTeamColor() == board.getPiece(startPos).getTeamColor()) {
-            return false;
-        } else {
-            addNewMove(startPos, testPosition);
-            return false;
-        }
-    }
-
-    public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
-        ChessMove newMove = new ChessMove(curPos, newPos, null);
-        validMoves.add(newMove);
-    }*/
 
     @Override
     public boolean equals(Object o) {
