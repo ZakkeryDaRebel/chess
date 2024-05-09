@@ -14,42 +14,42 @@ public class KingValidMoves {
 
         //Up
         ChessPosition testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
-        if(testPos.getRow() <= 8)
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Up and to the right
         testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
-        if((testPos.getRow() <= 8) && (testPos.getColumn() >= 1))
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Right
         testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + 1);
-        if(testPos.getColumn() <=8)
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Down and Right
         testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() + 1);
-        if((testPos.getRow() >= 1) && (testPos.getColumn() <= 8))
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Down
         testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
-        if(testPos.getRow() >= 1)
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Down and Left
         testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
-        if((testPos.getRow() >= 1) && (testPos.getColumn() >= 1))
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Left
         testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - 1);
-        if(testPos.getColumn() >= 1)
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
 
         //Up and Left
         testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1);
-        if((testPos.getRow() <= 8) && (testPos.getColumn() >= 1))
+        if(testClass.inBoard(testPos))
             testClass.testMove(validMoves, board, myPosition, testPos);
     }
 

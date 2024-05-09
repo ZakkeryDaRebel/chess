@@ -10,34 +10,41 @@ public class PawnValidMoves {
     public PawnValidMoves(ChessBoard board, ChessPosition myPosition) {
 
         validMoves = new ArrayList<>();
+        ValidMoves testClass = new ValidMoves();
         ChessGame.TeamColor pieceColor = board.getPiece(myPosition).getTeamColor();
         boolean valid = true;
 
         //If White
         if(pieceColor == ChessGame.TeamColor.WHITE) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
-            valid = pawnTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                valid = pawnTest(board, myPosition, testPos);
             if((myPosition.getRow() == 2) && valid) {
                 testPos = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
-                valid = pawnTest(board, myPosition, testPos);
+                pawnTest(board, myPosition, testPos);
             }
             testPos = new ChessPosition( myPosition.getRow() + 1, myPosition.getColumn() - 1);
-            valid = pawnCaptureTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                pawnCaptureTest(board, myPosition, testPos);
             testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
-            valid = pawnCaptureTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                pawnCaptureTest(board, myPosition, testPos);
         }
         //Else If Black
         else if (pieceColor == ChessGame.TeamColor.BLACK) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
-            valid = pawnTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                valid = pawnTest(board, myPosition, testPos);
             if((myPosition.getRow() == 7) && valid) {
                 testPos = new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn());
-                valid = pawnTest(board, myPosition, testPos);
+                pawnTest(board, myPosition, testPos);
             }
             testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
-            valid = pawnCaptureTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                pawnCaptureTest(board, myPosition, testPos);
             testPos = new ChessPosition( myPosition.getRow() - 1, myPosition.getColumn() + 1);
-            valid = pawnCaptureTest(board, myPosition, testPos);
+            if(testClass.inBoard(testPos))
+                pawnCaptureTest(board, myPosition, testPos);
         } else {
             validMoves = null;
         }
@@ -48,19 +55,16 @@ public class PawnValidMoves {
     }
 
     public boolean pawnTest(ChessBoard board, ChessPosition startPos, ChessPosition testPos) {
-        if((testPos.getRow() <= 8) && (testPos.getRow() >= 1) && (testPos.getColumn() >= 1) && (testPos.getColumn() <= 8) && (board.getPiece(testPos) == null)) {
+        if((board.getPiece(testPos) == null)) {
             addNewMove(startPos, testPos);
             return true;
         } else
             return false;
     }
 
-    public boolean pawnCaptureTest(ChessBoard board, ChessPosition startPos, ChessPosition testPos) {
-        if((testPos.getRow() <= 8) && (testPos.getRow() >= 1) && (testPos.getColumn() >= 1) && (testPos.getColumn() <= 8) && (board.getPiece(testPos) != null) && (board.getPiece(testPos).getTeamColor() != board.getPiece(startPos).getTeamColor())) {
+    public void pawnCaptureTest(ChessBoard board, ChessPosition startPos, ChessPosition testPos) {
+        if((board.getPiece(testPos) != null) && (board.getPiece(testPos).getTeamColor() != board.getPiece(startPos).getTeamColor()))
             addNewMove(startPos, testPos);
-            return true;
-        } else
-            return false;
     }
 
     public void addNewMove(ChessPosition curPos, ChessPosition newPos) {
