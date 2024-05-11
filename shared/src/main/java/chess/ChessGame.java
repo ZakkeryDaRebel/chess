@@ -93,7 +93,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //Check to see which team color to check
+        if(teamColor == TeamColor.WHITE)
+        {
+            //Loop through all the pieces
+            //If a piece has any valid moves, return false
+            //If I reach the end and no piece has any valid moves, return true
+            // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
+        } else {
+            //Loop through all the pieces
+            //If a piece has any valid moves, return false
+            //If I reach the end and no piece has any valid moves, return true
+            // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
+        }
+
+        return false;
     }
 
     /**
