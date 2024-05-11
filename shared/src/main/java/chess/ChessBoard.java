@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -11,8 +12,11 @@ import java.util.Objects;
  */
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
+    HashMap<String, ChessPosition> whiteTeam;
+    HashMap<String, ChessPosition> blackTeam;
     public ChessBoard() {
-        
+        whiteTeam = new HashMap<>();
+        blackTeam = new HashMap<>();
     }
 
     /**
@@ -53,16 +57,26 @@ public class ChessBoard {
 
 
         addPiece( new ChessPosition(1,1), new ChessPiece(teamWhite, typeRook));
+        whiteTeam.put("Rook1", new ChessPosition(1,1));
         addPiece( new ChessPosition(1,2), new ChessPiece(teamWhite, typeKnight));
+        whiteTeam.put("Knight1", new ChessPosition(1,2));
         addPiece( new ChessPosition(1,3), new ChessPiece(teamWhite, typeBishop));
+        whiteTeam.put("Bishop1", new ChessPosition(1,3));
         addPiece( new ChessPosition(1,4), new ChessPiece(teamWhite, typeQueen));
+        whiteTeam.put("Queen", new ChessPosition(1,4));
         addPiece( new ChessPosition(1,5), new ChessPiece(teamWhite, typeKing));
+        whiteTeam.put("King", new ChessPosition(1,5));
         addPiece( new ChessPosition(1,6), new ChessPiece(teamWhite, typeBishop));
+        whiteTeam.put("Bishop2", new ChessPosition(1,6));
         addPiece( new ChessPosition(1,7), new ChessPiece(teamWhite, typeKnight));
+        whiteTeam.put("Knight2", new ChessPosition(1,7));
         addPiece( new ChessPosition(1,8), new ChessPiece(teamWhite, typeRook));
+        whiteTeam.put("Rook2", new ChessPosition(1,8));
 
         for(int i = 1; i <= 8; i++) {
             addPiece( new ChessPosition(2,i), new ChessPiece(teamWhite, typePawn));
+            String name = "Pawn" + i;
+            whiteTeam.put(name, new ChessPosition(2,i));
         }
 
         addPiece( new ChessPosition(8,1), new ChessPiece(teamBlack, typeRook));
