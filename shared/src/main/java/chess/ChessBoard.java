@@ -12,8 +12,8 @@ import java.util.Objects;
  */
 public class ChessBoard {
     private ChessPiece[][] board = new ChessPiece[8][8];
-    HashMap<String, ChessPosition> whiteTeam;
-    HashMap<String, ChessPosition> blackTeam;
+    private HashMap<String, ChessPosition> whiteTeam;
+    private HashMap<String, ChessPosition> blackTeam;
     public ChessBoard() {
         whiteTeam = new HashMap<>();
         blackTeam = new HashMap<>();
@@ -38,6 +38,10 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return board[position.getRow() - 1][position.getColumn() - 1];
+    }
+
+    public ChessPiece[][] getBoard() {
+        return board;
     }
 
     /**
@@ -91,6 +95,14 @@ public class ChessBoard {
         for(int i = 1; i <= 8; i++) {
             addPiece( new ChessPosition(7,i), new ChessPiece(teamBlack, typePawn));
         }
+    }
+
+    public HashMap<String, ChessPosition> getWhiteTeam() {
+        return whiteTeam;
+    }
+
+    public HashMap<String, ChessPosition> getBlackTeam() {
+        return blackTeam;
     }
 
     @Override

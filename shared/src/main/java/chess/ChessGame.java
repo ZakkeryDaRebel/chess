@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -97,11 +98,20 @@ public class ChessGame {
         if(teamColor == TeamColor.WHITE)
         {
             //Loop through all the pieces
+            HashMap<String, ChessPosition> whiteTeam = newGame.getWhiteTeam();
+            for (var p : whiteTeam.entrySet()) {
+                if(p.getKey().startsWith("Pawn")) {
+                    if(newGame.getPiece(p.getValue()).pieceMoves(newGame, p.getValue()) != null)
+                        return false;
+                }
+            }
+            return true;
             //If a piece has any valid moves, return false
             //If I reach the end and no piece has any valid moves, return true
             // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
         } else {
             //Loop through all the pieces
+            HashMap<String, ChessPosition> blackTeam = newGame.getBlackTeam();
             //If a piece has any valid moves, return false
             //If I reach the end and no piece has any valid moves, return true
             // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
