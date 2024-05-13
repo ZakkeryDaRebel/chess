@@ -135,7 +135,7 @@ public class ChessGame {
         }
 
 
-
+        setBoard(moveBoard);
         if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
             setBoard(moveBoard);
             changeTeamTurn();
@@ -230,14 +230,17 @@ public class ChessGame {
                 }
             }
             for (ChessMove move : whiteMoves) {
+                ChessGame testMove = new ChessGame();
+                ChessBoard testBoard = this.getCopy();
+                testMove.setBoard(testBoard);
+                testMove.setTeamTurn(colorTurn);
                 try {
-                    makeMove(move);
-                    if(!isInCheck(TeamColor.WHITE)) {
-                        return false;
-                    }
-                } catch (InvalidMoveException e) {
+                    testMove.makeMove(move);
+                } catch(InvalidMoveException e) {
                     continue;
                 }
+                if(!testMove.isInCheck(TeamColor.WHITE))
+                    return false;
             }
             return true;
         } else {
@@ -258,14 +261,17 @@ public class ChessGame {
                 }
             }
             for (ChessMove move : blackMoves) {
+                ChessGame testMove = new ChessGame();
+                ChessBoard testBoard = this.getCopy();
+                testMove.setBoard(testBoard);
+                testMove.setTeamTurn(colorTurn);
                 try {
-                    makeMove(move);
-                    if(!isInCheck(TeamColor.BLACK)) {
-                        return false;
-                    }
-                } catch (InvalidMoveException e) {
+                    testMove.makeMove(move);
+                } catch(InvalidMoveException e) {
                     continue;
                 }
+                if(!testMove.isInCheck(TeamColor.BLACK))
+                    return false;
             }
             return true;
         }

@@ -133,7 +133,7 @@ public class ChessBoard implements Cloneable {
 
     public Collection<ChessMove> teamValidMoves(String color) {
         if(color.equals("W")) {
-            Collection<ChessMove> whiteValidMoves = new ArrayList<ChessMove>();
+            Collection<ChessMove> whiteValidMoves = new ArrayList<>();
             for(HashMap.Entry<String, ChessPosition> combo : whiteTeam.entrySet()) {
                 if(combo.getKey().contains("Pawn")) {
                     PawnValidMoves pVM = new PawnValidMoves(this, combo.getValue());
@@ -163,7 +163,7 @@ public class ChessBoard implements Cloneable {
             }
             return whiteValidMoves;
         } else {
-            Collection<ChessMove> blackValidMoves = new ArrayList<ChessMove>();
+            Collection<ChessMove> blackValidMoves = new ArrayList<>();
             for(HashMap.Entry<String, ChessPosition> combo : blackTeam.entrySet()) {
                 if(combo.getKey().contains("Pawn")) {
                     PawnValidMoves pVM = new PawnValidMoves(this, combo.getValue());
@@ -225,8 +225,16 @@ public class ChessBoard implements Cloneable {
 
     @Override
     protected ChessBoard clone() throws CloneNotSupportedException {
-        ChessBoard clone = new ChessBoard();
-        clone.board = Arrays.copyOf(board, board.length);
+        ChessBoard clone = (ChessBoard) super.clone();
+        ChessPiece[][] clonedBoard = new ChessPiece[8][8];
+        for(int i = 1; i < 9; i++) {
+            for(int j = 1; j < 9; j++) {
+                if(getPiece(new ChessPosition(i,j)) != null) {
+                    clonedBoard[i-1][j-1] = (ChessPiece) getPiece(new ChessPosition(i,j)).clone();
+                }
+            }
+        }
+        clone.board = clonedBoard;
         return clone;
     }
 }

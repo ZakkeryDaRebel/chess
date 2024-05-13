@@ -10,7 +10,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 
-public class ChessPiece {
+public class ChessPiece implements Cloneable {
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType type;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -52,15 +52,11 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        /*ValidMoves pieceMoves = new ValidMoves(board,myPosition);
-        return pieceMoves.getValidMoves();
-        */
         Collection<ChessMove> validMoves;
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == ChessPiece.PieceType.BISHOP) {
             BishopValidMoves bVM = new BishopValidMoves(board, myPosition);
             validMoves = bVM.getBishopMoves();
-            //System.out.println(validMoves);
         } else if (piece.getPieceType() == ChessPiece.PieceType.ROOK) {
             RookValidMoves rVM = new RookValidMoves(board, myPosition);
             validMoves = rVM.getRookMoves();
@@ -101,5 +97,10 @@ public class ChessPiece {
                 "pieceColor=" + pieceColor +
                 ", type=" + type +
                 '}';
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
