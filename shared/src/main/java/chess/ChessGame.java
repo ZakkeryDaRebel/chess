@@ -76,7 +76,7 @@ public class ChessGame {
             throw new InvalidMoveException();
         }
         //Get a copy of the piece at the starting position
-        ChessBoard moveBoard = getBoard();
+        ChessBoard moveBoard = getCopy();
         ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
 
         if(moveBoard.getPiece(move.getStartPosition()) == null)
@@ -96,27 +96,36 @@ public class ChessGame {
             else {
                 ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
                 moveBoard.addPiece(move.getEndPosition(), promotedPiece);
-                String oldname = "Pawn" + move.getStartPosition().getColumn();
-                String name;
+                String oldName = "";
+                HashMap<String, ChessPosition> copyWhiteTeam = newGame.getWhiteTeam();
+                for(HashMap.Entry<String, ChessPosition> pieceMap : copyWhiteTeam.entrySet()) {
+                    if(pieceMap.getKey().contains("Pawn") && pieceMap.getValue().equals(move.getStartPosition())) {
+                        oldName = pieceMap.getKey();
+                        break;
+                    }
+                }
+                if(oldName == null)
+                    throw new InvalidMoveException();
+                String name = oldName.charAt(0) + "";
                 if(promotedPiece.getPieceType() == ChessPiece.PieceType.QUEEN) {
-                    name = "QueenP" + move.getStartPosition().getColumn();
+                    name += "Queen";
                 } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
-                    name = "Rook" + move.getStartPosition().getColumn();
+                    name += "Rook";
                 } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.BISHOP) {
-                    name = "Bishop" + move.getStartPosition().getColumn();
+                    name += "Bishop";
                 } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
-                    name = "Knight" + move.getStartPosition().getColumn();
+                    name += "Knight";
                 } else {
                     throw new InvalidMoveException();
                 }
                 if(piece.getTeamColor() == TeamColor.WHITE) {
                     HashMap<String, ChessPosition> newWhiteTeam = moveBoard.getWhiteTeam();
-                    newWhiteTeam.remove(oldname);
+                    newWhiteTeam.remove(oldName);
                     newWhiteTeam.put(name,move.getEndPosition());
                     moveBoard.setWhiteTeam(newWhiteTeam);
                 } else {
                     HashMap<String, ChessPosition> newBlackTeam = moveBoard.getBlackTeam();
-                    newBlackTeam.remove(oldname);
+                    newBlackTeam.remove(oldName);
                     newBlackTeam.put(name,move.getEndPosition());
                     moveBoard.setBlackTeam(newBlackTeam);
                 }
@@ -167,6 +176,9 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
+        if(!isInCheck(teamColor))
+            return false;
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -179,6 +191,9 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         //Check to see which team color to check
+        if(isInCheck(teamColor))
+            return false;
+
         if(teamColor == TeamColor.WHITE)
         {
             //Loop through all the pieces
@@ -220,6 +235,14 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return newGame;
+    }
+
+    public ChessBoard getCopy() {
+        try {
+            return newGame.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

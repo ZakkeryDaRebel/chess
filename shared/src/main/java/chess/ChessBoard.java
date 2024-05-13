@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable {
     private ChessPiece[][] board = new ChessPiece[8][8];
     private HashMap<String, ChessPosition> whiteTeam;
     private HashMap<String, ChessPosition> blackTeam;
@@ -76,9 +76,10 @@ public class ChessBoard {
         addPiece( new ChessPosition(1,8), new ChessPiece(teamWhite, typeRook));
         whiteTeam.put("Rook2", new ChessPosition(1,8));
 
+        int baseLetter = 64;
         for(int i = 1; i <= 8; i++) {
             addPiece( new ChessPosition(2,i), new ChessPiece(teamWhite, typePawn));
-            String name = "Pawn" + i;
+            String name = Character.toString((char) baseLetter + i) + "Pawn";
             whiteTeam.put(name, new ChessPosition(2,i));
         }
 
@@ -222,5 +223,10 @@ public class ChessBoard {
         return stringOut;
     }
 
-
+    @Override
+    protected ChessBoard clone() throws CloneNotSupportedException {
+        ChessBoard clone = new ChessBoard();
+        clone.board = Arrays.copyOf(board, board.length);
+        return clone;
+    }
 }
