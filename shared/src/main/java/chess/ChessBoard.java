@@ -19,7 +19,6 @@ public class ChessBoard {
     public ChessBoard() {
         whiteTeam = new HashMap<>();
         blackTeam = new HashMap<>();
-        resetBoard();
     }
 
     /**
