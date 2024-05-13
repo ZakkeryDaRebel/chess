@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class ChessGame {
     private TeamColor colorTurn;
-    private final ChessBoard newGame;
+    private ChessBoard newGame;
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
@@ -63,7 +63,25 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        //First check to see if the move is valid
+        ChessPosition checkPos = move.getEndPosition();
+        if((checkPos.getRow() < 1) || (checkPos.getRow() > 8) || (checkPos.getColumn() < 1) || (checkPos.getColumn() > 8)) {
+            throw new InvalidMoveException();
+        }
+        //Get a copy of the piece at the starting position
+        ChessBoard moveBoard = getBoard();
+        ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
+        //Set the starting position to null
+        moveBoard.addPiece(move.getStartPosition(), piece);
+        //If the promotion is null, then set the new position to the copy of the piece
+        if(move.getPromotionPiece() == null) {
+            moveBoard.addPiece(move.getEndPosition(), piece);
+        }
+        //If the promotion isn't null, then set the new position to the promotion piece
+        else {
+            ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+            moveBoard.addPiece(move.getEndPosition(), promotedPiece);
+        }
     }
 
     /**
@@ -73,7 +91,12 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if(teamColor == TeamColor.WHITE) {
+            HashMap<String, ChessPosition> blackTeam = getBoard().getBlackTeam();
+
+        } else {
+
+        }
     }
 
     /**
@@ -126,7 +149,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        newGame = board;
     }
 
     /**
@@ -135,6 +158,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return newGame;
     }
 }

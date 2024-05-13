@@ -3,6 +3,8 @@ package chess;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Collection;
+import java.util.ArrayList;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -40,9 +42,6 @@ public class ChessBoard {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
-    public ChessPiece[][] getBoard() {
-        return board;
-    }
 
     /**
      * Sets the board to the default starting board
@@ -103,6 +102,41 @@ public class ChessBoard {
 
     public HashMap<String, ChessPosition> getBlackTeam() {
         return blackTeam;
+    }
+
+    public Collection<ChessMove> teamValidMoves(String color) {
+        if(color.equals("W")) {
+            Collection<ChessMove> whiteValidMoves = new ArrayList<ChessMove>();
+            for(HashMap.Entry<String, ChessPosition> combo : whiteTeam.entrySet()) {
+                if(combo.getKey().contains("Pawn")) {
+                    PawnValidMoves pVM = new PawnValidMoves(this, combo.getValue());
+                    if(pVM.getPawnMoves() != null)
+                        whiteValidMoves.addAll(pVM.getPawnMoves());
+                } else if(combo.getKey().contains("Rook")) {
+                    RookValidMoves rVM = new RookValidMoves(this, combo.getValue());
+                    if(rVM.getRookMoves() != null)
+                        whiteValidMoves.addAll(rVM.getRookMoves());
+                } else if(combo.getKey().contains("Bishop")) {
+                    BishopValidMoves bVM = new BishopValidMoves(this, combo.getValue());
+                    if(bVM.getBishopMoves() != null)
+                        whiteValidMoves.addAll(bVM.getBishopMoves());
+                } else if(combo.getKey().contains("Queen")) {
+                    QueenValidMoves qVM = new QueenValidMoves(this, combo.getValue());
+                    if(qVM.getQueenMoves() != null)
+                        whiteValidMoves.addAll(qVM.getQueenMoves());
+                } else if(combo.getKey().contains("Knight")) {
+                    KnightValidMoves nVM = new KnightValidMoves(this, combo.getValue());
+                    if(nVM.getKnightMoves() != null)
+                        whiteValidMoves.addAll(nVM.getKnightMoves());
+                } else if(combo.getKey().contains("King")) {
+                    KingValidMoves kVM = new KingValidMoves(this, combo.getValue());
+                    if(kVM.getKingMoves() != null)
+                        whiteValidMoves.addAll(kVM.getKingMoves());
+                }
+            }
+            return whiteValidMoves;
+        }
+        return null;
     }
 
     @Override
