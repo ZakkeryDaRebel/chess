@@ -210,6 +210,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if(!isInCheck(teamColor))
             return false;
+
         ChessBoard moveBoard = getCopy();
         if(teamColor == TeamColor.WHITE) {
             //For loop to find all the possible moves white has
@@ -289,29 +290,75 @@ public class ChessGame {
         if(isInCheck(teamColor))
             return false;
 
-        if(teamColor == TeamColor.WHITE)
-        {
-            //Loop through all the pieces
-            HashMap<String, ChessPosition> whiteTeam = newGame.getWhiteTeam();
-            for (var p : whiteTeam.entrySet()) {
-                if(p.getKey().startsWith("Pawn")) {
-                    if(newGame.getPiece(p.getValue()).pieceMoves(newGame, p.getValue()) != null)
-                        return false;
+        ChessBoard moveBoard = getCopy();
+        if(teamColor == TeamColor.WHITE) {
+            //For loop to find all the possible moves white has
+            Collection<ChessMove> whiteMoves = getBoard().teamValidMoves("W");
+            ChessPosition whiteKingPos = getBoard().getWhiteKing();
+            if(whiteMoves.isEmpty()) {
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null)) {
+                            if((moveBoard.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING) && (moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.WHITE)) {
+                                whiteKingPos = new ChessPosition(i,j);
+                                whiteMoves.addAll(moveBoard.getPiece(whiteKingPos).pieceMoves(moveBoard, whiteKingPos));
+                            } else if(moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.WHITE) {
+                                whiteMoves.addAll(moveBoard.getPiece(new ChessPosition(i,j)).pieceMoves(moveBoard, new ChessPosition(i,j)));
+                            }
+                        }
+                    }
                 }
             }
-            return true;
-            //If a piece has any valid moves, return false
-            //If I reach the end and no piece has any valid moves, return true
-            // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
+            for (ChessMove move : whiteMoves) {
+                ChessGame testMove = new ChessGame();
+                ChessBoard testBoard = this.getCopy();
+                testMove.setBoard(testBoard);
+                testMove.setTeamTurn(colorTurn);
+                try {
+                    testMove.makeMove(move);
+                } catch(InvalidMoveException e) {
+                    continue;
+                }
+                if(!testMove.isInCheck(TeamColor.WHITE))
+                    return false;
+            }
+            return false;
         } else {
-            //Loop through all the pieces
-            HashMap<String, ChessPosition> blackTeam = newGame.getBlackTeam();
-            //If a piece has any valid moves, return false
-            //If I reach the end and no piece has any valid moves, return true
-            // ** Flaw is if the king is in check, then it would be Checkmate, not Stalemate
+            Collection<ChessMove> blackMoves = getBoard().teamValidMoves("B");
+            ChessPosition blackKingPos = getBoard().getBlackKing();
+            if(blackMoves.isEmpty()) {
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null)) {
+                            if((moveBoard.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING) && (moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.BLACK)) {
+                                blackKingPos = new ChessPosition(i,j);
+                                blackMoves.addAll(moveBoard.getPiece(blackKingPos).pieceMoves(moveBoard, blackKingPos));
+                            } else if(moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.BLACK) {
+                                blackMoves.addAll(moveBoard.getPiece(new ChessPosition(i,j)).pieceMoves(moveBoard, new ChessPosition(i,j)));
+                            }
+                        }
+                    }
+                }
+            }
+            for (ChessMove move : blackMoves) {
+                ChessGame testMove = new ChessGame();
+                ChessBoard testBoard = this.getCopy();
+                testMove.setBoard(testBoard);
+                testMove.setTeamTurn(colorTurn);
+                try {
+                    testMove.makeMove(move);
+                } catch(InvalidMoveException e) {
+                    continue;
+                }
+                if(!testMove.isInCheck(TeamColor.BLACK))
+                    return false;
+            }
+            return false;
         }
+    }
 
-        return false;
+    public boolean anyValidMoves(TeamColor teamColor) {
+        return true;
     }
 
     /**
