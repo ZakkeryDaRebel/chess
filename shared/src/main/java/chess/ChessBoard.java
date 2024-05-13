@@ -19,6 +19,7 @@ public class ChessBoard {
     public ChessBoard() {
         whiteTeam = new HashMap<>();
         blackTeam = new HashMap<>();
+        resetBoard();
     }
 
     /**
@@ -159,4 +160,21 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(board);
     }
+
+    @Override
+    public String toString() {
+        String stringOut = "ChessBoard{" + "board=";
+                for(int i = 0; i < 8; i++) {
+                    for(int j = 0; j < 8; j++) {
+                        stringOut += board[i][j];
+                    }
+                }
+                //Arrays.toString(board) +
+                //", whiteTeam=" + whiteTeam +
+                //", blackTeam=" + blackTeam +
+                //'}';
+        return stringOut;
+    }
+
+
 }
