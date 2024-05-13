@@ -84,16 +84,26 @@ public class ChessBoard {
         }
 
         addPiece( new ChessPosition(8,1), new ChessPiece(teamBlack, typeRook));
+        blackTeam.put("Rook1", new ChessPosition(8,1));
         addPiece( new ChessPosition(8,2), new ChessPiece(teamBlack, typeKnight));
+        blackTeam.put("Knight1", new ChessPosition(8,2));
         addPiece( new ChessPosition(8,3), new ChessPiece(teamBlack, typeBishop));
+        blackTeam.put("Bishop1", new ChessPosition(8,3));
         addPiece( new ChessPosition(8,4), new ChessPiece(teamBlack, typeQueen));
+        blackTeam.put("Queen", new ChessPosition(8,4));
         addPiece( new ChessPosition(8,5), new ChessPiece(teamBlack, typeKing));
+        blackTeam.put("King", new ChessPosition(8,5));
         addPiece( new ChessPosition(8,6), new ChessPiece(teamBlack, typeBishop));
+        blackTeam.put("Bishop2", new ChessPosition(8,6));
         addPiece( new ChessPosition(8,7), new ChessPiece(teamBlack, typeKnight));
+        blackTeam.put("Knight2", new ChessPosition(8,7));
         addPiece( new ChessPosition(8,8), new ChessPiece(teamBlack, typeRook));
+        blackTeam.put("Rook2", new ChessPosition(8,8));
 
         for(int i = 1; i <= 8; i++) {
             addPiece( new ChessPosition(7,i), new ChessPiece(teamBlack, typePawn));
+            String name = "Pawn" + i;
+            blackTeam.put(name, new ChessPosition(7,i));
         }
     }
 
@@ -103,6 +113,14 @@ public class ChessBoard {
 
     public HashMap<String, ChessPosition> getBlackTeam() {
         return blackTeam;
+    }
+
+    public void setWhiteTeam(HashMap<String, ChessPosition> team) {
+        whiteTeam = team;
+    }
+
+    public void setBlackTeam(HashMap<String, ChessPosition> team) {
+        blackTeam = team;
     }
 
     public ChessPosition getWhiteKing() {
@@ -144,8 +162,37 @@ public class ChessBoard {
                 }
             }
             return whiteValidMoves;
+        } else {
+            Collection<ChessMove> blackValidMoves = new ArrayList<ChessMove>();
+            for(HashMap.Entry<String, ChessPosition> combo : blackTeam.entrySet()) {
+                if(combo.getKey().contains("Pawn")) {
+                    PawnValidMoves pVM = new PawnValidMoves(this, combo.getValue());
+                    if(pVM.getPawnMoves() != null)
+                        blackValidMoves.addAll(pVM.getPawnMoves());
+                } else if(combo.getKey().contains("Rook")) {
+                    RookValidMoves rVM = new RookValidMoves(this, combo.getValue());
+                    if(rVM.getRookMoves() != null)
+                        blackValidMoves.addAll(rVM.getRookMoves());
+                } else if(combo.getKey().contains("Bishop")) {
+                    BishopValidMoves bVM = new BishopValidMoves(this, combo.getValue());
+                    if(bVM.getBishopMoves() != null)
+                        blackValidMoves.addAll(bVM.getBishopMoves());
+                } else if(combo.getKey().contains("Queen")) {
+                    QueenValidMoves qVM = new QueenValidMoves(this, combo.getValue());
+                    if(qVM.getQueenMoves() != null)
+                        blackValidMoves.addAll(qVM.getQueenMoves());
+                } else if(combo.getKey().contains("Knight")) {
+                    KnightValidMoves nVM = new KnightValidMoves(this, combo.getValue());
+                    if(nVM.getKnightMoves() != null)
+                        blackValidMoves.addAll(nVM.getKnightMoves());
+                } else if(combo.getKey().contains("King")) {
+                    KingValidMoves kVM = new KingValidMoves(this, combo.getValue());
+                    if(kVM.getKingMoves() != null)
+                        blackValidMoves.addAll(kVM.getKingMoves());
+                }
+            }
+            return blackValidMoves;
         }
-        return null;
     }
 
     @Override

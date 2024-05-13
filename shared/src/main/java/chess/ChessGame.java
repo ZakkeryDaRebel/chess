@@ -29,6 +29,13 @@ public class ChessGame {
      */
     public void setTeamTurn(TeamColor team) { colorTurn = team; }
 
+    public void changeTeamTurn() {
+        if(this.colorTurn == TeamColor.WHITE)
+            setTeamTurn(TeamColor.BLACK);
+        else
+            setTeamTurn(TeamColor.WHITE);
+    }
+
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
@@ -59,6 +66,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if(move == null)
+            throw new InvalidMoveException();
+
         //First check to see if the move is valid
         ChessPosition checkPos = move.getEndPosition();
         if((checkPos.getRow() < 1) || (checkPos.getRow() > 8) || (checkPos.getColumn() < 1) || (checkPos.getColumn() > 8)) {
@@ -67,17 +77,60 @@ public class ChessGame {
         //Get a copy of the piece at the starting position
         ChessBoard moveBoard = getBoard();
         ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
+
+        if(moveBoard.getPiece(move.getStartPosition()) == null)
+            throw new InvalidMoveException();
+
+        if(moveBoard.getPiece(move.getStartPosition()).getTeamColor() != this.getTeamTurn())
+            throw new InvalidMoveException();
+
         //Set the starting position to null
-        moveBoard.addPiece(move.getStartPosition(), piece);
-        //If the promotion is null, then set the new position to the copy of the piece
-        if(move.getPromotionPiece() == null) {
-            moveBoard.addPiece(move.getEndPosition(), piece);
+        if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
+            moveBoard.addPiece(move.getStartPosition(), null);
+            //If the promotion is null, then set the new position to the copy of the piece
+            if(move.getPromotionPiece() == null) {
+                moveBoard.addPiece(move.getEndPosition(), piece);
+            }
+            //If the promotion isn't null, then set the new position to the promotion piece
+            else {
+                ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
+                moveBoard.addPiece(move.getEndPosition(), promotedPiece);
+                String oldname = "Pawn" + move.getStartPosition().getColumn();
+                String name;
+                if(promotedPiece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                    name = "QueenP" + move.getStartPosition().getColumn();
+                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
+                    name = "Rook" + move.getStartPosition().getColumn();
+                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+                    name = "Bishop" + move.getStartPosition().getColumn();
+                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                    name = "Knight" + move.getStartPosition().getColumn();
+                } else {
+                    throw new InvalidMoveException();
+                }
+                if(piece.getTeamColor() == TeamColor.WHITE) {
+                    HashMap<String, ChessPosition> newWhiteTeam = moveBoard.getWhiteTeam();
+                    newWhiteTeam.remove(oldname);
+                    newWhiteTeam.put(name,move.getEndPosition());
+                    moveBoard.setWhiteTeam(newWhiteTeam);
+                } else {
+                    HashMap<String, ChessPosition> newBlackTeam = moveBoard.getBlackTeam();
+                    newBlackTeam.remove(oldname);
+                    newBlackTeam.put(name,move.getEndPosition());
+                    moveBoard.setBlackTeam(newBlackTeam);
+                }
+            }
+        } else {
+            throw new InvalidMoveException();
         }
-        //If the promotion isn't null, then set the new position to the promotion piece
-        else {
-            ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
-            moveBoard.addPiece(move.getEndPosition(), promotedPiece);
-        }
+
+
+
+        if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
+            setBoard(moveBoard);
+            changeTeamTurn();
+        } else
+            throw new InvalidMoveException();
     }
 
     /**
