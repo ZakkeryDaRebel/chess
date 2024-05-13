@@ -153,17 +153,63 @@ public class ChessGame {
         if(teamColor == TeamColor.WHITE) {
             Collection<ChessMove> blackMoves = getBoard().teamValidMoves("B");
             ChessPosition whiteKingPos = getBoard().getWhiteKing();
-            for(ChessMove move : blackMoves) {
-                if(move.getEndPosition() == whiteKingPos)
-                    return true;
+            if(!blackMoves.isEmpty()) {
+                for (ChessMove move : blackMoves) {
+                    if (move.getEndPosition().equals(whiteKingPos))
+                        return true;
+                }
+            } else {
+                ChessBoard moveBoard = getCopy();
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null) && (moveBoard.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING) && (moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.WHITE)) {
+                            whiteKingPos = new ChessPosition(i,j);
+                            break;
+                        }
+                    }
+                }
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null) &&(moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() != teamColor)) {
+                            Collection<ChessMove> attackingMoves = moveBoard.getPiece(new ChessPosition(i,j)).pieceMoves(moveBoard, new ChessPosition(i,j));
+                            for(ChessMove attack : attackingMoves) {
+                                if(attack.getEndPosition().equals(whiteKingPos))
+                                    return true;
+                            }
+                        }
+                    }
+                }
             }
             return false;
         } else {
             Collection<ChessMove> whiteMoves = getBoard().teamValidMoves("W");
             ChessPosition blackKingPos = getBoard().getBlackKing();
-            for(ChessMove move : whiteMoves) {
-                if(move.getEndPosition() == blackKingPos)
+            if(!whiteMoves.isEmpty()) {
+                for(ChessMove move: whiteMoves) {
+                if(move.getEndPosition().equals(blackKingPos))
                     return true;
+                }
+            } else {
+                ChessBoard moveBoard = getCopy();
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null) && (moveBoard.getPiece(new ChessPosition(i,j)).getPieceType() == ChessPiece.PieceType.KING) && (moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() == TeamColor.BLACK)) {
+                            blackKingPos = new ChessPosition(i,j);
+                            break;
+                        }
+                    }
+                }
+                for(int i = 1; i < 9; i++) {
+                    for(int j = 1; j < 9; j++) {
+                        if((moveBoard.getPiece(new ChessPosition(i,j)) != null) &&(moveBoard.getPiece(new ChessPosition(i,j)).getTeamColor() != teamColor)) {
+                            Collection<ChessMove> attackingMoves = moveBoard.getPiece(new ChessPosition(i,j)).pieceMoves(moveBoard, new ChessPosition(i,j));
+                            for(ChessMove attack : attackingMoves) {
+                                if(attack.getEndPosition().equals(blackKingPos))
+                                    return true;
+                            }
+                        }
+                    }
+                }
             }
             return false;
         }
