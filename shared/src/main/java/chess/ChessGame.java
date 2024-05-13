@@ -20,18 +20,14 @@ public class ChessGame {
     /**
      * @return Which team's turn it is
      */
-    public TeamColor getTeamTurn() {
-        return colorTurn;
-    }
+    public TeamColor getTeamTurn() { return colorTurn; }
 
     /**
      * Set's which teams turn it is
      *
      * @param team the team whose turn it is
      */
-    public void setTeamTurn(TeamColor team) {
-        colorTurn = team;
-    }
+    public void setTeamTurn(TeamColor team) { colorTurn = team; }
 
     /**
      * Enum identifying the 2 possible teams in a chess game
@@ -92,10 +88,21 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         if(teamColor == TeamColor.WHITE) {
-            HashMap<String, ChessPosition> blackTeam = getBoard().getBlackTeam();
-
+            Collection<ChessMove> blackMoves = getBoard().teamValidMoves("B");
+            ChessPosition whiteKingPos = getBoard().getWhiteKing();
+            for(ChessMove move : blackMoves) {
+                if(move.getEndPosition() == whiteKingPos)
+                    return true;
+            }
+            return false;
         } else {
-
+            Collection<ChessMove> whiteMoves = getBoard().teamValidMoves("W");
+            ChessPosition blackKingPos = getBoard().getBlackKing();
+            for(ChessMove move : whiteMoves) {
+                if(move.getEndPosition() == blackKingPos)
+                    return true;
+            }
+            return false;
         }
     }
 

@@ -104,6 +104,14 @@ public class ChessBoard {
         return blackTeam;
     }
 
+    public ChessPosition getWhiteKing() {
+        return whiteTeam.get("King");
+    }
+
+    public ChessPosition getBlackKing() {
+        return blackTeam.get("King");
+    }
+
     public Collection<ChessMove> teamValidMoves(String color) {
         if(color.equals("W")) {
             Collection<ChessMove> whiteValidMoves = new ArrayList<ChessMove>();
