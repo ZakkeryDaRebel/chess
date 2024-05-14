@@ -11,11 +11,13 @@ import java.util.HashMap;
  */
 public class ChessGame {
     private TeamColor colorTurn;
+    private boolean checkCase;
     private ChessBoard newGame;
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
         newGame.resetBoard();
+        checkCase = false;
     }
 
     /**
@@ -82,6 +84,8 @@ public class ChessGame {
         if(moveBoard.getPiece(move.getStartPosition()) == null)
             throw new InvalidMoveException();
 
+        if(!checkCase && (moveBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
+            throw new InvalidMoveException();
 
         //Set the starting position to null
         if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
@@ -95,37 +99,40 @@ public class ChessGame {
                 ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
                 moveBoard.addPiece(move.getEndPosition(), promotedPiece);
                 String oldName = "";
+                String name = "";
                 HashMap<String, ChessPosition> copyWhiteTeam = newGame.getWhiteTeam();
-                for(HashMap.Entry<String, ChessPosition> pieceMap : copyWhiteTeam.entrySet()) {
-                    if(pieceMap.getKey().contains("Pawn") && pieceMap.getValue().equals(move.getStartPosition())) {
-                        oldName = pieceMap.getKey();
-                        break;
+                if(!copyWhiteTeam.isEmpty()) {
+                    for (HashMap.Entry<String, ChessPosition> pieceMap : copyWhiteTeam.entrySet()) {
+                        if (pieceMap.getKey().contains("Pawn") && pieceMap.getValue().equals(move.getStartPosition())) {
+                            oldName = pieceMap.getKey();
+                            break;
+                        }
                     }
-                }
-                if(oldName == null)
-                    throw new InvalidMoveException();
-                String name = oldName.charAt(0) + "";
-                if(promotedPiece.getPieceType() == ChessPiece.PieceType.QUEEN) {
-                    name += "Queen";
-                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
-                    name += "Rook";
-                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.BISHOP) {
-                    name += "Bishop";
-                } else if(promotedPiece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
-                    name += "Knight";
-                } else {
-                    throw new InvalidMoveException();
-                }
-                if(piece.getTeamColor() == TeamColor.WHITE) {
-                    HashMap<String, ChessPosition> newWhiteTeam = moveBoard.getWhiteTeam();
-                    newWhiteTeam.remove(oldName);
-                    newWhiteTeam.put(name,move.getEndPosition());
-                    moveBoard.setWhiteTeam(newWhiteTeam);
-                } else {
-                    HashMap<String, ChessPosition> newBlackTeam = moveBoard.getBlackTeam();
-                    newBlackTeam.remove(oldName);
-                    newBlackTeam.put(name,move.getEndPosition());
-                    moveBoard.setBlackTeam(newBlackTeam);
+                    if (oldName.isEmpty())
+                        throw new InvalidMoveException();
+                    name = oldName.charAt(0) + "";
+                    if (promotedPiece.getPieceType() == ChessPiece.PieceType.QUEEN) {
+                        name += "Queen";
+                    } else if (promotedPiece.getPieceType() == ChessPiece.PieceType.ROOK) {
+                        name += "Rook";
+                    } else if (promotedPiece.getPieceType() == ChessPiece.PieceType.BISHOP) {
+                        name += "Bishop";
+                    } else if (promotedPiece.getPieceType() == ChessPiece.PieceType.KNIGHT) {
+                        name += "Knight";
+                    } else {
+                        throw new InvalidMoveException();
+                    }
+                    if (piece.getTeamColor() == TeamColor.WHITE) {
+                        HashMap<String, ChessPosition> newWhiteTeam = moveBoard.getWhiteTeam();
+                        newWhiteTeam.remove(oldName);
+                        newWhiteTeam.put(name, move.getEndPosition());
+                        moveBoard.setWhiteTeam(newWhiteTeam);
+                    } else {
+                        HashMap<String, ChessPosition> newBlackTeam = moveBoard.getBlackTeam();
+                        newBlackTeam.remove(oldName);
+                        newBlackTeam.put(name, move.getEndPosition());
+                        moveBoard.setBlackTeam(newBlackTeam);
+                    }
                 }
             }
         } else {
@@ -137,8 +144,13 @@ public class ChessGame {
         if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
             setBoard(moveBoard);
             changeTeamTurn();
+            if(moveBoard.getPiece(move.getEndPosition()).getTeamColor() == TeamColor.WHITE) {
+                HashMap<String, ChessPosition> updateWhiteTeam = moveBoard.getWhiteTeam();
+                //updateWhiteTeam.put()
+            }
         } else
             throw new InvalidMoveException();
+        checkCase = false;
     }
 
     /**
@@ -148,6 +160,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        checkCase = true;
         if(teamColor == TeamColor.WHITE) {
             Collection<ChessMove> blackMoves = getBoard().teamValidMoves("B");
             ChessPosition whiteKingPos = getBoard().getWhiteKing();
@@ -166,8 +179,9 @@ public class ChessGame {
                 }
             }
             for (ChessMove move : blackMoves) {
-                if (move.getEndPosition().equals(whiteKingPos))
+                if (move.getEndPosition().equals(whiteKingPos)) {
                     return true;
+                }
             }
             return false;
         } else {
@@ -186,14 +200,11 @@ public class ChessGame {
                         }
                     }
                 }
-                for(ChessMove attack : whiteMoves) {
-                    if(attack.getEndPosition().equals(blackKingPos))
-                        return true;
-                }
             }
             for (ChessMove move : whiteMoves) {
-                if (move.getEndPosition().equals(blackKingPos))
+                if (move.getEndPosition().equals(blackKingPos)) {
                     return true;
+                }
             }
             return false;
         }
@@ -257,8 +268,9 @@ public class ChessGame {
                 } catch(InvalidMoveException e) {
                     continue;
                 }
-                if(!testMove.isInCheck(TeamColor.WHITE))
+                if(!testMove.isInCheck(TeamColor.WHITE)) {
                     return false;
+                }
             }
             return true;
         } else {
@@ -281,6 +293,7 @@ public class ChessGame {
             for (ChessMove move : blackMoves) {
                 ChessGame testMove = new ChessGame();
                 ChessBoard testBoard = this.getCopy();
+                testMove.isCheckCase();
                 testMove.setBoard(testBoard);
                 testMove.setTeamTurn(colorTurn);
                 try {
@@ -288,8 +301,9 @@ public class ChessGame {
                 } catch(InvalidMoveException e) {
                     continue;
                 }
-                if(!testMove.isInCheck(TeamColor.BLACK))
+                if(!testMove.isInCheck(TeamColor.BLACK)) {
                     return false;
+                }
             }
             return true;
         }
@@ -319,6 +333,10 @@ public class ChessGame {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void isCheckCase() {
+        checkCase = true;
     }
 
     @Override
