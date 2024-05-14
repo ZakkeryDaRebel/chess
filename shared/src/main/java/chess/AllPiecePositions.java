@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class AllPiecePositions {
@@ -10,6 +11,9 @@ public class AllPiecePositions {
     private Collection<ChessMove> blackTeamMoves;
 
     public AllPiecePositions(ChessBoard board) {
+        whiteTeamMoves = new ArrayList<>();
+        blackTeamMoves = new ArrayList<>();
+
         for(int i = 1; i < 9; i++) {
             for(int j = 1; j < 9; j++) {
                 if((board.getPiece(new ChessPosition(i,j)) != null)) {
