@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -56,11 +57,35 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        Collection<ChessMove> possibleMoves;
+
         if (newGame.getPiece(startPosition) == null) {
             return null;
         } else {
-            return newGame.getPiece(startPosition).pieceMoves(newGame,startPosition);
+            possibleMoves = newGame.getPiece(startPosition).pieceMoves(newGame,startPosition);
         }
+
+        ChessGame.TeamColor pieceColor = newGame.getPiece(startPosition).getTeamColor();
+
+        Iterator<ChessMove> i = possibleMoves.iterator();
+        while(i.hasNext()) {
+            ChessMove move = i.next();
+            ChessGame testMove = new ChessGame();
+            ChessBoard testBoard = this.getCopy();
+            testMove.isCheckCase();
+            testMove.setBoard(testBoard);
+            testMove.setTeamTurn(colorTurn);
+            try {
+                testMove.makeMove(move);
+            } catch(InvalidMoveException e) {
+                i.remove();
+                continue;
+            }
+            if(testMove.isInCheck(pieceColor)) {
+                i.remove();
+            }
+        }
+        return possibleMoves;
     }
 
     /**
