@@ -124,13 +124,11 @@ public class ChessGame {
             }
             //If the promotion isn't null, then set the new position to the promotion piece
             else {
-                ChessPiece promotedPiece = new ChessPiece(piece.getTeamColor(), move.getPromotionPiece());
-                moveBoard.addPiece(move.getEndPosition(), promotedPiece);
+                moveBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
         } else {
             throw new InvalidMoveException();
         }
-
 
         setBoard(moveBoard);
         if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
@@ -160,7 +158,6 @@ public class ChessGame {
                     return true;
                 }
             }
-            return false;
         } else {
             ChessPosition blackKingPos = allPieces.getBlackKingPos();
             Collection<ChessMove> whiteMoves = allPieces.getWhiteTeamMoves();
@@ -169,8 +166,8 @@ public class ChessGame {
                     return true;
                 }
             }
-            return false;
         }
+        return false;
     }
 
     /**
@@ -210,6 +207,7 @@ public class ChessGame {
             for (ChessMove move : whiteMoves) {
                 ChessGame testMove = new ChessGame();
                 ChessBoard testBoard = this.getCopy();
+                testMove.isCheckCase();
                 testMove.setBoard(testBoard);
                 testMove.setTeamTurn(colorTurn);
                 try {
@@ -221,7 +219,6 @@ public class ChessGame {
                     return false;
                 }
             }
-            return true;
         } else {
             Collection<ChessMove> blackMoves = allPieces.getBlackTeamMoves();
             for (ChessMove move : blackMoves) {
@@ -239,8 +236,8 @@ public class ChessGame {
                     return false;
                 }
             }
-            return true;
         }
+        return true;
     }
 
     /**
