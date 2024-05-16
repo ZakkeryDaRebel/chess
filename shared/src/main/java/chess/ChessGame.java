@@ -13,6 +13,7 @@ public class ChessGame {
     private TeamColor colorTurn;
     private boolean checkCase;
     private ChessBoard newGame;
+    private ChessMove lastMove;
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
@@ -56,6 +57,8 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         Collection<ChessMove> possibleMoves;
+
+        newGame.setLastMove(lastMove);
 
         if (newGame.getPiece(startPosition) == null) {
             return null;
@@ -135,6 +138,7 @@ public class ChessGame {
         } else
             throw new InvalidMoveException();
         checkCase = false;
+        lastMove = move;
     }
 
     /**
