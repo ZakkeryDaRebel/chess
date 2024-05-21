@@ -7,8 +7,8 @@ public class AllPiecePositions {
 
     private ChessPosition whiteKingPos;
     private ChessPosition blackKingPos;
-    private Collection<ChessMove> whiteTeamMoves;
-    private Collection<ChessMove> blackTeamMoves;
+    private final Collection<ChessMove> whiteTeamMoves;
+    private final Collection<ChessMove> blackTeamMoves;
 
     public AllPiecePositions(ChessBoard board) {
         whiteTeamMoves = new ArrayList<>();
@@ -43,31 +43,31 @@ public class AllPiecePositions {
         return whiteKingPos;
     }
 
-    public void setWhiteKingPos(ChessPosition whiteKingPos) {
-        this.whiteKingPos = whiteKingPos;
-    }
-
     public ChessPosition getBlackKingPos() {
         return blackKingPos;
-    }
-
-    public void setBlackKingPos(ChessPosition blackKingPos) {
-        this.blackKingPos = blackKingPos;
     }
 
     public Collection<ChessMove> getWhiteTeamMoves() {
         return whiteTeamMoves;
     }
 
-    public void setWhiteTeamMoves(Collection<ChessMove> whiteTeamMoves) {
-        this.whiteTeamMoves = whiteTeamMoves;
-    }
-
     public Collection<ChessMove> getBlackTeamMoves() {
         return blackTeamMoves;
     }
 
+    /*public void setWhiteKingPos(ChessPosition whiteKingPos) {
+        this.whiteKingPos = whiteKingPos;
+    }
+
+    public void setBlackKingPos(ChessPosition blackKingPos) {
+        this.blackKingPos = blackKingPos;
+    }
+
+    public void setWhiteTeamMoves(Collection<ChessMove> whiteTeamMoves) {
+        this.whiteTeamMoves = whiteTeamMoves;
+    }
+
     public void setBlackTeamMoves(Collection<ChessMove> blackTeamMoves) {
         this.blackTeamMoves = blackTeamMoves;
-    }
+    }*/
 }

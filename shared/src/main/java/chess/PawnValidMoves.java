@@ -16,45 +16,40 @@ public class PawnValidMoves {
 
         //If White
         if(pieceColor == ChessGame.TeamColor.WHITE) {
+            //Move 1
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn());
             if(testClass.inBoard(testPos))
                 valid = pawnTest(board, myPosition, testPos);
+            //If I can move 1, and at starting position test move 2
             if((myPosition.getRow() == 2) && valid) {
                 testPos = new ChessPosition(myPosition.getRow() + 2, myPosition.getColumn());
                 pawnTest(board, myPosition, testPos);
             }
+            //Capture Left
             testPos = new ChessPosition( myPosition.getRow() + 1, myPosition.getColumn() - 1);
             if(testClass.inBoard(testPos))
                 pawnCaptureTest(board, myPosition, testPos);
+            //Capture Right
             testPos = new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1);
             if(testClass.inBoard(testPos))
                 pawnCaptureTest(board, myPosition, testPos);
-            /*En Passant
-            testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - 1);
-            if(testClass.inBoard(testPos) && (board.getPiece(testPos) != null)) {
-                if(board.getLastMove().getEndPosition().equals(testPos) && (board.getLastMove().getStartPosition().equals( new ChessPosition(board.getLastMove().getEndPosition().getRow() + 2, board.getLastMove().getEndPosition().getColumn())))) {
-                    addNewMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() - 1));
-                }
-            }
-            testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() + 1);
-            if(testClass.inBoard(testPos) && (board.getPiece(testPos) != null)) {
-                if(board.getLastMove().getEndPosition().equals(testPos) && (board.getLastMove().getStartPosition().equals( new ChessPosition(board.getLastMove().getEndPosition().getRow() + 2, board.getLastMove().getEndPosition().getColumn())))) {
-                    addNewMove(myPosition, new ChessPosition(myPosition.getRow() + 1, myPosition.getColumn() + 1));
-                }
-            } */
         }
         //Else If Black
         else if (pieceColor == ChessGame.TeamColor.BLACK) {
+            //Move 1
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn());
             if(testClass.inBoard(testPos))
                 valid = pawnTest(board, myPosition, testPos);
+            //If I can move 1, and at starting position test move 2
             if((myPosition.getRow() == 7) && valid) {
                 testPos = new ChessPosition(myPosition.getRow() - 2, myPosition.getColumn());
                 pawnTest(board, myPosition, testPos);
             }
+            //Capture Right
             testPos = new ChessPosition(myPosition.getRow() - 1, myPosition.getColumn() - 1);
             if(testClass.inBoard(testPos))
                 pawnCaptureTest(board, myPosition, testPos);
+            //Capture Left
             testPos = new ChessPosition( myPosition.getRow() - 1, myPosition.getColumn() + 1);
             if(testClass.inBoard(testPos))
                 pawnCaptureTest(board, myPosition, testPos);

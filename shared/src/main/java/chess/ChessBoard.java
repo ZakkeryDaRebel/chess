@@ -1,10 +1,7 @@
 package chess;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.Collection;
-import java.util.ArrayList;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -14,7 +11,6 @@ import java.util.ArrayList;
  */
 public class ChessBoard implements Cloneable {
     private ChessPiece[][] board = new ChessPiece[8][8];
-    private ChessMove lastMove;
     public ChessBoard() {
     }
 
@@ -99,17 +95,17 @@ public class ChessBoard implements Cloneable {
 
     @Override
     public String toString() {
-        String stringOut = "ChessBoard{" + "board=";
+        StringBuilder stringOut = new StringBuilder("ChessBoard{" + "board=");
                 for(int i = 0; i < 8; i++) {
                     for(int j = 0; j < 8; j++) {
-                        stringOut += board[i][j];
+                        stringOut.append(board[i][j]);
                     }
                 }
-                //Arrays.toString(board) +
+                /*Arrays.toString(board) +
                 //", whiteTeam=" + whiteTeam +
                 //", blackTeam=" + blackTeam +
-                //'}';
-        return stringOut;
+                //'}';*/
+        return stringOut.toString();
     }
 
     @Override
@@ -125,13 +121,5 @@ public class ChessBoard implements Cloneable {
         }
         clone.board = clonedBoard;
         return clone;
-    }
-
-    public ChessMove getLastMove() {
-        return lastMove;
-    }
-
-    public void setLastMove(ChessMove lastMove) {
-        this.lastMove = lastMove;
     }
 }
