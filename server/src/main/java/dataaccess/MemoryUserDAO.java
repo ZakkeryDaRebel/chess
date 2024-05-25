@@ -23,7 +23,7 @@ public class MemoryUserDAO implements UserDAO {
     }
 
     @Override
-    public void removeUser(String name) {
+    public void deleteUser(String name) {
         map.remove(name);
     }
 
