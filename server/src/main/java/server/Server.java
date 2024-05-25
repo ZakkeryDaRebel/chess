@@ -1,17 +1,20 @@
 package server;
 
+import dataaccess.*;
 import handler.ClearAllHandler;
-import handler.ParentHandler;
 import spark.*;
 
 public class Server {
+
+    DataBase database;
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
-        //ParentHandler handler = new ParentHandler(); SCRAP PARENT IDEA
+        //Create DAOs to pass through
+        database = new DataBase();
 
         // Register your endpoints and handle exceptions here.
         //Spark.post("/user", )       Register
@@ -22,7 +25,7 @@ public class Server {
         //Spark.put("/game", )        JoinGame
 
         //Clear
-        Spark.delete("/db", new ClearAllHandler());
+        Spark.delete("/db", new ClearAllHandler(database));
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -32,6 +35,4 @@ public class Server {
         Spark.stop();
         Spark.awaitStop();
     }
-
-
 }

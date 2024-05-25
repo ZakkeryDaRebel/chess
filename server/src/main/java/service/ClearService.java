@@ -7,26 +7,21 @@ import result.ClearAllResult;
 import java.util.Map;
 
 
-public class ClearService extends ParentService {
+public class ClearService {
 
-    AuthDAO authDB;
-    GameDAO gameDB;
-    UserDAO userDB;
+    DataBase database;
 
-    public ClearService() {
-        authDB = getAuthDB();
-        gameDB = getGameDB();
-        userDB = getUserDB();
+    public ClearService(DataBase database) {
+        this.database = database;
     }
 
-    public ClearAllResult deleteAll() {
+    public ClearAllResult deleteAll()  {
         ClearAllResult result;
         try {
-            authDB.clear();
-            gameDB.clear();
-            userDB.clear();
-            result = new ClearAllResult(null);
+            database.clearAll();
+            result = new ClearAllResult("");
         } catch(DataAccessException ex) {
+            System.out.println("Caught DataAccessException Error");
             //Create new ClearResponse
             //Response has message
             //return response

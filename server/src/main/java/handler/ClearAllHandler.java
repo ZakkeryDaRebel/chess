@@ -1,5 +1,6 @@
 package handler;
 
+import dataaccess.DataBase;
 import service.ClearService;
 import spark.Request;
 import spark.Response;
@@ -7,13 +8,15 @@ import spark.Route;
 
 public class ClearAllHandler implements Route {
 
-    /*public ClearAllHandler() {
-        ClearService clear = new ClearService();
-    }*/
+    DataBase database;
+
+    public ClearAllHandler(DataBase database) {
+        this.database = database;
+    }
 
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        ClearService clear = new ClearService();
+    public Object handle(Request request, Response response) {
+        ClearService clear = new ClearService(database);
         return clear.deleteAll();
     }
 }
