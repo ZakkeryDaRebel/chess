@@ -16,6 +16,16 @@ public class UserService {
             dataBase.createUser(name, password,email);
         } catch(DataAccessException ex) {
             //Already existing User
+            System.out.println("Caught DataAccessException, username already taken");
+        }
+    }
+
+    public void loginUser(String name, String password) {
+        try {
+            dataBase.getUser(name);
+        } catch(DataAccessException ex) {
+            //No user
+            System.out.println("Caught DataAccessException, no user by that username");
         }
     }
 
@@ -24,6 +34,7 @@ public class UserService {
             return dataBase.getUser(name);
         } catch(DataAccessException ex) {
             //No User to return
+            System.out.println("Caught DataAccessException, no user to return");
             return null;
         }
     }
@@ -33,6 +44,7 @@ public class UserService {
             dataBase.deleteUser(name);
         } catch(DataAccessException ex) {
             //No User to delete
+            System.out.println("Caught DataAccessException, no user to delete");
         }
     }
 }

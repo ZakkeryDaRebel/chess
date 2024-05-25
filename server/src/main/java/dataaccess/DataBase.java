@@ -2,6 +2,9 @@ package dataaccess;
 
 import model.*;
 
+import javax.xml.crypto.Data;
+import java.util.ArrayList;
+
 public class DataBase {
 
     AuthDAO authDataBase;
@@ -22,35 +25,84 @@ public class DataBase {
 
     //Create Methods
     public void createUser(String name, String password, String email) throws DataAccessException {
-        userDataBase.createUser(name, new UserData(name, password, email));
+        if(isUserEmpty(name))
+            userDataBase.createUser(name, new UserData(name, password, email));
+        else
+            throw new DataAccessException("Username taken");
     }
     public void createGame(String name) throws DataAccessException {
-        gameDataBase.createGame(name);
+        if(isGameEmpty(name))
+            gameDataBase.createGame(name);
+        else
+            throw new DataAccessException("Game taken");
     }
     public void createAuth(String token, String name) throws DataAccessException {
-        authDataBase.createAuth(token, new AuthData(token, name));
+        if(isAuthEmpty(token))
+            authDataBase.createAuth(token, new AuthData(token, name));
+        else
+            throw new DataAccessException("Auth taken");
     }
 
     //Get Methods
     public AuthData getAuth(String token) throws DataAccessException {
-        return authDataBase.getAuth(token);
+        if(isAuthEmpty(token))
+            throw new DataAccessException("Not valid token");
+        else
+            return authDataBase.getAuth(token);
     }
     public UserData getUser(String name) throws DataAccessException {
-        return userDataBase.getUser(name);
+        if(isUserEmpty(name))
+            throw new DataAccessException("Not valid Username");
+        else
+            return userDataBase.getUser(name);
     }
     public GameData getGame(int gameID) throws DataAccessException {
-        return gameDataBase.getGame(gameID);
+        if(isGameEmpty(gameID))
+            throw new DataAccessException("Not valid GameID");
+        else
+            return gameDataBase.getGame(gameID);
+    }
+    public GameData getGameName(String name) throws DataAccessException {
+        ArrayList<GameData> gameList = gameDataBase.listGames();
+        for(GameData game : gameList) {
+            if(game.gameName().equals(name))
+                return game;
+        }
+        throw new DataAccessException("Not valid Game Name");
+    }
+
+    //is_Empty
+    public boolean isAuthEmpty(String token) throws DataAccessException {
+        return authDataBase.getAuth(token) == null;
+    }
+    public boolean isUserEmpty(String name) throws DataAccessException {
+        return userDataBase.getUser(name) == null;
+    }
+    public boolean isGameEmpty(int gameID) throws DataAccessException {
+        return gameDataBase.getGame(gameID) == null;
+    }
+    public boolean isGameEmpty(String name) throws DataAccessException {
+        return getGameName(name) == null;
     }
 
     //Delete Methods
     public void deleteAuth(String token) throws DataAccessException {
-        authDataBase.deleteAuth(token);
+        if(isAuthEmpty(token))
+            throw new DataAccessException("Not valid token");
+        else
+            authDataBase.deleteAuth(token);
     }
     public void deleteGame(int gameID) throws DataAccessException {
-        gameDataBase.deleteGame(gameID);
+        if(isGameEmpty(gameID))
+            throw new DataAccessException("Not valid GameID");
+        else
+            gameDataBase.deleteGame(gameID);
     }
     public void deleteUser(String name) throws DataAccessException {
-        userDataBase.deleteUser(name);
+        if(isUserEmpty(name))
+            throw new DataAccessException("Not valid Username");
+        else
+            userDataBase.deleteUser(name);
     }
 
     //Getters and Setters for DAOs

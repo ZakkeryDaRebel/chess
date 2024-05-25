@@ -3,14 +3,21 @@ package service;
 import dataaccess.*;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ClearTests {
 
+    DataBase db;
+
+    @BeforeEach
+    public void createDataBase() {
+        db = new DataBase();
+    }
+
     @Test
     public void clearAll1User() {
         try {
-            DataBase db = new DataBase();
             db.createUser("Test", "1234", "test@gmail.com");
             UserDAO testDB = db.getUserDataBase();
             if (testDB.getUser("Test") != null)
@@ -32,7 +39,6 @@ public class ClearTests {
     @Test
     public void clearAll1Game() {
         try {
-            DataBase db = new DataBase();
             db.createGame("Test");
             GameDAO testDB = db.getGameDataBase();
             if (testDB.getGame(1) != null)
@@ -54,7 +60,6 @@ public class ClearTests {
     @Test
     public void clearAll1Auth() {
         try {
-            DataBase db = new DataBase();
             db.createAuth("TOKEN", "Test");
             AuthDAO testDB = db.getAuthDataBase();
             if (testDB.getAuth("TOKEN") != null)
@@ -75,7 +80,6 @@ public class ClearTests {
 
     @Test
     public void clearAllEmpty() {
-        DataBase db = new DataBase();
         ClearService clear = new ClearService(db);
         clear.deleteAll();
         System.out.println("End of Test");
