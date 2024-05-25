@@ -4,6 +4,8 @@ import dataaccess.*;
 import model.*;
 import result.RegisterResult;
 
+import java.util.UUID;
+
 public class UserService {
 
     DataBase dataBase;
@@ -13,16 +15,16 @@ public class UserService {
     }
 
     public RegisterResult createUser(String name, String password, String email) {
+        RegisterResult result;
         try {
             dataBase.createUser(name, password,email);
-            //Create Auth Token
-            //Add token to database along with Username
-            //Return RegisterResult of Username and Authtoken
+            String authToken = UUID.randomUUID().toString();
+            dataBase.createAuth(authToken, name);
+            result = new RegisterResult(true, null, name, authToken);
         } catch(DataAccessException ex) {
-            //Already existing User
-            System.out.println("Caught DataAccessException, username already taken");
+            result = new RegisterResult(false, ex.getMessage(), null, null);
         }
-        return null;
+        return result;
     }
 
     public void loginUser(String name, String password) {

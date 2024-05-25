@@ -24,23 +24,14 @@ public class RegisterTests {
     @Test
     public void RegisterNewUser() {
         result = service.createUser("Test", "1234", "test@gmail.com");
-
-
-        try {
-            db.createUser("Test", "1234", "test@gmail.com");
-        } catch(DataAccessException ex) {
-            fail("Should not have caught a DataAccessException: " + ex.getMessage());
-        }
+        Assertions.assertTrue(result.isSuccess(), result.getMessage());
     }
 
     @Test
     public void UsernameAlreadyTaken() {
-        try {
-            db.createUser("Test", "1234", "test@gmail.com");
-            db.createUser("Test", "5678", "test2@gmail.com");
-            fail("Should There should have been a problem with creating two Users with the same Username");
-        } catch(DataAccessException ex) {
-            Assertions.assertEquals(ex.getMessage(), "Username taken", "Caught a different DataAccessException than expected" + ex.getMessage());
-        }
+        result = service.createUser("Test", "1234", "test@gmail.com");
+        Assertions.assertTrue(result.isSuccess(), result.getMessage());
+        result = service.createUser("Test", "5678", "test2@gmail.com");
+        Assertions.assertFalse(result.isSuccess(), result.getMessage());
     }
 }

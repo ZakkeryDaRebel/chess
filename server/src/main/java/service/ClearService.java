@@ -22,7 +22,8 @@ public class ClearService {
             database.clearAll();
             if(database.isAllEmpty())
                 result = new ClearAllResult(true, null);
-            else throw new DataAccessException("Didn't clear the database");
+            else
+                throw new DataAccessException("Didn't clear the database");
         } catch(DataAccessException ex) {
             result = new ClearAllResult(false, ex.getMessage());
         }
