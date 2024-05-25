@@ -2,6 +2,7 @@ package server;
 
 import dataaccess.*;
 import handler.ClearAllHandler;
+import handler.RegisterHandler;
 import spark.*;
 
 public class Server {
@@ -17,7 +18,7 @@ public class Server {
         database = new DataBase();
 
         // Register your endpoints and handle exceptions here.
-        //Spark.post("/user", )       Register
+        Spark.post("/user", (req, res) -> (new RegisterHandler(database)).handle(req,res));
         //Spark.post("/session", )    Login
         //Spark.delete("/session", )  Logout
         //Spark.get("/game", )        ListGames
@@ -25,7 +26,7 @@ public class Server {
         //Spark.put("/game", )        JoinGame
 
         //Clear
-        Spark.delete("/db", new ClearAllHandler(database));
+        Spark.delete("/db", (req, res) -> (new ClearAllHandler(database)).handle(req, res));
 
         Spark.awaitInitialization();
         return Spark.port();

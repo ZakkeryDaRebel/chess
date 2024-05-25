@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ClearAllResult extends ParentResult {
 
-    public ClearAllResult(boolean success, String message) {
+    public ClearAllResult(Boolean success, String message) {
         super(success, message);
     }
 }

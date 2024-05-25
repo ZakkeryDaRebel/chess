@@ -1,10 +1,10 @@
 package result;
 
 public class ParentResult {
-    private final boolean success;
-    private final String message;
+    private Boolean success;
+    private String message;
 
-    public ParentResult(boolean success, String message) {
+    public ParentResult(Boolean success, String message) {
         this.success = success;
         this.message = message;
     }
@@ -15,5 +15,14 @@ public class ParentResult {
 
     public String getMessage() {
         return message;
+    }
+
+    public void nullParentVariables() {
+        success = null;
+        message = null;
+    }
+
+    public void nullSuccess() {
+        success = null;
     }
 }
