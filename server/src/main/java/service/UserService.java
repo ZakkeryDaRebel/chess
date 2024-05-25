@@ -2,6 +2,8 @@ package service;
 
 import dataaccess.*;
 import model.*;
+import request.LoginRequest;
+import request.RegisterRequest;
 import result.RegisterResult;
 
 import java.util.UUID;
@@ -14,7 +16,10 @@ public class UserService {
         this.dataBase = dataBase;
     }
 
-    public RegisterResult createUser(String name, String password, String email) {
+    public RegisterResult createUser(RegisterRequest request) {
+        String name = request.getName();
+        String password = request.getPassword();
+        String email = request.getEmail();
         RegisterResult result;
         try {
             dataBase.createUser(name, password,email);
@@ -27,7 +32,9 @@ public class UserService {
         return result;
     }
 
-    public void loginUser(String name, String password) {
+    public void loginUser(LoginRequest request) {
+        String name = request.getName();
+        String password = request.getPassword();
         try {
             UserData user = dataBase.getUser(name);
             if(user.password().equals(password)) {
