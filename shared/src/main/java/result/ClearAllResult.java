@@ -1,16 +1,12 @@
 package result;
 
+import com.google.gson.JsonObject;
+
 import java.util.Map;
 
-public class ClearAllResult {
+public class ClearAllResult extends ParentResult {
 
-    String json;
-
-    public ClearAllResult(String json) {
-        this.json = json;
-    }
-
-    public String getResult() {
-        return json;
+    public ClearAllResult(boolean success, String message) {
+        super(success, message);
     }
 }

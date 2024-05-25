@@ -22,6 +22,9 @@ public class DataBase {
         userDataBase.clear();
         gameDataBase.clear();
     }
+    public boolean isAllEmpty() {
+        return (authDataBase.size() == 0) && (userDataBase.size() == 0) && (gameDataBase.size() == 0);
+    }
 
     //Create Methods
     public void createUser(String name, String password, String email) throws DataAccessException {
@@ -82,7 +85,11 @@ public class DataBase {
         return gameDataBase.getGame(gameID) == null;
     }
     public boolean isGameEmpty(String name) throws DataAccessException {
-        return getGameName(name) == null;
+        try {
+            return getGameName(name) == null;
+        } catch(DataAccessException ex) {
+            return true;
+        }
     }
 
     //Delete Methods

@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.*;
+import result.RegisterResult;
 
 public class UserService {
 
@@ -11,21 +12,31 @@ public class UserService {
         this.dataBase = dataBase;
     }
 
-    public void createUser(String name, String password, String email) {
+    public RegisterResult createUser(String name, String password, String email) {
         try {
             dataBase.createUser(name, password,email);
+            //Create Auth Token
+            //Add token to database along with Username
+            //Return RegisterResult of Username and Authtoken
         } catch(DataAccessException ex) {
             //Already existing User
             System.out.println("Caught DataAccessException, username already taken");
         }
+        return null;
     }
 
     public void loginUser(String name, String password) {
         try {
-            dataBase.getUser(name);
+            UserData user = dataBase.getUser(name);
+            if(user.password().equals(password)) {
+                System.out.println("Login valid");
+            }
+            else
+                throw new DataAccessException("Invalid Password");
         } catch(DataAccessException ex) {
             //No user
-            System.out.println("Caught DataAccessException, no user by that username");
+            System.out.println("Caught DataAccessException: " + ex.getMessage());
+
         }
     }
 

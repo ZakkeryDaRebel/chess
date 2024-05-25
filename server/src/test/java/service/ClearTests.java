@@ -1,38 +1,32 @@
 package service;
 
 import dataaccess.*;
-import model.AuthData;
-import model.UserData;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import result.ClearAllResult;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ClearTests {
 
     DataBase db;
+    ClearService clear;
+    ClearAllResult result;
 
     @BeforeEach
     public void createDataBase() {
         db = new DataBase();
+        clear = new ClearService(db);
+        ClearAllResult result;
     }
 
     @Test
     public void clearAll1User() {
         try {
             db.createUser("Test", "1234", "test@gmail.com");
-            UserDAO testDB = db.getUserDataBase();
-            if (testDB.getUser("Test") != null)
-                System.out.println("Successfully added");
-            else
-                System.out.println("Failed to add");
-            ClearService clear = new ClearService(db);
-            clear.deleteAll();
-            UserDAO clearDB = db.getUserDataBase();
-            if (clearDB.getUser("Test") == null)
-                System.out.println("Test Success");
-            else
-                System.out.println("Failure somewhere");
+            result = clear.deleteAll();
+            Assertions.assertTrue(result.isSuccess(), result.getMessage());
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException");
+            fail("Should not have caught a DataAccessException: " + ex.getMessage());
         }
     }
 
@@ -40,20 +34,10 @@ public class ClearTests {
     public void clearAll1Game() {
         try {
             db.createGame("Test");
-            GameDAO testDB = db.getGameDataBase();
-            if (testDB.getGame(1) != null)
-                System.out.println("Successfully added");
-            else
-                System.out.println("Failed to add");
-            ClearService clear = new ClearService(db);
-            clear.deleteAll();
-            GameDAO clearDB = db.getGameDataBase();
-            if (clearDB.getGame(1) == null)
-                System.out.println("Test Success");
-            else
-                System.out.println("Failure somewhere");
+            result = clear.deleteAll();
+            Assertions.assertTrue(result.isSuccess(), result.getMessage());
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException");
+            fail("Should not have caught a DataAccessException: " + ex.getMessage());
         }
     }
 
@@ -61,27 +45,17 @@ public class ClearTests {
     public void clearAll1Auth() {
         try {
             db.createAuth("TOKEN", "Test");
-            AuthDAO testDB = db.getAuthDataBase();
-            if (testDB.getAuth("TOKEN") != null)
-                System.out.println("Successfully added");
-            else
-                System.out.println("Failed to add");
-            ClearService clear = new ClearService(db);
-            clear.deleteAll();
-            AuthDAO clearDB = db.getAuthDataBase();
-            if (clearDB.getAuth("TOKEN") == null)
-                System.out.println("Test Success");
-            else
-                System.out.println("Failure somewhere");
+            result = clear.deleteAll();
+            Assertions.assertTrue(result.isSuccess(), result.getMessage());
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException");
+            fail("Should not have caught a DataAccessException: " + ex.getMessage());
         }
     }
 
     @Test
     public void clearAllEmpty() {
         ClearService clear = new ClearService(db);
-        clear.deleteAll();
-        System.out.println("End of Test");
+        result = clear.deleteAll();
+        Assertions.assertTrue(result.isSuccess(), result.getMessage());
     }
 }

@@ -31,4 +31,9 @@ public class MemoryAuthDAO implements AuthDAO {
     public AuthData getAuth(String token) {
         return map.get(token);
     }
+
+    @Override
+    public int size() {
+        return map.size();
+    }
 }

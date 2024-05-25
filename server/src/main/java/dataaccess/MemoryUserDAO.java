@@ -31,4 +31,9 @@ public class MemoryUserDAO implements UserDAO {
     public UserData getUser(String name) {
         return map.get(name);
     }
+
+    @Override
+    public int size() {
+        return map.size();
+    }
 }

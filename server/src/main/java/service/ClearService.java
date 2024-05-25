@@ -1,6 +1,7 @@
 package service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import dataaccess.*;
 import result.ClearAllResult;
 
@@ -19,16 +20,11 @@ public class ClearService {
         ClearAllResult result;
         try {
             database.clearAll();
-            result = new ClearAllResult("");
+            if(database.isAllEmpty())
+                result = new ClearAllResult(true, null);
+            else throw new DataAccessException("Didn't clear the database");
         } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException Error");
-            //Create new ClearResponse
-            //Response has message
-            //return response
-            var obj = Map.of("Message", "Error: Can't clear all databases");
-            var serializer = new Gson();
-            String json = serializer.toJson(obj);
-            result = new ClearAllResult(json);
+            result = new ClearAllResult(false, ex.getMessage());
         }
         return result;
     }

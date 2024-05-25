@@ -50,4 +50,9 @@ public class MemoryGameDAO implements GameDAO{
     public void deleteGame(int id) {
         map.remove(id);
     }
+
+    @Override
+    public int size() {
+        return map.size();
+    }
 }
