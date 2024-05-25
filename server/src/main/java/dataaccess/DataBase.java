@@ -2,7 +2,6 @@ package dataaccess;
 
 import model.*;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 public class DataBase {
@@ -53,6 +52,14 @@ public class DataBase {
         else
             return authDataBase.getAuth(token);
     }
+    public AuthData getAuthName(String name) throws DataAccessException {
+        ArrayList<AuthData> authList = authDataBase.getAllAuths();
+        for(AuthData auth : authList) {
+            if(auth.username().equals(name))
+                return auth;
+        }
+        throw new DataAccessException("Not valid Username");
+    }
     public UserData getUser(String name) throws DataAccessException {
         if(isUserEmpty(name))
             throw new DataAccessException("Not valid Username");
@@ -84,7 +91,7 @@ public class DataBase {
     public boolean isGameEmpty(int gameID) throws DataAccessException {
         return gameDataBase.getGame(gameID) == null;
     }
-    public boolean isGameEmpty(String name) throws DataAccessException {
+    public boolean isGameEmpty(String name) {
         try {
             return getGameName(name) == null;
         } catch(DataAccessException ex) {
