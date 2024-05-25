@@ -1,6 +1,7 @@
 package server;
 
 import handler.ClearAllHandler;
+import handler.ParentHandler;
 import spark.*;
 
 public class Server {
@@ -9,6 +10,8 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        //ParentHandler handler = new ParentHandler(); SCRAP PARENT IDEA
 
         // Register your endpoints and handle exceptions here.
         //Spark.post("/user", )       Register
@@ -19,7 +22,7 @@ public class Server {
         //Spark.put("/game", )        JoinGame
 
         //Clear
-        Spark.delete("/db", (req, res) -> new ClearAllHandler());
+        Spark.delete("/db", new ClearAllHandler());
 
         Spark.awaitInitialization();
         return Spark.port();
