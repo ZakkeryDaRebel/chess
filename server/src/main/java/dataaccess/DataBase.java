@@ -80,6 +80,14 @@ public class DataBase {
         }
         throw new DataAccessException("Not valid Game Name");
     }
+    public boolean noGameName(String name) {
+        try {
+            getGameName(name);
+            return false;
+        } catch(DataAccessException ex) {
+            return true;
+        }
+    }
 
     //is_Empty
     public boolean isAuthEmpty(String token) throws DataAccessException {

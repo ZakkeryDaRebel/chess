@@ -2,14 +2,14 @@ package result;
 
 public class CreateGameResult extends ParentResult {
 
-    private final int gameID;
+    private final Integer gameID;
 
-    public CreateGameResult(Boolean success, String message, int gameID) {
+    public CreateGameResult(Boolean success, String message, Integer gameID) {
         super(success, message);
         this.gameID = gameID;
     }
 
-    public int getGameID() {
+    public Integer getGameID() {
         return gameID;
     }
 }
