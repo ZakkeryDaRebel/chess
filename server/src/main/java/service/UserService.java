@@ -2,10 +2,8 @@ package service;
 
 import dataaccess.*;
 import model.*;
-import request.LoginRequest;
-import request.RegisterRequest;
-import result.LoginResult;
-import result.RegisterResult;
+import request.*;
+import result.*;
 
 import java.util.UUID;
 
@@ -27,7 +25,7 @@ public class UserService {
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
             result = new RegisterResult(true, null, name, authToken);
-            System.out.println(result.toString());
+            //System.out.println(result.toString());
         } catch(DataAccessException ex) {
             result = new RegisterResult(false, ex.getMessage(), null, null);
         }
@@ -52,6 +50,21 @@ public class UserService {
         } catch(DataAccessException ex) {
             result = new LoginResult(false, ex.getMessage(), null, null);
         }
+        return result;
+    }
+
+    public LogoutResult logoutUser(LogoutRequest request) {
+        LogoutResult result;
+        try {
+            String authToken = request.getAuthToken();
+            dataBase.getAuth(authToken);
+            dataBase.deleteAuth(authToken);
+            result = new LogoutResult(true, null);
+        } catch(DataAccessException ex) {
+            //
+            result = new LogoutResult(false, "Error: " + ex.getMessage());
+        }
+        //Double check AuthDAO to see if it dissappered
         return result;
     }
 
