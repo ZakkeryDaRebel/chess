@@ -27,6 +27,7 @@ public class UserService {
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
             result = new RegisterResult(true, null, name, authToken);
+            System.out.println(result.toString());
         } catch(DataAccessException ex) {
             result = new RegisterResult(false, ex.getMessage(), null, null);
         }

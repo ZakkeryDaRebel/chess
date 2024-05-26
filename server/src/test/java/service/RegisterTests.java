@@ -33,4 +33,12 @@ public class RegisterTests {
         result = service.createUser( new RegisterRequest("Test", "5678", "test2@gmail.com"));
         Assertions.assertFalse(result.isSuccess(), result.getMessage());
     }
+
+    @Test
+    public void CreateTwoUsers() {
+        result = service.createUser(new RegisterRequest("Test", "1234", "test@gmail.com"));
+        Assertions.assertTrue(result.isSuccess(), result.getMessage());
+        result = service.createUser(new RegisterRequest("Test2", "8745", "Test2@gmail.com"));
+        Assertions.assertTrue(result.isSuccess(), result.getMessage());
+    }
 }

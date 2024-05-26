@@ -29,13 +29,12 @@ public class ClearAllHandler implements Route {
             clearResult.nullParentVariables();
             response.status(200);
             response.type("application/json");
-            return new Gson().toJson(clearResult);
         } else {
             //Return error with the message
             response.status(500);
             response.type("application/json");
             clearResult.nullSuccess();
-            return new Gson().toJson(clearResult);
         }
+        return new Gson().toJson(clearResult);
     }
 }
