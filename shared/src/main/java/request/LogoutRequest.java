@@ -1,4 +1,15 @@
 package request;
 
-public class LogoutRequest {
+public class LogoutRequest extends ParentRequest {
+
+    private final String authToken;
+
+    public LogoutRequest(String authToken) {
+        super();
+        this.authToken = authToken;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
 }
