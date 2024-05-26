@@ -30,7 +30,6 @@ public class CreateGameTests {
     public void CreateNewGame() {
         gameResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
         Assertions.assertTrue(gameResult.isSuccess(), gameResult.getMessage());
-
     }
 
     @Test

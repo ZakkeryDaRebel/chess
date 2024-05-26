@@ -88,6 +88,9 @@ public class DataBase {
             return true;
         }
     }
+    public ArrayList<GameData> getGameList() throws DataAccessException {
+        return gameDataBase.listGames();
+    }
 
     //is_Empty
     public boolean isAuthEmpty(String token) throws DataAccessException {

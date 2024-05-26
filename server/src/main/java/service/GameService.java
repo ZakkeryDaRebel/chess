@@ -4,7 +4,11 @@ import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import model.GameData;
 import request.CreateGameRequest;
+import request.ListGamesRequest;
 import result.CreateGameResult;
+import result.ListGamesResult;
+
+import java.util.ArrayList;
 
 public class GameService {
 
@@ -35,6 +39,34 @@ public class GameService {
     //Join Game
 
     //List Games
+    public ListGamesResult listGames(ListGamesRequest request) {
+        String authToken = request.getAuthToken();
+        ListGamesResult result;
+        try {
+            database.getAuth(authToken);
+            ArrayList<GameData> gameList = database.getGameList();
+            for(GameData game : gameList) {
+                boolean nullData = false;
+                String whiteUsername;
+                String blackUsername;
+                if(game.blackUsername() == null) {
+                    nullData = true;
+                    blackUsername = "";
+                } else
+                    blackUsername = game.blackUsername();
+                if(game.whiteUsername() == null) {
+                    nullData = true;
+                    whiteUsername = "";
+                } else
+                    whiteUsername = game.whiteUsername();
+                game = new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
+            }
+            result = new ListGamesResult (true, null, gameList);
+        } catch(DataAccessException ex) {
+            result = new ListGamesResult(false, ex.getMessage(), null);
+        }
+        return result;
+    }
 
     //Delete Game
 }
