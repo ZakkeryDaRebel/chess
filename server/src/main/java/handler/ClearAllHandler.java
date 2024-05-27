@@ -12,24 +12,21 @@ import spark.Route;
 public class ClearAllHandler implements Route {
 
     DataBase database;
+    HandlerMethods handlerMethods;
 
     public ClearAllHandler(DataBase database) {
         this.database = database;
+        handlerMethods = new HandlerMethods();
     }
 
     @Override
     public Object handle(Request request, Response response) {
-        ClearAllRequest body = new Gson().fromJson(request.body(), ClearAllRequest.class);
         ClearService clear = new ClearService(database);
         ClearAllResult clearResult = clear.deleteAll();
         if(clearResult.isSuccess()) {
-            clearResult.nullParentVariables();
-            response.status(200);
-            response.type("application/json");
+            handlerMethods.getResponse(response, 200, clearResult);
         } else {
-            response.status(500);
-            response.type("application/json");
-            clearResult.nullSuccess();
+            handlerMethods.getResponse(response, 500, clearResult);
         }
         return new Gson().toJson(clearResult);
     }

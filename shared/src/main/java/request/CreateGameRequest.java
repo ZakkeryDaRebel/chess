@@ -2,7 +2,7 @@ package request;
 
 public class CreateGameRequest extends ParentRequest {
 
-    private final String authToken;
+    private String authToken;
     private final String gameName;
 
     public CreateGameRequest(String authToken, String gameName) {
@@ -17,5 +17,9 @@ public class CreateGameRequest extends ParentRequest {
 
     public String getGameName() {
         return gameName;
+    }
+
+    public void setAuthToken(String token) {
+        authToken = token;
     }
 }

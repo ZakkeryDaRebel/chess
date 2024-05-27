@@ -26,7 +26,7 @@ public class ClearService {
             else
                 throw new DataAccessException("Didn't clear the database");
         } catch(DataAccessException ex) {
-            result = new ClearAllResult(false, ex.getMessage());
+            result = new ClearAllResult(false, "Error: " + ex.getMessage());
         }
         return result;
     }

@@ -19,7 +19,8 @@ public class ListGamesHandler implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        ListGamesRequest body = new Gson().fromJson(request.body(), ListGamesRequest.class);
+        String header = request.headers("Authorization");
+        ListGamesRequest body = new ListGamesRequest(header);
         GameService listGames = new GameService(database);
         ListGamesResult listGamesResult = listGames.listGames(body);
         if(listGamesResult.isSuccess()) {
