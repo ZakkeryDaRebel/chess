@@ -101,6 +101,13 @@ public class DataBase {
     public boolean isAuthEmpty(String token) throws DataAccessException {
         return authDataBase.getAuth(token) == null;
     }
+    public boolean isAuthNameEmpty(String name) throws DataAccessException {
+        try {
+            return getAuthName(name) == null;
+        } catch(DataAccessException ex) {
+            return true;
+        }
+    }
     public boolean isUserEmpty(String name) throws DataAccessException {
         return userDataBase.getUser(name) == null;
     }

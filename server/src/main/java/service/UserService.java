@@ -40,8 +40,10 @@ public class UserService {
         try {
             UserData user = dataBase.getUser(name);
             if(user.password().equals(password)) {
-                String authToken = dataBase.getAuthName(name).authToken();
-                dataBase.deleteAuth(authToken);
+                if(!dataBase.isAuthNameEmpty(name)) {
+                    String authToken = dataBase.getAuthName(name).authToken();
+                    dataBase.deleteAuth(authToken);
+                }
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);

@@ -19,17 +19,18 @@ public class LogoutHandler implements Route {
 
     @Override
     public Object handle(Request request, Response response) {
-        LogoutRequest body = new Gson().fromJson(request.body(), LogoutRequest.class);
+        String header = request.headers("Authorization");
+        LogoutRequest body = new LogoutRequest(header);
         UserService logout = new UserService(database);
         LogoutResult logoutResult = logout.logoutUser(body);
         if(logoutResult.isSuccess()) {
-            response.status(200);
             response.type("application/json");
+            response.status(200);
             logoutResult.nullParentVariables();
         } else {
             //Return error with the message
-            response.status(500);
             response.type("application/json");
+            response.status(500);
             logoutResult.nullSuccess();
         }
         return new Gson().toJson(logoutResult);

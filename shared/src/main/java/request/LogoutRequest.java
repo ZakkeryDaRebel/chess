@@ -2,7 +2,7 @@ package request;
 
 public class LogoutRequest extends ParentRequest {
 
-    private final String authToken;
+    private String authToken;
 
     public LogoutRequest(String authToken) {
         super();
@@ -11,5 +11,9 @@ public class LogoutRequest extends ParentRequest {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public void setAuthToken(String newToken) {
+        authToken = newToken;
     }
 }
