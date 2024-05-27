@@ -1,12 +1,9 @@
 package service;
 
-import dataaccess.DataAccessException;
-import dataaccess.DataBase;
-import model.GameData;
-import request.CreateGameRequest;
-import request.ListGamesRequest;
-import result.CreateGameResult;
-import result.ListGamesResult;
+import dataaccess.*;
+import model.*;
+import request.*;
+import result.*;
 
 import java.util.ArrayList;
 
@@ -37,6 +34,29 @@ public class GameService {
     }
 
     //Join Game
+    public JoinGameResult joinGame(JoinGameRequest request) {
+        String authToken = request.getAuthToken();
+        JoinGameResult result;
+        try {
+            AuthData auth = database.getAuth(authToken);
+            GameData game = database.getGame(request.getGameID());
+            GameData newGame;
+             if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
+                 if(database.getPlayerFromColor(game, "WHITE") != null)
+                     throw new DataAccessException("Username taken");
+                 newGame = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
+             } else {
+                if(database.getPlayerFromColor(game, "BLACK") != null)
+                    throw new DataAccessException("Username taken");
+                newGame = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+             }
+             database.updateGame(newGame);
+            result = new JoinGameResult(true, null);
+        } catch(DataAccessException ex) {
+            result = new JoinGameResult(false, ex.getMessage());
+        }
+        return result;
+    }
 
     //List Games
     public ListGamesResult listGames(ListGamesRequest request) {
@@ -45,8 +65,9 @@ public class GameService {
         try {
             database.getAuth(authToken);
             ArrayList<GameData> gameList = database.getGameList();
-            for(GameData game : gameList) {
+            for(int i = 0; i < gameList.size(); i++) {
                 boolean nullData = false;
+                GameData game = gameList.get(i);
                 String whiteUsername;
                 String blackUsername;
                 if(game.blackUsername() == null) {
@@ -59,7 +80,7 @@ public class GameService {
                     whiteUsername = "";
                 } else
                     whiteUsername = game.whiteUsername();
-                game = new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game());
+                gameList.set(i, new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game()));
             }
             result = new ListGamesResult (true, null, gameList);
         } catch(DataAccessException ex) {

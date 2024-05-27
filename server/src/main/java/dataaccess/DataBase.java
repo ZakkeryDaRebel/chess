@@ -91,6 +91,11 @@ public class DataBase {
     public ArrayList<GameData> getGameList() throws DataAccessException {
         return gameDataBase.listGames();
     }
+    public String getPlayerFromColor(GameData game, String color) {
+        if(color.equals("WHITE"))
+            return game.whiteUsername();
+        return game.blackUsername();
+    }
 
     //is_Empty
     public boolean isAuthEmpty(String token) throws DataAccessException {
@@ -128,6 +133,10 @@ public class DataBase {
             throw new DataAccessException("Not valid Username");
         else
             userDataBase.deleteUser(name);
+    }
+
+    public void updateGame(GameData newGame) throws DataAccessException{
+        gameDataBase.updateGame(newGame.gameID(), newGame);
     }
 
     //Getters and Setters for DAOs
