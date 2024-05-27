@@ -2,17 +2,17 @@ package request;
 
 public class LoginRequest extends ParentRequest {
 
-    private final String name;
+    private final String username;
     private final String password;
 
     public LoginRequest(String name, String password) {
         super();
-        this.name = name;
+        this.username = name;
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {

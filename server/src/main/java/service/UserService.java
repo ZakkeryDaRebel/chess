@@ -16,9 +16,10 @@ public class UserService {
     }
 
     public RegisterResult createUser(RegisterRequest request) {
-        String name = request.getName();
+        String name = request.getUsername();
         String password = request.getPassword();
         String email = request.getEmail();
+        //System.out.println("Name: " + name + "\nPassword: " + password)
         RegisterResult result;
         try {
             dataBase.createUser(name, password,email);
@@ -33,7 +34,7 @@ public class UserService {
     }
 
     public LoginResult loginUser(LoginRequest request) {
-        String name = request.getName();
+        String name = request.getUsername();
         String password = request.getPassword();
         LoginResult result;
         try {
