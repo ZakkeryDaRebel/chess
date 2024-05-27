@@ -30,7 +30,7 @@ public class DataBase {
         if(isUserEmpty(name))
             userDataBase.createUser(name, new UserData(name, password, email));
         else
-            throw new DataAccessException("Username taken");
+            throw new DataAccessException("Error: already taken");
     }
     public void createGame(String name) throws DataAccessException {
         if(isGameEmpty(name))

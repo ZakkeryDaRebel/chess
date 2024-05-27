@@ -19,7 +19,6 @@ public class UserService {
         String name = request.getUsername();
         String password = request.getPassword();
         String email = request.getEmail();
-        //System.out.println("Name: " + name + "\nPassword: " + password)
         RegisterResult result;
         try {
             dataBase.createUser(name, password,email);

@@ -26,19 +26,19 @@ public class RegisterHandler implements Route {
         RegisterRequest registerRequest;
         try {
             registerRequest = (RegisterRequest) handlerMethods.getBody(request, "RegisterRequest");
+            handlerMethods.hasUsername(registerRequest.getUsername());
+            handlerMethods.hasPassword(registerRequest.getPassword());
+            handlerMethods.hasEmail(registerRequest.getEmail());
         } catch(DataAccessException ex) {
-            return handlerMethods.getResponse(response,500, new RegisterResult(null, "Error: Bad Request", null, null));
+            return handlerMethods.getResponse(response,400, new RegisterResult(null, "Error: Bad Request", null, null));
         }
         UserService register = new UserService(database);
         RegisterResult registerResult = register.createUser(registerRequest);
         if(registerResult.isSuccess()) {
             return handlerMethods.getResponse(response, 200, registerResult);
-        } else {
-            //Return error with the message
-            response.status(500);
-            response.type("application/json");
-            registerResult.nullSuccess();
-        }
-        return new Gson().toJson(registerResult);
+        } else if(registerResult.getMessage().contains("already taken")) {
+            return handlerMethods.getResponse(response, 403, registerResult);
+        } else
+            return handlerMethods.getResponse(response, 500, registerResult);
     }
 }

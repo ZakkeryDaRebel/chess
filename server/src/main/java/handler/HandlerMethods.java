@@ -13,42 +13,17 @@ public class HandlerMethods {
 
     }
 
-    public ClearAllRequest getBody(Request request, ClearAllRequest clearRequest) {
-        return new Gson().fromJson(request.body(), ClearAllRequest.class);
-    }
-
-    public CreateGameRequest getBody(Request request, CreateGameRequest createRequest) {
-        return new Gson().fromJson(request.body(), CreateGameRequest.class);
-    }
-
-    public JoinGameRequest getBody(Request request, JoinGameRequest joinRequest) {
-        return new Gson().fromJson(request.body(), JoinGameRequest.class);
-    }
-
-    public ListGamesRequest getBody(Request request, ListGamesRequest listRequest) {
-        return new Gson().fromJson(request.body(), ListGamesRequest.class);
-    }
-
-    public LoginRequest getBody(Request request, LoginRequest loginRequest) {
-        return new Gson().fromJson(request.body(), LoginRequest.class);
-    }
-
-    public LogoutRequest getBody(Request request, LogoutRequest logoutRequest) {
-        return new Gson().fromJson(request.body(), LogoutRequest.class);
-    }
-
-    public RegisterRequest getBody(Request request, RegisterRequest registerRequest) {
-        return new Gson().fromJson(request.body(), RegisterRequest.class);
-    }
-
     public Object getBody(Request request, String requestType) throws DataAccessException {
-        if(requestType.equals("ReqisterRequest"))
+        if(requestType.equals("RegisterRequest"))
             return new Gson().fromJson(request.body(), RegisterRequest.class);
-        else if(requestType.equals("LogoutRequest"))
-            return new Gson().fromJson(request.body(), LogoutRequest.class);
-
-        else
-            throw new DataAccessException("Invalid Request");
+        else if(requestType.equals("LoginRequest"))
+            return new Gson().fromJson(request.body(), LoginRequest.class);
+        else if(requestType.equals("JoinGameRequest"))
+            return new Gson().fromJson(request.body(), JoinGameRequest.class);
+        else if(requestType.equals("CreateGameRequest"))
+            return new Gson().fromJson(request.body(), CreateGameRequest.class);
+        else  //Clear, Logout, ListGames don't have bodies
+            throw new DataAccessException("Bad Request");
     }
 
     public String getAuthorization(Request request) {
@@ -60,5 +35,23 @@ public class HandlerMethods {
         response.type("application/json");
         objectClass.nullSuccess();
         return new Gson().toJson(objectClass);
+    }
+
+    public boolean hasUsername(String username) throws DataAccessException {
+        if(username == null)
+            throw new DataAccessException("Error: Missing Username");
+        return true;
+    }
+
+    public boolean hasPassword(String password) throws DataAccessException {
+        if(password == null)
+            throw new DataAccessException("Error: Missing Password");
+        return true;
+    }
+
+    public boolean hasEmail(String email) throws DataAccessException {
+        if(email == null)
+            throw new DataAccessException("Error: Missing Email");
+        return true;
     }
 }
