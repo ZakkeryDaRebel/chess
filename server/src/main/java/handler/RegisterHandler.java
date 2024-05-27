@@ -2,11 +2,8 @@ package handler;
 
 import com.google.gson.Gson;
 import dataaccess.DataBase;
-import request.ClearAllRequest;
 import request.RegisterRequest;
-import result.ClearAllResult;
 import result.RegisterResult;
-import service.ClearService;
 import service.UserService;
 import spark.Request;
 import spark.Response;
