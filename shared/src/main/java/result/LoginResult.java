@@ -5,7 +5,7 @@ public class LoginResult extends ParentResult {
     private final String username;
     private final String authToken;
 
-    public LoginResult(boolean success, String message, String username, String authToken) {
+    public LoginResult(Boolean success, String message, String username, String authToken) {
         super(success, message);
         this.username = username;
         this.authToken = authToken;

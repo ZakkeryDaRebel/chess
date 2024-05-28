@@ -42,4 +42,10 @@ public class HandlerMethods {
             throw new DataAccessException("Error: bad request");
         return true;
     }
+
+    public boolean isNullInteger(Integer num) throws DataAccessException {
+        if(num == null)
+            throw new DataAccessException("Error: bad request");
+        return true;
+    }
 }

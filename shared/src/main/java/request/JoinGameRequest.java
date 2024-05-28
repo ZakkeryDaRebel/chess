@@ -2,7 +2,7 @@ package request;
 
 public class JoinGameRequest extends ParentRequest {
 
-    private final String authToken;
+    private String authToken;
     private final String playerColor;
     private final int gameID;
 
@@ -23,5 +23,9 @@ public class JoinGameRequest extends ParentRequest {
 
     public int getGameID() {
         return gameID;
+    }
+
+    public void setAuthToken(String token) {
+        authToken = token;
     }
 }

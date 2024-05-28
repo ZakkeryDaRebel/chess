@@ -41,16 +41,18 @@ public class GameService {
             AuthData auth = database.getAuth(authToken);
             GameData game = database.getGame(request.getGameID());
             GameData newGame;
+            Boolean spectator = false;
              if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
                  if(database.getPlayerFromColor(game, "WHITE") != null)
-                     throw new DataAccessException("Username taken");
+                     throw new DataAccessException("Error: already taken");
                  newGame = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
-             } else {
+                 database.updateGame(newGame);
+             } else if (request.getPlayerColor().equalsIgnoreCase("BLACK")) {
                 if(database.getPlayerFromColor(game, "BLACK") != null)
-                    throw new DataAccessException("Username taken");
+                    throw new DataAccessException("Error: already taken");
                 newGame = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
+                 database.updateGame(newGame);
              }
-             database.updateGame(newGame);
             result = new JoinGameResult(true, null);
         } catch(DataAccessException ex) {
             result = new JoinGameResult(false, ex.getMessage());
@@ -80,7 +82,8 @@ public class GameService {
                     whiteUsername = "";
                 } else
                     whiteUsername = game.whiteUsername();
-                gameList.set(i, new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), game.game()));
+
+                gameList.set(i, new GameData(game.gameID(), whiteUsername, blackUsername, game.gameName(), null));
             }
             result = new ListGamesResult (true, null, gameList);
         } catch(DataAccessException ex) {

@@ -1,8 +1,9 @@
 package handler;
 
-import com.google.gson.Gson;
+import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import request.ListGamesRequest;
+import result.JoinGameResult;
 import result.ListGamesResult;
 import service.GameService;
 import spark.Request;
@@ -12,28 +13,32 @@ import spark.Route;
 public class ListGamesHandler implements Route {
 
     DataBase database;
+    HandlerMethods handlerMethods;
 
     public ListGamesHandler(DataBase database) {
         this.database = database;
+        handlerMethods = new HandlerMethods();
     }
 
     @Override
     public Object handle(Request request, Response response) {
-        String header = request.headers("Authorization");
-        ListGamesRequest body = new ListGamesRequest(header);
+        ListGamesRequest listRequest;
+        String token;
+        try {
+            token = handlerMethods.getAuthorization(request);
+            handlerMethods.isNullString(token);
+            listRequest = new ListGamesRequest(token);
+        } catch(DataAccessException ex) {
+            return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
+        }
         GameService listGames = new GameService(database);
-        ListGamesResult listGamesResult = listGames.listGames(body);
+        ListGamesResult listGamesResult = listGames.listGames(listRequest);
         if(listGamesResult.isSuccess()) {
-            response.status(200);
-            response.type("application/json");
-            listGamesResult.nullParentVariables();
+            return handlerMethods.getResponse(response, 200, listGamesResult);
         } else {
             //Return error with the message
-            response.status(500);
-            response.type("application/json");
-            listGamesResult.nullSuccess();
+            return handlerMethods.getResponse(response, 500, listGamesResult);
         }
-        return new Gson().toJson(listGamesResult);
     }
 
 }
