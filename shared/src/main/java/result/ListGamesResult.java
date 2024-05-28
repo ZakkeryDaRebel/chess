@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 public class ListGamesResult extends ParentResult {
 
-    private final ArrayList<GameData> gameList;
+    private final ArrayList<GameData> games;
 
-    public ListGamesResult(Boolean success, String message, ArrayList<GameData> gameList) {
+    public ListGamesResult(Boolean success, String message, ArrayList<GameData> games) {
         super(success, message);
-        this.gameList = gameList;
+        this.games = games;
     }
 
-    public ArrayList<GameData> getGameList() {
-        return gameList;
+    public ArrayList<GameData> getGames() {
+        return games;
     }
 }
