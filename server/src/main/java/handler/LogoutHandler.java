@@ -1,11 +1,9 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import model.AuthData;
 import request.LogoutRequest;
-import result.JoinGameResult;
 import result.LoginResult;
 import result.LogoutResult;
 import service.UserService;
