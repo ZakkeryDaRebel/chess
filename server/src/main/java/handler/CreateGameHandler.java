@@ -1,6 +1,5 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import request.*;
@@ -24,21 +23,24 @@ public class CreateGameHandler implements Route {
         String token;
         try {
             createRequest = (CreateGameRequest) handlerMethods.getBody(request, "CreateGameRequest");
+            handlerMethods.isNullString(createRequest.getGameName());
             token = handlerMethods.getAuthorization(request);
+        } catch(DataAccessException ex) {
+            return handlerMethods.getResponse(response,400, new CreateGameResult(null, "Error: bad request", null));
+        }
+        try {
+            handlerMethods.isNullString(token);
+            database.getAuth(token);
             createRequest.setAuthToken(token);
         } catch(DataAccessException ex) {
-            return handlerMethods.getResponse(response,500, new CreateGameResult(null, "Error: Bad Request", null));
+            return handlerMethods.getResponse(response, 401, new CreateGameResult(null, "Error: unauthorized",null));
         }
         GameService createGame = new GameService(database);
         CreateGameResult createGameResult = createGame.createGame(createRequest);
         if(createGameResult.isSuccess()) {
             return handlerMethods.getResponse(response, 200, createGameResult);
         } else {
-            //Return error with the message
-            response.status(500);
-            response.type("application/json");
-            createGameResult.nullSuccess();
+            return handlerMethods.getResponse(response, 500, createGameResult);
         }
-        return new Gson().toJson(createGameResult);
     }
 }

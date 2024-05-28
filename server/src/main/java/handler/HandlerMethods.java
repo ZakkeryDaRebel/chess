@@ -37,21 +37,9 @@ public class HandlerMethods {
         return new Gson().toJson(objectClass);
     }
 
-    public boolean hasUsername(String username) throws DataAccessException {
-        if(username == null)
-            throw new DataAccessException("Error: Missing Username");
-        return true;
-    }
-
-    public boolean hasPassword(String password) throws DataAccessException {
-        if(password == null)
-            throw new DataAccessException("Error: Missing Password");
-        return true;
-    }
-
-    public boolean hasEmail(String email) throws DataAccessException {
-        if(email == null)
-            throw new DataAccessException("Error: Missing Email");
+    public boolean isNullString(String variable) throws DataAccessException {
+        if(variable == null)
+            throw new DataAccessException("Error: bad request");
         return true;
     }
 }

@@ -1,10 +1,8 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import request.RegisterRequest;
-import result.CreateGameResult;
 import result.RegisterResult;
 import service.UserService;
 import spark.Request;
@@ -26,9 +24,9 @@ public class RegisterHandler implements Route {
         RegisterRequest registerRequest;
         try {
             registerRequest = (RegisterRequest) handlerMethods.getBody(request, "RegisterRequest");
-            handlerMethods.hasUsername(registerRequest.getUsername());
-            handlerMethods.hasPassword(registerRequest.getPassword());
-            handlerMethods.hasEmail(registerRequest.getEmail());
+            handlerMethods.isNullString(registerRequest.getUsername());
+            handlerMethods.isNullString(registerRequest.getPassword());
+            handlerMethods.isNullString(registerRequest.getEmail());
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response,400, new RegisterResult(null, "Error: Bad Request", null, null));
         }
