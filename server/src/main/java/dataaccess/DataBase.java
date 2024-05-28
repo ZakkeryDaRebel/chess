@@ -52,14 +52,6 @@ public class DataBase {
         else
             return authDataBase.getAuth(token);
     }
-    public AuthData getAuthName(String name) throws DataAccessException {
-        ArrayList<AuthData> authList = authDataBase.getAllAuths();
-        for(AuthData auth : authList) {
-            if(auth.username().equals(name))
-                return auth;
-        }
-        throw new DataAccessException("Not valid Username");
-    }
     public UserData getUser(String name) throws DataAccessException {
         if(isUserEmpty(name))
             throw new DataAccessException("Not valid Username");
@@ -103,13 +95,6 @@ public class DataBase {
     public boolean isAuthEmpty(String token) throws DataAccessException {
         return authDataBase.getAuth(token) == null;
     }
-    public boolean isAuthNameEmpty(String name) throws DataAccessException {
-        try {
-            return getAuthName(name) == null;
-        } catch(DataAccessException ex) {
-            return true;
-        }
-    }
     public boolean isUserEmpty(String name) throws DataAccessException {
         return userDataBase.getUser(name) == null;
     }
@@ -130,12 +115,6 @@ public class DataBase {
             throw new DataAccessException("Not valid token");
         else
             authDataBase.deleteAuth(token);
-    }
-    public void deleteUser(String name) throws DataAccessException {
-        if(isUserEmpty(name))
-            throw new DataAccessException("Not valid Username");
-        else
-            userDataBase.deleteUser(name);
     }
 
     public void updateGame(GameData newGame) throws DataAccessException{

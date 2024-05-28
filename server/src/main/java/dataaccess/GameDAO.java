@@ -10,6 +10,5 @@ public interface GameDAO {
     GameData getGame(int id) throws DataAccessException;
     ArrayList<GameData> listGames() throws DataAccessException;
     void updateGame(int id, GameData game) throws DataAccessException;
-    void deleteGame(int id) throws DataAccessException;
     int size();
 }

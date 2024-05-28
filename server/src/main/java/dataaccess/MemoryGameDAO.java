@@ -1,12 +1,9 @@
 package dataaccess;
 
 import chess.ChessGame;
-import model.AuthData;
 import model.GameData;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MemoryGameDAO implements GameDAO{
 
@@ -47,12 +44,6 @@ public class MemoryGameDAO implements GameDAO{
     @Override
     public void updateGame(int id, GameData game) {
         map.put(id, game);
-    }
-
-    @Override
-    public void deleteGame(int id) {
-        map.remove(id);
-        numGames--;
     }
 
     @Override

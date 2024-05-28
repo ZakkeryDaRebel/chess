@@ -2,7 +2,7 @@ package result;
 
 public class ParentResult {
     private Boolean success;
-    private String message;
+    private final String message;
 
     public ParentResult(Boolean success, String message) {
         this.success = success;
@@ -15,11 +15,6 @@ public class ParentResult {
 
     public String getMessage() {
         return message;
-    }
-
-    public void nullParentVariables() {
-        success = null;
-        message = null;
     }
 
     public void nullSuccess() {
