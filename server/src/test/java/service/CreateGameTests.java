@@ -1,27 +1,18 @@
 package service;
 
-import dataaccess.DataBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import request.CreateGameRequest;
-import request.RegisterRequest;
 import result.CreateGameResult;
-import result.RegisterResult;
 
-public class CreateGameTests {
+public class CreateGameTests extends ParentTests{
 
-    private GameService gameService;
-    private CreateGameResult gameResult;
-    private String authToken;
+    CreateGameResult gameResult;
 
     @BeforeEach
-    public void createDataBase() {
-        DataBase db = new DataBase();
-        UserService userService = new UserService(db);
-        RegisterResult registerResult = userService.createUser(new RegisterRequest("Test", "1234", "test@gmail.com"));
-        authToken = registerResult.getAuthToken();
-        gameService = new GameService(db);
+    public void setUp() {
+        createDataBase();
     }
 
     @Test
@@ -32,8 +23,7 @@ public class CreateGameTests {
 
     @Test
     public void createExistingGame() {
-        gameResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
-        Assertions.assertTrue(gameResult.isSuccess(), gameResult.getMessage());
+        createNewGame();
         gameResult = gameService.createGame(new CreateGameRequest(authToken, "Test"));
         Assertions.assertFalse(gameResult.isSuccess(), gameResult.getMessage());
     }

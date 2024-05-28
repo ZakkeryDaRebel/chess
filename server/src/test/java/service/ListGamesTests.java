@@ -1,28 +1,19 @@
 package service;
 
-import dataaccess.DataBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import request.*;
 import result.*;
 
-public class ListGamesTests {
+public class ListGamesTests extends ParentTests {
 
-    private GameService gameService;
     private CreateGameResult createResult;
     private ListGamesResult listResult;
-    private UserService userService;
-    private RegisterResult registerResult;
-    private String authToken;
 
     @BeforeEach
-    public void createDataBase() {
-        DataBase db = new DataBase();
-        userService = new UserService(db);
-        registerResult = userService.createUser(new RegisterRequest("Test", "1234", "test@gmail.com"));
-        authToken = registerResult.getAuthToken();
-        gameService = new GameService(db);
+    public void setUp() {
+        createDataBase();
     }
 
     //Create1GameThenList

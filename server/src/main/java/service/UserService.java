@@ -39,10 +39,6 @@ public class UserService {
         try {
             UserData user = dataBase.getUser(name);
             if(user.password().equals(password)) {
-                if(!dataBase.isAuthNameEmpty(name)) {
-                    String authToken = dataBase.getAuthName(name).authToken();
-                    dataBase.deleteAuth(authToken);
-                }
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);
@@ -68,23 +64,6 @@ public class UserService {
         }
         //Double check AuthDAO to see if it dissappered
         return result;
-    }
-
-    public UserData getUser(String name) {
-        try {
-            return dataBase.getUser(name);
-        } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to return");
-            return null;
-        }
-    }
-
-    public void deleteUser(String name) {
-        try {
-            dataBase.deleteUser(name);
-        } catch(DataAccessException ex) {
-            System.out.println("Caught DataAccessException, no user to delete");
-        }
     }
 
     public String newAuthToken() {
