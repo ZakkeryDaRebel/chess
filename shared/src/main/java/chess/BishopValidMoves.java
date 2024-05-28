@@ -18,7 +18,7 @@ public class BishopValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() + i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -27,7 +27,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() + i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -36,7 +36,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn() - i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -45,7 +45,7 @@ public class BishopValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() + i, myPosition.getColumn() - i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
     }
@@ -65,15 +65,5 @@ public class BishopValidMoves {
     @Override
     public int hashCode() {
         return Objects.hashCode(validMoves);
-    }
-
-    @Override
-    public String toString() {
-        String output = "BishopValidMoves{" +
-                "validMoves= ";
-        for (ChessMove move : validMoves) {
-            output += "{ " + move.getStartPosition() + "," + move.getEndPosition() + "} ";
-        }
-        return output;
     }
 }

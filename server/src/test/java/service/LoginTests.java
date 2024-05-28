@@ -20,7 +20,7 @@ public class LoginTests {
     }
 
     @Test
-    public void CreateUserCorrectLogin() {
+    public void createUserCorrectLogin() {
         regRes = service.createUser( new RegisterRequest("Test", "1234", "test@gmail.com"));
         logRes = service.loginUser(new LoginRequest("Test", "1234"));
         Assertions.assertTrue(regRes.isSuccess(), regRes.getMessage());
@@ -28,7 +28,7 @@ public class LoginTests {
     }
 
     @Test
-    public void CreateUserWrongPassword() {
+    public void createUserWrongPassword() {
         regRes = service.createUser( new RegisterRequest("Test", "1234", "test@gmail.com"));
         logRes = service.loginUser( new LoginRequest("Test", "5678"));
         Assertions.assertTrue(regRes.isSuccess(), regRes.getMessage());
@@ -36,7 +36,7 @@ public class LoginTests {
     }
 
     @Test
-    public void SkipCreateTryLogin() {
+    public void skipCreateTryLogin() {
         logRes = service.loginUser( new LoginRequest("Test", "1234"));
         Assertions.assertFalse(logRes.isSuccess(), logRes.getMessage());
     }

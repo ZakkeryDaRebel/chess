@@ -54,20 +54,4 @@ public class AllPiecePositions {
     public Collection<ChessMove> getBlackTeamMoves() {
         return blackTeamMoves;
     }
-
-    /*public void setWhiteKingPos(ChessPosition whiteKingPos) {
-        this.whiteKingPos = whiteKingPos;
-    }
-
-    public void setBlackKingPos(ChessPosition blackKingPos) {
-        this.blackKingPos = blackKingPos;
-    }
-
-    public void setWhiteTeamMoves(Collection<ChessMove> whiteTeamMoves) {
-        this.whiteTeamMoves = whiteTeamMoves;
-    }
-
-    public void setBlackTeamMoves(Collection<ChessMove> blackTeamMoves) {
-        this.blackTeamMoves = blackTeamMoves;
-    }*/
 }

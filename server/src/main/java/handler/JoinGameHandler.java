@@ -2,7 +2,6 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
-import model.AuthData;
 import model.GameData;
 import request.JoinGameRequest;
 import result.JoinGameResult;
@@ -25,25 +24,25 @@ public class JoinGameHandler implements Route {
     public Object handle(Request request, Response response) {
         JoinGameRequest joinRequest;
         String token;
+        GameData game;
         try {
             joinRequest = (JoinGameRequest) handlerMethods.getBody(request, "JoinGameRequest");
             handlerMethods.isNullString(joinRequest.getPlayerColor());
             handlerMethods.isNullInteger(joinRequest.getGameID());
             token = handlerMethods.getAuthorization(request);
+            game = database.getGame(joinRequest.getGameID());
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
-        AuthData auth;
         try {
             handlerMethods.isNullString(token);
             database.getAuth(token);
             joinRequest.setAuthToken(token);
-            auth = database.getAuth(token);
+            database.getAuth(token);
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response, 401, new JoinGameResult(null, "Error: unauthorized"));
         }
         try {
-            GameData game = database.getGame(joinRequest.getGameID());
             String playerColor = joinRequest.getPlayerColor();
             if(playerColor.equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)

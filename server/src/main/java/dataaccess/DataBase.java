@@ -91,9 +91,7 @@ public class DataBase {
         }
     }
     public ArrayList<GameData> getGameList() throws DataAccessException {
-        if(gameDataBase.size() != 0)
-            return gameDataBase.listGames();
-        throw new DataAccessException("No games");
+        return gameDataBase.listGames();
     }
     public String getPlayerFromColor(GameData game, String color) {
         if(color.equals("WHITE"))
@@ -133,12 +131,6 @@ public class DataBase {
         else
             authDataBase.deleteAuth(token);
     }
-    public void deleteGame(int gameID) throws DataAccessException {
-        if(isGameEmpty(gameID))
-            throw new DataAccessException("Not valid GameID");
-        else
-            gameDataBase.deleteGame(gameID);
-    }
     public void deleteUser(String name) throws DataAccessException {
         if(isUserEmpty(name))
             throw new DataAccessException("Not valid Username");
@@ -149,12 +141,4 @@ public class DataBase {
     public void updateGame(GameData newGame) throws DataAccessException{
         gameDataBase.updateGame(newGame.gameID(), newGame);
     }
-
-    //Getters and Setters for DAOs
-    public AuthDAO getAuthDataBase() { return authDataBase; }
-    public void setAuthDataBase(AuthDAO authDataBase) { this.authDataBase = authDataBase; }
-    public UserDAO getUserDataBase() { return userDataBase; }
-    public void setUserDataBase(UserDAO userDataBase) { this.userDataBase = userDataBase; }
-    public GameDAO getGameDataBase() { return gameDataBase; }
-    public void setGameDataBase(GameDAO gameDataBase) { this.gameDataBase = gameDataBase; }
 }

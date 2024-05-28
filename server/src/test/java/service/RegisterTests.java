@@ -1,6 +1,5 @@
 package service;
 
-import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +20,13 @@ public class RegisterTests {
     }
 
     @Test
-    public void RegisterNewUser() {
+    public void registerNewUser() {
         result = service.createUser( new RegisterRequest("Test", "1234", "test@gmail.com"));
         Assertions.assertTrue(result.isSuccess(), result.getMessage());
     }
 
     @Test
-    public void UsernameAlreadyTaken() {
+    public void usernameAlreadyTaken() {
         result = service.createUser( new RegisterRequest("Test", "1234", "test@gmail.com"));
         Assertions.assertTrue(result.isSuccess(), result.getMessage());
         result = service.createUser( new RegisterRequest("Test", "5678", "test2@gmail.com"));
@@ -35,7 +34,7 @@ public class RegisterTests {
     }
 
     @Test
-    public void CreateTwoUsers() {
+    public void createTwoUsers() {
         result = service.createUser(new RegisterRequest("Test", "1234", "test@gmail.com"));
         Assertions.assertTrue(result.isSuccess(), result.getMessage());
         result = service.createUser(new RegisterRequest("Test2", "8745", "Test2@gmail.com"));

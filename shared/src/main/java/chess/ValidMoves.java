@@ -1,17 +1,13 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class ValidMoves {
 
-    private Collection<ChessMove> validmoves;
-
     public ValidMoves() {
-        validmoves = new ArrayList<>();
     }
 
-    public boolean LoopTest(Collection<ChessMove> validMoves, ChessBoard board, ChessPosition startPos, ChessPosition testPos) {
+    public boolean loopTest(Collection<ChessMove> validMoves, ChessBoard board, ChessPosition startPos, ChessPosition testPos) {
         if(inBoard(testPos))
             return testMove(validMoves, board, startPos, testPos);
         else

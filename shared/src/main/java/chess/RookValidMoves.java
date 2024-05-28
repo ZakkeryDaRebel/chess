@@ -17,7 +17,7 @@ public class RookValidMoves {
         int i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition( myPosition.getRow(), myPosition.getColumn() + i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -26,7 +26,7 @@ public class RookValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow(), myPosition.getColumn() - i);
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -35,7 +35,7 @@ public class RookValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition(myPosition.getRow() - i, myPosition.getColumn());
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
 
@@ -44,7 +44,7 @@ public class RookValidMoves {
         i = 1;
         while(valid) {
             ChessPosition testPos = new ChessPosition( myPosition.getRow() + i, myPosition.getColumn());
-            valid = testClass.LoopTest(validMoves, board, myPosition, testPos);
+            valid = testClass.loopTest(validMoves, board, myPosition, testPos);
             i++;
         }
     }
