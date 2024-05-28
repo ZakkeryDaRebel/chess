@@ -25,7 +25,6 @@ public class UserService {
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
             result = new RegisterResult(true, null, name, authToken);
-            //System.out.println(result.toString());
         } catch(DataAccessException ex) {
             result = new RegisterResult(false, ex.getMessage(), null, null);
         }
@@ -59,10 +58,8 @@ public class UserService {
             dataBase.deleteAuth(authToken);
             result = new LogoutResult(true, null);
         } catch(DataAccessException ex) {
-            //
             result = new LogoutResult(false, "Error: " + ex.getMessage());
         }
-        //Double check AuthDAO to see if it dissappered
         return result;
     }
 

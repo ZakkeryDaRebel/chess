@@ -59,7 +59,6 @@ public class JoinGameHandler implements Route {
         if(joinGameResult.isSuccess()) {
             return handlerMethods.getResponse(response, 200, joinGameResult);
         } else {
-            //Return error with the message
             return handlerMethods.getResponse(response, 500, joinGameResult);
         }
     }

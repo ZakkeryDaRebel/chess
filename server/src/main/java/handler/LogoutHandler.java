@@ -2,7 +2,6 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
-import model.AuthData;
 import request.LogoutRequest;
 import result.LoginResult;
 import result.LogoutResult;
@@ -33,7 +32,7 @@ public class LogoutHandler implements Route {
             return handlerMethods.getResponse(response,400, new LogoutResult(null, "Error: bad request"));
         }
         try {
-            AuthData auth = database.getAuth(token);
+            database.getAuth(token);
             UserService logout = new UserService(database);
             LogoutResult logoutResult = logout.logoutUser(logoutRequest);
             if(logoutResult.isSuccess())

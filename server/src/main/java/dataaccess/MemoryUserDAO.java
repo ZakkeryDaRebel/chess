@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.UserData;
-
 import java.util.HashMap;
 
 public class MemoryUserDAO implements UserDAO {
@@ -20,11 +19,6 @@ public class MemoryUserDAO implements UserDAO {
     @Override
     public void createUser(String name, UserData authData) {
         map.put(name, authData);
-    }
-
-    @Override
-    public void deleteUser(String name) {
-        map.remove(name);
     }
 
     @Override

@@ -15,7 +15,6 @@ public class GameService {
         this.database = database;
     }
 
-    //Create Game
     public CreateGameResult createGame(CreateGameRequest request) {
         String authToken = request.getAuthToken();
         String gameName = request.getGameName();
@@ -33,7 +32,6 @@ public class GameService {
         return result;
     }
 
-    //Join Game
     public JoinGameResult joinGame(JoinGameRequest request) {
         String authToken = request.getAuthToken();
         JoinGameResult result;
@@ -41,7 +39,6 @@ public class GameService {
             AuthData auth = database.getAuth(authToken);
             GameData game = database.getGame(request.getGameID());
             GameData newGame;
-            Boolean spectator = false;
              if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
                  if(database.getPlayerFromColor(game, "WHITE") != null)
                      throw new DataAccessException("Error: already taken");
@@ -60,7 +57,6 @@ public class GameService {
         return result;
     }
 
-    //List Games
     public ListGamesResult listGames(ListGamesRequest request) {
         String authToken = request.getAuthToken();
         ListGamesResult result;
@@ -73,6 +69,4 @@ public class GameService {
         }
         return result;
     }
-
-    //Delete Game
 }

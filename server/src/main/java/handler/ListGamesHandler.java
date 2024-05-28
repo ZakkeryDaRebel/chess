@@ -2,7 +2,6 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
-import model.AuthData;
 import request.ListGamesRequest;
 import result.JoinGameResult;
 import result.ListGamesResult;
@@ -34,7 +33,7 @@ public class ListGamesHandler implements Route {
             return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
         try {
-            AuthData auth = database.getAuth(token);
+            database.getAuth(token);
             GameService listGames = new GameService(database);
             ListGamesResult listGamesResult = listGames.listGames(listRequest);
             if(listGamesResult.isSuccess()) {
