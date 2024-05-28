@@ -2,10 +2,14 @@ package handler;
 
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
+import model.AuthData;
+import model.UserData;
 import request.ListGamesRequest;
 import result.JoinGameResult;
 import result.ListGamesResult;
+import result.LoginResult;
 import service.GameService;
+import service.UserService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -31,14 +35,17 @@ public class ListGamesHandler implements Route {
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
-        GameService listGames = new GameService(database);
-        ListGamesResult listGamesResult = listGames.listGames(listRequest);
-        if(listGamesResult.isSuccess()) {
-            return handlerMethods.getResponse(response, 200, listGamesResult);
-        } else {
-            //Return error with the message
-            return handlerMethods.getResponse(response, 500, listGamesResult);
+        try {
+            AuthData auth = database.getAuth(token);
+            GameService listGames = new GameService(database);
+            ListGamesResult listGamesResult = listGames.listGames(listRequest);
+            if(listGamesResult.isSuccess()) {
+                return handlerMethods.getResponse(response, 200, listGamesResult);
+            } else {
+                return handlerMethods.getResponse(response, 500, listGamesResult);
+            }
+        } catch(DataAccessException ex) {
+            return handlerMethods.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
         }
     }
-
 }

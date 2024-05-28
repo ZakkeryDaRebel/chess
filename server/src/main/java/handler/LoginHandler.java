@@ -1,12 +1,10 @@
 package handler;
 
-import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DataBase;
 import model.UserData;
 import request.LoginRequest;
 import result.LoginResult;
-import result.ParentResult;
 import service.UserService;
 import spark.Request;
 import spark.Response;
