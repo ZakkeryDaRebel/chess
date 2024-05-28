@@ -28,11 +28,11 @@ public class LoginHandler implements Route {
             loginRequest = (LoginRequest) handlerMethods.getBody(request, "LoginRequest");
             handlerMethods.isNullString(loginRequest.getUsername());
             handlerMethods.isNullString(loginRequest.getPassword());
-            user = database.getUser(loginRequest.getUsername());
         } catch(DataAccessException ex) {
-            return handlerMethods.getResponse(response, 500, new LoginResult(null, "Error: bad request", null, null));
+            return handlerMethods.getResponse(response, 401, new LoginResult(null, "Error: bad request", null, null));
         }
         try {
+            user = database.getUser(loginRequest.getUsername());
             UserService login = new UserService(database);
             LoginResult loginResult = login.loginUser(loginRequest);
             if(user.password().equals(loginRequest.getPassword())) {

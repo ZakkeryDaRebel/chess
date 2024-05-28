@@ -1,13 +1,7 @@
 package service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import dataaccess.*;
-import request.ClearAllRequest;
 import result.ClearAllResult;
-
-import java.util.Map;
-
 
 public class ClearService {
 

@@ -74,6 +74,8 @@ public class DataBase {
     }
     public GameData getGameName(String name) throws DataAccessException {
         ArrayList<GameData> gameList = gameDataBase.listGames();
+        if(gameList.isEmpty())
+            throw new DataAccessException("Not valid Game Name");
         for(GameData game : gameList) {
             if(game.gameName().equals(name))
                 return game;
@@ -89,7 +91,9 @@ public class DataBase {
         }
     }
     public ArrayList<GameData> getGameList() throws DataAccessException {
-        return gameDataBase.listGames();
+        if(gameDataBase.size() != 0)
+            return gameDataBase.listGames();
+        throw new DataAccessException("No games");
     }
     public String getPlayerFromColor(GameData game, String color) {
         if(color.equals("WHITE"))
