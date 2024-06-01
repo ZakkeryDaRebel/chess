@@ -18,7 +18,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection();) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("TRUNCATE game");
             statement.executeUpdate();
         } catch(SQLException ex) {
@@ -28,7 +28,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void createGame(String name) throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("INSERT INTO game (whiteUsername, blackUsername, gameName, json) VALUES (?,?,?,?)");
             statement.setString(1,"");
             statement.setString(2,"");
@@ -43,7 +43,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GameData getGame(int id) throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection();){
+        try (Connection conn = DatabaseManager.getConnection()){
             PreparedStatement statement = conn.prepareStatement("SELECT json FROM game WHERE id=?");
             statement.setInt(1, id);
             ResultSet queryResult = statement.executeQuery();
@@ -84,7 +84,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public void updateGame(int id, GameData game) throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement preparedStatement = conn.prepareStatement("UPDATE game SET json=? WHERE id=?");
             String json = new Gson().toJson(game);
             preparedStatement.setObject(1, json);
@@ -97,7 +97,7 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public int size() {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM game");
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {

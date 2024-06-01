@@ -16,7 +16,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void clear() throws DataAccessException {
-        try (Connection conn = DatabaseManager.getConnection();) {
+        try (Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("TRUNCATE user");
             statement.executeUpdate();
         } catch(SQLException ex) {
@@ -26,7 +26,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public void createUser(String name, UserData authData) throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("INSERT INTO user (username, password, email, json) VALUES (?,?,?, ?)");
             statement.setString(1,name);
             statement.setString(2, authData.password());
@@ -41,7 +41,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public UserData getUser(String name) throws DataAccessException {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT json FROM user WHERE name=?");
             statement.setString(1,name);
             ResultSet queryResult = statement.executeQuery();
@@ -59,7 +59,7 @@ public class SQLUserDAO implements UserDAO {
 
     @Override
     public int size() {
-        try(Connection conn = DatabaseManager.getConnection();) {
+        try(Connection conn = DatabaseManager.getConnection()) {
             PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) FROM user");
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
