@@ -24,6 +24,7 @@ public class DataBase {
 
     public void createTables() {
         //Create auth, user, and game table if not created already.
+
     }
 
     public void clearAll() throws DataAccessException {
