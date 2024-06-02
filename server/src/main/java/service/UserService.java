@@ -4,8 +4,8 @@ import dataaccess.*;
 import model.*;
 import request.*;
 import result.*;
-
 import java.util.UUID;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
 
@@ -17,11 +17,11 @@ public class UserService {
 
     public RegisterResult createUser(RegisterRequest request) {
         String name = request.getUsername();
-        String password = request.getPassword();
+        String hashedPassword = hashPassword(request.getPassword());
         String email = request.getEmail();
         RegisterResult result;
         try {
-            dataBase.createUser(name, password,email);
+            dataBase.createUser(name, hashedPassword, email);
             String authToken = newAuthToken();
             dataBase.createAuth(authToken, name);
             result = new RegisterResult(true, null, name, authToken);
@@ -33,11 +33,11 @@ public class UserService {
 
     public LoginResult loginUser(LoginRequest request) {
         String name = request.getUsername();
-        String password = request.getPassword();
+        String hashedPassword = hashPassword(request.getPassword());
         LoginResult result;
         try {
             UserData user = dataBase.getUser(name);
-            if(user.password().equals(password)) {
+            if(user.password().equals(hashedPassword)) {
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);
@@ -65,5 +65,10 @@ public class UserService {
 
     public String newAuthToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
+
     }
 }

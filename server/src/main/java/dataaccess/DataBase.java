@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.*;
-
 import java.util.ArrayList;
 
 public class DataBase {
