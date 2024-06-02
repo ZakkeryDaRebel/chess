@@ -44,11 +44,11 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public GameData getGame(int id) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("SELECT json FROM game WHERE id=?");
+            PreparedStatement statement = conn.prepareStatement("SELECT json FROM game WHERE gameID=?");
             statement.setInt(1, id);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
-                int gameId = queryResult.getInt("id");
+                int gameId = queryResult.getInt("gameID");
                 String whiteUsername = queryResult.getString("whiteUsername");
                 String blackUsername = queryResult.getString("blackUsername");
                 String gameName = queryResult.getString("gameName");
@@ -65,10 +65,10 @@ public class SQLGameDAO implements GameDAO {
     public ArrayList<GameData> listGames() throws DataAccessException {
         ArrayList<GameData> gameList = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT json FROM pet");
+            PreparedStatement ps = conn.prepareStatement("SELECT json FROM game");
             try (ResultSet allGames = ps.executeQuery()) {
                 while (allGames.next()) {
-                    int gameID = allGames.getInt("id");
+                    int gameID = allGames.getInt("gameID");
                     String whiteUsername = allGames.getString("whiteUsername");
                     String blackUsername = allGames.getString("blackUsername");
                     String gameName = allGames.getString("gameName");
@@ -85,7 +85,7 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public void updateGame(int id, GameData game) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE game SET json=? WHERE id=?");
+            PreparedStatement preparedStatement = conn.prepareStatement("UPDATE game SET json=? WHERE gameID=?");
             String json = new Gson().toJson(game);
             preparedStatement.setObject(1, json);
             preparedStatement.setInt(2,id);

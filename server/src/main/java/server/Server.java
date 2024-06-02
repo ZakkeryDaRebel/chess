@@ -19,7 +19,7 @@ public class Server {
         Spark.staticFiles.location("web");
 
 
-        //This is my test with pet_store SQL
+        /*This is my test with pet_store SQL
 
         try (var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "P=Wg<ch#74or;#.kK^jC")) {
             try (var preparedStatement = conn.prepareStatement("SELECT 1+1")) {
@@ -67,7 +67,7 @@ public class Server {
         } catch(SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
-        //End of SQL Test
+        //End of SQL Test */
 
 
         //Create DAOs to pass through

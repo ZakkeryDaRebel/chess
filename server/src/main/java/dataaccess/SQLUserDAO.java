@@ -27,7 +27,7 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public void createUser(String name, UserData authData) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO user (username, password, email, json) VALUES (?,?,?, ?)");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO user (username, password, email, json) VALUES (?,?,?,?)");
             statement.setString(1,name);
             statement.setString(2, authData.password());
             statement.setString(3, authData.email());
@@ -42,7 +42,7 @@ public class SQLUserDAO implements UserDAO {
     @Override
     public UserData getUser(String name) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT json FROM user WHERE name=?");
+            PreparedStatement statement = conn.prepareStatement("SELECT json FROM user WHERE username=?");
             statement.setString(1,name);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {

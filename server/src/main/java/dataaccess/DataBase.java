@@ -1,6 +1,10 @@
 package dataaccess;
 
 import model.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class DataBase {
@@ -23,7 +27,48 @@ public class DataBase {
 
     public void createTables() {
         //Create auth, user, and game table if not created already.
+        try (Connection conn = DatabaseManager.getConnection()) {
+            var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
+            dropDbStatement.executeUpdate();
 
+            DatabaseManager.createDatabase();
+
+                conn.setCatalog("chess");
+                String createUserTable = """
+                    CREATE TABLE IF NOT EXISTS user (
+                        username VARCHAR(255) NOT NULL,
+                        password VARCHAR(255) NOT NULL,
+                        email VARCHAR(255) NOT NULL,
+                        json TEXT NOT NULL,
+                        PRIMARY KEY (username)
+                    )""";
+                PreparedStatement createUserStatement = conn.prepareStatement(createUserTable);
+                createUserStatement.executeUpdate();
+
+                String createGameTable = """
+                    CREATE TABLE IF NOT EXISTS game (
+                        gameID INT NOT NULL AUTO_INCREMENT,
+                        whiteUsername VARCHAR(255) NOT NULL,
+                        blackUsername VARCHAR(255) NOT NULL,
+                        gameName VARCHAR(255) NOT NULL,
+                        game TEXT NOT NULL,
+                        PRIMARY KEY (gameID)
+                    )""";
+                PreparedStatement createGameStatement = conn.prepareStatement(createGameTable);
+                createGameStatement.executeUpdate();
+
+                String createAuthTable = """
+                    CREATE TABLE IF NOT EXISTS auth (
+                        authToken VARCHAR(255) NOT NULL,
+                        username VARCHAR(255) NOT NULL,
+                        PRIMARY KEY (authToken)
+                    )""";
+                PreparedStatement createAuthStatement = conn.prepareStatement(createAuthTable);
+                createAuthStatement.executeUpdate();
+        } catch(Exception ex) {
+            //I need to do something with this error, just not sure what to do.
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 
     public void clearAll() throws DataAccessException {
