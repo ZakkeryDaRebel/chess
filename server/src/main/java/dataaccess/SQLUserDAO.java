@@ -46,10 +46,8 @@ public class SQLUserDAO implements UserDAO {
             statement.setString(1,name);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
-                String username = queryResult.getString("username");
-                String password = queryResult.getString("password");
-                String email = queryResult.getString("email");
-                return new UserData(username, password, email);
+                String json = queryResult.getString("json");
+                return new Gson().fromJson(json, UserData.class);
             }
         } catch(SQLException ex) {
             throw new DataAccessException("Error: " + ex.getMessage());
