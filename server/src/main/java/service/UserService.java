@@ -33,11 +33,10 @@ public class UserService {
 
     public LoginResult loginUser(LoginRequest request) {
         String name = request.getUsername();
-        String hashedPassword = hashPassword(request.getPassword());
         LoginResult result;
         try {
             UserData user = dataBase.getUser(name);
-            if(user.password().equals(hashedPassword)) {
+            if(BCrypt.checkpw(request.getPassword(), user.password())) {
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);

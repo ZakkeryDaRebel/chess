@@ -3,6 +3,7 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
+import model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,12 +30,11 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public void createGame(String name) throws DataAccessException {
         try(Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO game (whiteUsername, blackUsername, gameName, json) VALUES (?,?,?,?)");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?,?,?,?)");
             statement.setString(1,"");
             statement.setString(2,"");
             statement.setString(3,name);
-            String json = new Gson().toJson(new ChessGame());
-            statement.setString(4,json);
+            String gameJson = new Gson().toJson(new ChessGame());
             statement.executeUpdate();
         } catch(SQLException ex) {
             throw new DataAccessException("Error: " + ex.getMessage());
@@ -44,16 +44,12 @@ public class SQLGameDAO implements GameDAO {
     @Override
     public GameData getGame(int id) throws DataAccessException {
         try (Connection conn = DatabaseManager.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("SELECT json FROM game WHERE gameID=?");
+            PreparedStatement statement = conn.prepareStatement("SELECT game FROM game WHERE gameID=?");
             statement.setInt(1, id);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
-                int gameId = queryResult.getInt("gameID");
-                String whiteUsername = queryResult.getString("whiteUsername");
-                String blackUsername = queryResult.getString("blackUsername");
-                String gameName = queryResult.getString("gameName");
-                ChessGame game = queryResult.getObject("game", ChessGame.class);
-                return new GameData(gameId, whiteUsername, blackUsername, gameName, game);
+                String json = queryResult.getString("game");
+                return new Gson().fromJson(json, GameData.class);
             }
         } catch(SQLException ex) {
             throw new DataAccessException("Error: " + ex.getMessage());

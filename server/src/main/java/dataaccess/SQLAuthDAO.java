@@ -2,6 +2,7 @@ package dataaccess;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,9 +57,8 @@ public class SQLAuthDAO implements AuthDAO {
             statement.setString(1, token);
             ResultSet queryResult = statement.executeQuery();
             if(queryResult.next()) {
-                String authToken = queryResult.getString("authToken");
-                String username = queryResult.getString("username");
-                return new AuthData(authToken, username);
+                String json = queryResult.getString("json");
+                return new Gson().fromJson(json, AuthData.class);
             }
         } catch(SQLException ex) {
             throw new DataAccessException("Error: " + ex.getMessage());

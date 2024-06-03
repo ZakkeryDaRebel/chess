@@ -35,14 +35,12 @@ public class LoginHandler implements Route {
             user = database.getUser(loginRequest.getUsername());
             UserService login = new UserService(database);
             LoginResult loginResult = login.loginUser(loginRequest);
-            if(user.password().equals(loginRequest.getPassword())) {
-                if(loginResult.isSuccess()) {
-                    return handlerMethods.getResponse(response, 200, loginResult);
-                } else {
-                    return handlerMethods.getResponse(response, 500, loginResult);
-                }
-            } else
-                throw new DataAccessException("Error: unauthorized");
+
+            if(loginResult.isSuccess()) {
+                return handlerMethods.getResponse(response, 200, loginResult);
+            } else {
+                return handlerMethods.getResponse(response, 500, loginResult);
+            }
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response, 401, new LoginResult(null, "Error: unauthorized", null, null));
         }

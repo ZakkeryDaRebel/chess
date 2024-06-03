@@ -2,6 +2,8 @@ package server;
 
 import dataaccess.*;
 import handler.*;
+import org.mindrot.jbcrypt.BCrypt;
+import service.UserService;
 import spark.*;
 
 import java.sql.DriverManager;
@@ -69,9 +71,25 @@ public class Server {
         }
         //End of SQL Test */
 
-
         //Create DAOs to pass through
         database = new DataBase();
+
+        //Password test
+        String password1 = "password";
+        UserService service = new UserService(database);
+        String hash1 = service.hashPassword(password1);
+
+        String[] passwords = {"cow", "toomanysecrets", "password"};
+        for (var pw : passwords) {
+            var match = BCrypt.checkpw(pw, hash1) ? "==" : "!=";
+
+            System.out.printf("%s %s %s%n", pw, match, password1);
+        }
+
+
+
+
+
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> (new RegisterHandler(database)).handle(req,res));
