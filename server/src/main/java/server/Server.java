@@ -2,15 +2,7 @@ package server;
 
 import dataaccess.*;
 import handler.*;
-import org.mindrot.jbcrypt.BCrypt;
-import service.UserService;
 import spark.*;
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-
 public class Server {
 
     DataBase database;
@@ -74,7 +66,7 @@ public class Server {
         //Create DAOs to pass through
         database = new DataBase();
 
-        //Password test
+        /*Password test
         String password1 = "password";
         UserService service = new UserService(database);
         String hash1 = service.hashPassword(password1);
@@ -86,9 +78,7 @@ public class Server {
             System.out.printf("%s %s %s%n", pw, match, password1);
         }
 
-
-
-
+        //End of password test*/
 
 
         // Register your endpoints and handle exceptions here.

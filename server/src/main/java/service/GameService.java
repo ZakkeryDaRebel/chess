@@ -40,12 +40,12 @@ public class GameService {
             GameData game = database.getGame(request.getGameID());
             GameData newGame;
              if(request.getPlayerColor().equalsIgnoreCase("WHITE")) {
-                 if(database.getPlayerFromColor(game, "WHITE") != null)
+                 if(!database.getPlayerFromColor(game, "WHITE").isEmpty())
                      throw new DataAccessException("Error: already taken");
                  newGame = new GameData(game.gameID(), auth.username(), game.blackUsername(), game.gameName(), game.game());
                  database.updateGame(newGame);
              } else if (request.getPlayerColor().equalsIgnoreCase("BLACK")) {
-                if(database.getPlayerFromColor(game, "BLACK") != null)
+                if(!database.getPlayerFromColor(game, "BLACK").isEmpty())
                     throw new DataAccessException("Error: already taken");
                 newGame = new GameData(game.gameID(), game.whiteUsername(), auth.username(), game.gameName(), game.game());
                  database.updateGame(newGame);
