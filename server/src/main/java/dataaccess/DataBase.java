@@ -13,15 +13,15 @@ public class DataBase {
     GameDAO gameDataBase;
 
     public DataBase() {
-        /*authDataBase = new MemoryAuthDAO();
+        authDataBase = new MemoryAuthDAO();
         userDataBase = new MemoryUserDAO();
-        gameDataBase = new MemoryGameDAO();*/
+        gameDataBase = new MemoryGameDAO();
 
-        createTables();
+        /*createTables();
 
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
-        gameDataBase = new SQLGameDAO();
+        gameDataBase = new SQLGameDAO();*/
     }
 
     public void createTables() {

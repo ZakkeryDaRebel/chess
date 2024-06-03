@@ -40,10 +40,10 @@ public class UserService {
                 String newToken = newAuthToken();
                 dataBase.createAuth(newToken, name);
                 result = new LoginResult(true, null, name, newToken);
-            }
-            else
-                throw new DataAccessException("Invalid Password");
+            } else
+                throw new DataAccessException("Test Unauthorized");
         } catch(DataAccessException ex) {
+
             result = new LoginResult(false, ex.getMessage(), null, null);
         }
         return result;
