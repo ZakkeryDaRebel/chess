@@ -27,8 +27,10 @@ public class DataBase {
     public void createTables() {
         //Create auth, user, and game table if not created already.
         try (Connection conn = DatabaseManager.getConnection()) {
+            /* Drop Database code
             var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
             dropDbStatement.executeUpdate();
+             */
 
             DatabaseManager.createDatabase();
 

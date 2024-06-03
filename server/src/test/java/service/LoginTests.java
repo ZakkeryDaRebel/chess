@@ -16,6 +16,8 @@ public class LoginTests {
     @BeforeEach
     public void createDataBase() {
         DataBase db = new DataBase();
+        ClearService clearService = new ClearService(db);
+        clearService.deleteAll();
         service = new UserService(db);
     }
 

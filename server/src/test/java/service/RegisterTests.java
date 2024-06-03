@@ -16,6 +16,8 @@ public class RegisterTests {
     @BeforeEach
     public void createDataBase() {
         db = new DataBase();
+        ClearService clearService = new ClearService(db);
+        clearService.deleteAll();
         service = new UserService(db);
     }
 

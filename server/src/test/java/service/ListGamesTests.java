@@ -14,6 +14,8 @@ public class ListGamesTests extends ParentTests {
     @BeforeEach
     public void setUp() {
         createDataBase();
+        clearService.deleteAll();
+        createUser();
     }
 
     //Create1GameThenList

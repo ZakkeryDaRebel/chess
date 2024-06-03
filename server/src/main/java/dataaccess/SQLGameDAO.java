@@ -64,16 +64,14 @@ public class SQLGameDAO implements GameDAO {
     public ArrayList<GameData> listGames() throws DataAccessException {
         ArrayList<GameData> gameList = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            PreparedStatement ps = conn.prepareStatement("SELECT gameID, whiteUsername, blackUsername, gameName, game FROM game");
+            PreparedStatement ps = conn.prepareStatement("SELECT gameID, whiteUsername, blackUsername, gameName FROM game");
             try (ResultSet allGames = ps.executeQuery()) {
                 while (allGames.next()) {
                     int gameID = allGames.getInt("gameID");
                     String whiteUsername = allGames.getString("whiteUsername");
                     String blackUsername = allGames.getString("blackUsername");
                     String gameName = allGames.getString("gameName");
-                    String json = allGames.getString("game");
-                    ChessGame chessgame = new Gson().fromJson(json, ChessGame.class);
-                    gameList.add(new GameData(gameID, whiteUsername, blackUsername, gameName, chessgame));
+                    gameList.add(new GameData(gameID, whiteUsername, blackUsername, gameName, null));
                 }
                 return gameList;
             }

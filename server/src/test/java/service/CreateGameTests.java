@@ -13,6 +13,8 @@ public class CreateGameTests extends ParentTests{
     @BeforeEach
     public void setUp() {
         createDataBase();
+        clearService.deleteAll();
+        createUser();
     }
 
     @Test
