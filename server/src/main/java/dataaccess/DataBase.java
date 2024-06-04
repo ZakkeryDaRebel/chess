@@ -13,26 +13,31 @@ public class DataBase {
     GameDAO gameDataBase;
 
     public DataBase() {
-        authDataBase = new MemoryAuthDAO();
+        /*authDataBase = new MemoryAuthDAO();
         userDataBase = new MemoryUserDAO();
-        gameDataBase = new MemoryGameDAO();
+        gameDataBase = new MemoryGameDAO();*/
 
-        /*createTables();
+        createTables();
 
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
-        gameDataBase = new SQLGameDAO();*/
+        gameDataBase = new SQLGameDAO();
     }
 
     public void createTables() {
         //Create auth, user, and game table if not created already.
+        try {
+            DatabaseManager.createDatabase();
+        } catch(Exception ex) {
+            System.out.println("You messed up Tristan");
+        }
         try (Connection conn = DatabaseManager.getConnection()) {
             /* Drop Database code
             var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
             dropDbStatement.executeUpdate();
              */
 
-            DatabaseManager.createDatabase();
+
 
                 conn.setCatalog("chess");
                 String createUserTable = """
@@ -49,8 +54,8 @@ public class DataBase {
                 String createGameTable = """
                     CREATE TABLE IF NOT EXISTS game (
                         gameID INT NOT NULL AUTO_INCREMENT,
-                        whiteUsername VARCHAR(255) NOT NULL,
-                        blackUsername VARCHAR(255) NOT NULL,
+                        whiteUsername VARCHAR(255) DEFAULT NULL,
+                        blackUsername VARCHAR(255) DEFAULT NULL,
                         gameName VARCHAR(255) NOT NULL,
                         game TEXT NOT NULL,
                         PRIMARY KEY (gameID)
