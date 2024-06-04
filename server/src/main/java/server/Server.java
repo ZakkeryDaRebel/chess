@@ -12,73 +12,8 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-
-        /*This is my test with pet_store SQL
-
-        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost:3306", "root", "P=Wg<ch#74or;#.kK^jC")) {
-            try (var preparedStatement = conn.prepareStatement("SELECT 1+1")) {
-                var rs = preparedStatement.executeQuery();
-                rs.next();
-                System.out.println(rs.getInt(1));
-            }
-
-            var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS pet_store");
-            dropDbStatement.executeUpdate();
-
-            var createDbStatement = conn.prepareStatement("CREATE DATABASE IF NOT EXISTS pet_store");
-            createDbStatement.executeUpdate();
-
-            conn.setCatalog("pet_store");
-
-            var createPetTable = """
-            CREATE TABLE  IF NOT EXISTS pet (
-                id INT NOT NULL AUTO_INCREMENT,
-                name VARCHAR(255) NOT NULL,
-                type VARCHAR(255) NOT NULL,
-                PRIMARY KEY (id)
-            )""";
-            try (var createTableStatement = conn.prepareStatement(createPetTable)) {
-                createTableStatement.executeUpdate();
-            }
-
-
-            String name = "Fido";
-            String type = "dog";
-            try (var preparedStatement = conn.prepareStatement("INSERT INTO pet (name, type) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, type);
-                preparedStatement.executeUpdate();
-                var resultSet = preparedStatement.getGeneratedKeys();
-                var ID = 0;
-                if (resultSet.next()) {
-                    ID = resultSet.getInt(1);
-                }
-                System.out.println(ID);
-            }
-            var newPet = conn.prepareStatement("INSERT INTO pet (name, type) VALUES ('Chilli', 'Heeler Dog')");
-            newPet.executeUpdate();
-
-        } catch(SQLException ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
-        //End of SQL Test */
-
         //Create DAOs to pass through
         database = new DataBase();
-
-        /*Password test
-        String password1 = "password";
-        UserService service = new UserService(database);
-        String hash1 = service.hashPassword(password1);
-
-        String[] passwords = {"cow", "toomanysecrets", "password"};
-        for (var pw : passwords) {
-            var match = BCrypt.checkpw(pw, hash1) ? "==" : "!=";
-
-            System.out.printf("%s %s %s%n", pw, match, password1);
-        }
-
-        //End of password test*/
 
 
         // Register your endpoints and handle exceptions here.
