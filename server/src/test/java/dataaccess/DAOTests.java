@@ -31,7 +31,7 @@ public class DAOTests {
     public void clearUsedDAOs() {
         try {
             db.createAuth("1234","test");
-            db.createGame("GAME!");
+            createGameSuccess();
             registerNewUser();
             db.clearAll();
         } catch(Exception ex) {
@@ -45,6 +45,7 @@ public class DAOTests {
         try {
             db.createUser("name", "password", "email");
             Assertions.assertNotNull(db.getUser("name"));
+            Assertions.assertEquals(1, db.userDataBase.size());
         } catch(Exception ex) {
             Assertions.fail();
         }
@@ -121,6 +122,7 @@ public class DAOTests {
         try {
             createGameSuccess();
             db.createGame("Test");
+            Assertions.assertEquals(1, db.gameDataBase.size());
         } catch(Exception ex) {
             Assertions.assertTrue(ex.getMessage().contains("Game taken"));
         }
@@ -136,6 +138,50 @@ public class DAOTests {
             Assertions.assertNotEquals(newGame.whiteUsername(), game.whiteUsername());
         } catch(Exception ex) {
             Assertions.fail();
+        }
+    }
+
+    @Test
+    public void joinGameBlackSuccess() {
+        try {
+            createGameSuccess();
+            GameData oldGame = db.getGame(1);
+            db.updateGame(new GameData(1, oldGame.whiteUsername(), "Black player", oldGame.gameName(), oldGame.game()));
+            GameData newGame = db.getGame(1);
+            Assertions.assertNotEquals(newGame.blackUsername(), oldGame.blackUsername());
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void createAuthSuccess() {
+        try {
+            db.createAuth("1234", "name");
+            Assertions.assertNotNull(db.getAuth("1234"));
+            Assertions.assertEquals(1, db.authDataBase.size());
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void deleteAuthSuccess() {
+        try {
+            createAuthSuccess();
+            db.deleteAuth("1234");
+            Assertions.assertEquals(0, db.authDataBase.size());
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    public void deleteNonexistingAuth() {
+        try {
+            db.deleteAuth("1234");
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Not valid token"));
         }
     }
 }
