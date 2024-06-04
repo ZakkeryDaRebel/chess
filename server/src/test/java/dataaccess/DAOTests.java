@@ -108,12 +108,36 @@ public class DAOTests {
     }
 
     @Test
+    public void listThreeGames() {
+        try {
+            db.createGame("newGame");
+            db.createGame("testGame");
+            db.createGame("pro game");
+            Assertions.assertEquals(3,db.gameDataBase.size());
+            db.getGameList();
+        } catch(Exception ex) {
+            Assertions.fail();
+        }
+    }
+
+    @Test
     public void createGameSuccess() {
         try {
             db.createGame("Test");
             Assertions.assertNotNull(db.getGame(1));
         } catch(Exception ex) {
             Assertions.fail();
+        }
+    }
+
+    @Test
+    public void createExistingGame() {
+        try {
+            createGameSuccess();
+            db.createGame("Test");
+            Assertions.fail();
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Game taken"));
         }
     }
 
@@ -162,6 +186,17 @@ public class DAOTests {
             Assertions.assertEquals(1, db.authDataBase.size());
         } catch(Exception ex) {
             Assertions.fail();
+        }
+    }
+
+    @Test
+    public void createExistingAuth() {
+        try {
+            createAuthSuccess();
+            db.createAuth("1234", "test");
+            Assertions.fail();
+        } catch(Exception ex) {
+            Assertions.assertTrue(ex.getMessage().contains("Auth taken"));
         }
     }
 
