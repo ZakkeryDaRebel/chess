@@ -25,14 +25,12 @@ public class JoinGameHandler implements Route {
         JoinGameRequest joinRequest;
         String token;
         GameData game;
-        System.out.println("JoinGameHandler Start");
         try {
             joinRequest = (JoinGameRequest) handlerMethods.getBody(request, "JoinGameRequest");
             handlerMethods.isNullString(joinRequest.getPlayerColor());
             handlerMethods.isNullInteger(joinRequest.getGameID());
             token = handlerMethods.getAuthorization(request);
             game = database.getGame(joinRequest.getGameID());
-            System.out.println("JoinGameHandler Test 1");
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
         }
@@ -41,13 +39,11 @@ public class JoinGameHandler implements Route {
             database.getAuth(token);
             joinRequest.setAuthToken(token);
             database.getAuth(token);
-            System.out.println("JoinGameHandler Test 2");
         } catch(DataAccessException ex) {
             return handlerMethods.getResponse(response, 401, new JoinGameResult(null, "Error: unauthorized"));
         }
         try {
             String playerColor = joinRequest.getPlayerColor();
-            System.out.println("JoinGameHandler Test 3");
             if(playerColor.equalsIgnoreCase("WHITE")) {
                 if(database.getPlayerFromColor(game, "WHITE") != null)
                     throw new DataAccessException("Error: already taken");
@@ -60,7 +56,6 @@ public class JoinGameHandler implements Route {
         }
         GameService joinGame = new GameService(database);
         JoinGameResult joinGameResult = joinGame.joinGame(joinRequest);
-        System.out.println("JoinGameHandler Test 4");
         if(joinGameResult.isSuccess()) {
             return handlerMethods.getResponse(response, 200, joinGameResult);
         } else {
