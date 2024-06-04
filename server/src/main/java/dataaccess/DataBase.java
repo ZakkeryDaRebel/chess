@@ -36,10 +36,6 @@ public class DataBase {
             var dropDbStatement = conn.prepareStatement("DROP DATABASE IF EXISTS chess");
             dropDbStatement.executeUpdate();
              */
-
-
-
-                conn.setCatalog("chess");
                 String createUserTable = """
                     CREATE TABLE IF NOT EXISTS user (
                         username VARCHAR(255) NOT NULL,
