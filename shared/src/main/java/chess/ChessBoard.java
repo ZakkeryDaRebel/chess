@@ -122,4 +122,8 @@ public class ChessBoard implements Cloneable {
         clone.board = clonedBoard;
         return clone;
     }
+
+    public ChessPiece[][] getBoard() {
+        return board;
+    }
 }

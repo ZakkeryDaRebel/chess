@@ -1,4 +1,5 @@
 import chess.*;
+import ui.GameBoardUI;
 
 import java.util.Scanner;
 
@@ -140,6 +141,7 @@ public class Main {
         System.out.println("~Implement Join Game~");
         System.out.println("GameID: " + gameID);
         System.out.println("Need to make sure the input is a valid integer");
+        printBoards();
     }
 
     static void observeGame() {
@@ -149,5 +151,12 @@ public class Main {
         System.out.println("~Implement Observe Game~");
         System.out.println("GameID: " + gameID);
         System.out.println("Need to make sure the input is a valid integer");
+        printBoards();
+    }
+
+    static void printBoards() {
+        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
+        GameBoardUI gameBoard = new GameBoardUI(newBoard);
+        gameBoard.printLettersWhite();
     }
 }
