@@ -98,8 +98,10 @@ public class Main {
     }
 
     static void invalidInput() {
-        System.out.println("\nInvalid input. Please input the number of the exact words of the option.");
-        System.out.println("For example: to access the help screen, please input '1' or 'help'");
+        System.out.println("\nInvalid input. If you are trying to select an option, Please input the number or the exact words of the option.");
+        System.out.println("  For example: to access the help screen, please input '1' or 'help'.");
+        System.out.println("If you are trying to join or observe a game, please make sure you only input the number of that game.");
+        System.out.println("  For example: to join the game with ID of '1', please only enter '1', no spaces or anything but the number");
     }
 
     static boolean loginUser() {
@@ -138,20 +140,34 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the gameID of the game you would like to join: ");
         String gameID = scan.nextLine();
-        System.out.println("~Implement Join Game~");
-        System.out.println("GameID: " + gameID);
-        System.out.println("Need to make sure the input is a valid integer");
-        printBoards();
+        try {
+            int gameNum = Integer.parseInt(gameID);
+            System.out.println("~Implement Join Game~");
+            System.out.println("GameID: " + gameID);
+            System.out.println("Need to make sure the input is a valid integer");
+            printBoards();
+            inGame();
+        } catch(NumberFormatException ex) {
+            invalidInput();
+        }
+
     }
 
     static void observeGame() {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
         String gameID = scan.nextLine();
-        System.out.println("~Implement Observe Game~");
-        System.out.println("GameID: " + gameID);
-        System.out.println("Need to make sure the input is a valid integer");
-        printBoards();
+        try {
+            int gameNum = Integer.parseInt(gameID);
+            System.out.println("~Implement Observe Game~");
+            System.out.println("GameID: " + gameID);
+            System.out.println("Made sure that they only pass in a valid integer for gameID, but still need to make sure there is a game with that gameID");
+            printBoards();
+            inGame();
+        } catch(NumberFormatException ex) {
+            invalidInput();
+        }
+
     }
 
     static void printBoards() {
@@ -161,5 +177,14 @@ public class Main {
         gameBoard.printWhiteSideBoard();
         System.out.println("\nBlack board: ");
         gameBoard.printBlackSideBoard();
+    }
+
+    static void inGame() {
+        Scanner scan = new Scanner(System.in);
+        String input = "start";
+        while(!input.equalsIgnoreCase("quit")) {
+            System.out.println("When you are ready to leave the game, please enter 'quit'");
+            input = scan.nextLine();
+        }
     }
 }
