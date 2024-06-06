@@ -157,6 +157,9 @@ public class Main {
     static void printBoards() {
         ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
         GameBoardUI gameBoard = new GameBoardUI(newBoard);
-        gameBoard.printLettersWhite();
+        System.out.println("White board: ");
+        gameBoard.printWhiteSideBoard();
+        System.out.println("\nBlack board: ");
+        gameBoard.printBlackSideBoard();
     }
 }
