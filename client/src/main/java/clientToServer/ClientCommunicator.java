@@ -25,6 +25,7 @@ public class ClientCommunicator {
             HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
             http.setRequestMethod(clientStrings.getRequestMethod());
             http.setDoOutput(true);
+            http.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
             try(OutputStream requestBody = http.getOutputStream();) {
                 // Write request body to OutputStream ...

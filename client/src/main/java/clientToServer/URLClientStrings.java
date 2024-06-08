@@ -4,10 +4,12 @@ public class URLClientStrings {
 
     String urlPath;
     String requestMethod;
+    String authToken;
 
-    public URLClientStrings(String path, String method) {
+    public URLClientStrings(String path, String method, String token) {
         urlPath = path;
         requestMethod = method;
+        authToken = token;
     }
 
     public String getUrlPath() {
@@ -16,5 +18,9 @@ public class URLClientStrings {
 
     public String getRequestMethod() {
         return requestMethod;
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 }

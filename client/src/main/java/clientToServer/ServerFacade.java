@@ -12,28 +12,29 @@ public class ServerFacade {
     ClientCommunicator communicator;
 
     public ServerFacade(int port) {
-        authToken = "";
+        authToken = null;
         communicator = new ClientCommunicator(port);
     }
 
     public RegisterResult registerUser(String username, String password, String email) {
         RegisterRequest request = new RegisterRequest(username, password, email);
-        URLClientStrings clientStrings = new URLClientStrings("/user", "POST");
+        URLClientStrings clientStrings = new URLClientStrings("/user", "POST", "");
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
         return new Gson().fromJson(reader, RegisterResult.class);
     }
 
     public LoginResult loginUser(String username, String password) {
         LoginRequest request = new LoginRequest(username, password);
-        URLClientStrings clientString = new URLClientStrings("/session", "POST");
+        URLClientStrings clientString = new URLClientStrings("/session", "POST", "");
         InputStreamReader reader = communicator.clientToServer(request, clientString);
         return new Gson().fromJson(reader, LoginResult.class);
     }
 
     public LogoutResult logoutUser() {
         LogoutRequest request = new LogoutRequest(authToken);
-        //LogoutResult result = communicator.clientTo(request);
-        return null;
+        URLClientStrings clientStrings = new URLClientStrings("/session", "DELETE", authToken);
+        InputStreamReader reader = communicator.clientToServer(request, clientStrings);
+        return new Gson().fromJson(reader, LogoutResult.class);
     }
 
     public CreateGameResult createGame(String gameName) {

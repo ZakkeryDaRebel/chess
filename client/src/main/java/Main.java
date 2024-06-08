@@ -104,7 +104,7 @@ public class Main {
         RegisterResult result = serverFacade.registerUser(username, password, email);
 
         if(result.getAuthToken() == null)
-            System.out.println("Error: Username already taken");
+            System.out.println(result.getMessage());
         else
             System.out.println("Successfully registered. You may now proceed to login.");
     }
@@ -122,16 +122,28 @@ public class Main {
         String username = scan.nextLine();
         System.out.println("Please enter your password: ");
         String password = scan.nextLine();
-        System.out.println("~Implement Login~");
-        System.out.println("Username: " + username + ", Password: " + password);
-        System.out.println("Since I haven't implemented Login yet, I am just telling the code that I am loggedIn");
-        return true;
+        LoginResult result = serverFacade.loginUser(username, password);
+
+        if(result.getAuthToken() == null) {
+            System.out.println(result.getMessage());
+            return false;
+        } else {
+            System.out.println("Successfully logged in.");
+            serverFacade.setAuthToken(result.getAuthToken());
+            return true;
+        }
     }
 
     static boolean logoutUser() {
-        System.out.println("\n~Implement Logout~");
-        System.out.println("Since I haven't implemented Logout yet, I am just telling the code that I am not loggedIn");
-        return false;
+        LogoutResult result = serverFacade.logoutUser();
+        if(result.getMessage() == null) {
+            System.out.println("Successfully logged out.");
+            serverFacade.setAuthToken(null);
+            return false;
+        } else {
+            System.out.println(result.getMessage());
+            return true;
+        }
     }
 
     static void createGame() {
