@@ -8,11 +8,9 @@ import java.io.InputStreamReader;
 
 public class ServerFacade {
 
-    String authToken;
     ClientCommunicator communicator;
 
     public ServerFacade(int port) {
-        authToken = null;
         communicator = new ClientCommunicator(port);
     }
 
@@ -30,28 +28,28 @@ public class ServerFacade {
         return new Gson().fromJson(reader, LoginResult.class);
     }
 
-    public LogoutResult logoutUser() {
+    public LogoutResult logoutUser(String authToken) {
         LogoutRequest request = new LogoutRequest(authToken);
         URLClientStrings clientStrings = new URLClientStrings("/session", "DELETE", authToken);
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
         return new Gson().fromJson(reader, LogoutResult.class);
     }
 
-    public CreateGameResult createGame(String gameName) {
+    public CreateGameResult createGame(String gameName, String authToken) {
         CreateGameRequest request = new CreateGameRequest(authToken, gameName);
         URLClientStrings clientStrings = new URLClientStrings("/game", "POST", authToken);
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
         return new Gson().fromJson(reader, CreateGameResult.class);
     }
 
-    public ListGamesResult listGames() {
+    public ListGamesResult listGames(String authToken) {
         ListGamesRequest request = new ListGamesRequest(authToken);
         URLClientStrings clientStrings = new URLClientStrings("/game", "GET", authToken);
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
         return new Gson().fromJson(reader, ListGamesResult.class);
     }
 
-    public JoinGameResult joinGame(Integer gameID, String playerColor) {
+    public JoinGameResult joinGame(Integer gameID, String playerColor, String authToken) {
         JoinGameRequest request = new JoinGameRequest(authToken, playerColor, gameID);
         URLClientStrings clientStrings = new URLClientStrings("/game", "PUT", authToken);
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
@@ -63,9 +61,5 @@ public class ServerFacade {
         URLClientStrings clientStrings = new URLClientStrings("/db", "DELETE", "");
         InputStreamReader reader = communicator.clientToServer(request, clientStrings);
         return new Gson().fromJson(reader, ClearAllResult.class);
-    }
-
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
     }
 }

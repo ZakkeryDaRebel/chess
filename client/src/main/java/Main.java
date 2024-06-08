@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Main {
 
     static ServerFacade serverFacade;
+    static String authToken;
 
     public static void main(String[] args) {
 
@@ -129,16 +130,16 @@ public class Main {
             return false;
         } else {
             System.out.println("Successfully logged in.");
-            serverFacade.setAuthToken(result.getAuthToken());
+            authToken = result.getAuthToken();
             return true;
         }
     }
 
     static boolean logoutUser() {
-        LogoutResult result = serverFacade.logoutUser();
+        LogoutResult result = serverFacade.logoutUser(authToken);
         if(result.getMessage() == null) {
             System.out.println("Successfully logged out.");
-            serverFacade.setAuthToken(null);
+            authToken = null;
             return false;
         } else {
             System.out.println(result.getMessage());
@@ -150,7 +151,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the game name you would like to create: ");
         String gameName = scan.nextLine();
-        CreateGameResult result = serverFacade.createGame(gameName);
+        CreateGameResult result = serverFacade.createGame(gameName, authToken);
         if(result.getGameID() == null) {
             System.out.println(result.getMessage());
         } else {
@@ -159,7 +160,7 @@ public class Main {
     }
 
     static void listGames() {
-        ListGamesResult result = serverFacade.listGames();
+        ListGamesResult result = serverFacade.listGames(authToken);
         if(result.getGames() == null) {
             System.out.println(result.getMessage());
         } else {
@@ -183,7 +184,7 @@ public class Main {
             if(!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
                 invalidInput();
             else {
-                JoinGameResult result = serverFacade.joinGame(gameNum, playerColor);
+                JoinGameResult result = serverFacade.joinGame(gameNum, playerColor, authToken);
                 if(result.getMessage() == null) {
                     System.out.println("Successfully joined game.");
                     printBoards();
@@ -203,7 +204,7 @@ public class Main {
         String gameID = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
-            JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR");
+            JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
             if(result.getMessage() == null) {
                 System.out.println("Successfully joined game.");
                 printBoards();
