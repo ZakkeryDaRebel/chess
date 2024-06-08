@@ -1,5 +1,5 @@
 import chess.*;
-import clientToServer.ServerFacade;
+import clienttoserver.ServerFacade;
 import model.GameData;
 import result.*;
 import ui.GameBoardUI;

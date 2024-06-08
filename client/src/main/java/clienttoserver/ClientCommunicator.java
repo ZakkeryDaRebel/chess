@@ -1,4 +1,4 @@
-package clientToServer;
+package clienttoserver;
 import com.google.gson.Gson;
 import request.*;
 
@@ -28,7 +28,7 @@ public class ClientCommunicator {
             http.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
             if(!clientStrings.getRequestMethod().equals("GET")) {
-                try (OutputStream requestBody = http.getOutputStream();) {
+                try (OutputStream requestBody = http.getOutputStream()) {
                     // Write request body to OutputStream ...
                     String json = new Gson().toJson(request);
                     requestBody.write(json.getBytes());

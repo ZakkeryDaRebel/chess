@@ -1,4 +1,4 @@
-package clientToServer;
+package clienttoserver;
 
 public class URLClientStrings {
 

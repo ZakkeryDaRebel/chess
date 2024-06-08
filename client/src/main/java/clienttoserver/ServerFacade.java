@@ -1,4 +1,4 @@
-package clientToServer;
+package clienttoserver;
 
 import com.google.gson.Gson;
 import request.*;
