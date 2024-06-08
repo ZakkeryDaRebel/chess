@@ -27,10 +27,12 @@ public class ClientCommunicator {
             http.setDoOutput(true);
             http.addRequestProperty("Authorization", clientStrings.getAuthToken());
 
-            try(OutputStream requestBody = http.getOutputStream();) {
-                // Write request body to OutputStream ...
-                String json = new Gson().toJson(request);
-                requestBody.write(json.getBytes());
+            if(!clientStrings.getRequestMethod().equals("GET")) {
+                try (OutputStream requestBody = http.getOutputStream();) {
+                    // Write request body to OutputStream ...
+                    String json = new Gson().toJson(request);
+                    requestBody.write(json.getBytes());
+                }
             }
 
             // Make the request

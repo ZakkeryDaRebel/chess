@@ -1,8 +1,10 @@
 import chess.*;
 import clientToServer.ServerFacade;
+import model.GameData;
 import result.*;
 import ui.GameBoardUI;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -150,14 +152,26 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the game name you would like to create: ");
         String gameName = scan.nextLine();
-        System.out.println("~Implement Create Game~");
-        System.out.println("Game Name: " + gameName);
-        System.out.println("Since I haven't implemented Create Game yet, list games won't show anything");
+        CreateGameResult result = serverFacade.createGame(gameName);
+        if(result.getGameID() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameID());
+        }
     }
 
     static void listGames() {
-        System.out.println("\n~Implement List Games~");
-        System.out.println("Since I haven't implemented List Games yet, there is nothing to list");
+        ListGamesResult result = serverFacade.listGames();
+        if(result.getGames() == null) {
+            System.out.println(result.getMessage());
+        } else {
+            System.out.println("List of games: ");
+            for(GameData game : result.getGames()) {
+                System.out.println("Game ID: " + game.gameID() + ", Game Name: " + game.gameName());
+                System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
+                System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
+            }
+        }
     }
 
     static void joinGame() {

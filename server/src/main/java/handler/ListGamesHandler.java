@@ -30,7 +30,7 @@ public class ListGamesHandler implements Route {
             handlerMethods.isNullString(token);
             listRequest = new ListGamesRequest(token);
         } catch(DataAccessException ex) {
-            return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request"));
+            return handlerMethods.getResponse(response,400, new JoinGameResult(null, "Error: bad request. "));
         }
         try {
             database.getAuth(token);

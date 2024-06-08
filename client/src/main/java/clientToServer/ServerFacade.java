@@ -38,13 +38,17 @@ public class ServerFacade {
     }
 
     public CreateGameResult createGame(String gameName) {
-        CreateGameRequest request = new CreateGameRequest(gameName, authToken);
-        return null;
+        CreateGameRequest request = new CreateGameRequest(authToken, gameName);
+        URLClientStrings clientStrings = new URLClientStrings("/game", "POST", authToken);
+        InputStreamReader reader = communicator.clientToServer(request, clientStrings);
+        return new Gson().fromJson(reader, CreateGameResult.class);
     }
 
     public ListGamesResult listGames() {
         ListGamesRequest request = new ListGamesRequest(authToken);
-        return null;
+        URLClientStrings clientStrings = new URLClientStrings("/game", "GET", authToken);
+        InputStreamReader reader = communicator.clientToServer(request, clientStrings);
+        return new Gson().fromJson(reader, ListGamesResult.class);
     }
 
     public void joinGame(Integer gameID, String playerColor) {
