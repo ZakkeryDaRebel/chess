@@ -1,4 +1,5 @@
 import chess.*;
+import clientToServer.ServerFacade;
 import result.*;
 import ui.GameBoardUI;
 
@@ -101,14 +102,11 @@ public class Main {
         System.out.println("Please enter your email: ");
         String email = scan.nextLine();
         RegisterResult result = serverFacade.registerUser(username, password, email);
-        try {
+
+        if(result.getAuthToken() == null)
+            System.out.println("Error: Username already taken");
+        else
             System.out.println("Successfully registered. You may now proceed to login.");
-        } catch(Exception ex)  {
-            System.out.println(result.getMessage());
-        }
-        /*System.out.println("~Implement Register~");
-        System.out.println("Username: " + username + ", Password: " + password + ", Email: " + email);
-         */
     }
 
     static void invalidInput() {
