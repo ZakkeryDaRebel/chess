@@ -51,12 +51,18 @@ public class ServerFacade {
         return new Gson().fromJson(reader, ListGamesResult.class);
     }
 
-    public void joinGame(Integer gameID, String playerColor) {
+    public JoinGameResult joinGame(Integer gameID, String playerColor) {
         JoinGameRequest request = new JoinGameRequest(authToken, playerColor, gameID);
+        URLClientStrings clientStrings = new URLClientStrings("/game", "PUT", authToken);
+        InputStreamReader reader = communicator.clientToServer(request, clientStrings);
+        return new Gson().fromJson(reader, JoinGameResult.class);
     }
 
-    public void clear() {
+    public ClearAllResult clear() {
         ClearAllRequest request = new ClearAllRequest();
+        URLClientStrings clientStrings = new URLClientStrings("/db", "DELETE", "");
+        InputStreamReader reader = communicator.clientToServer(request, clientStrings);
+        return new Gson().fromJson(reader, ClearAllResult.class);
     }
 
     public void setAuthToken(String authToken) {

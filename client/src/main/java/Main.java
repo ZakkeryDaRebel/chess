@@ -3,8 +3,6 @@ import clientToServer.ServerFacade;
 import model.GameData;
 import result.*;
 import ui.GameBoardUI;
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -178,17 +176,25 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter the gameID of the game you would like to join: ");
         String gameID = scan.nextLine();
+        System.out.println("Please enter which color you would like to play as (WHITE or BLACK)");
+        String playerColor = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
-            System.out.println("~Implement Join Game~");
-            System.out.println("GameID: " + gameID);
-            System.out.println("Need to make sure the input is a valid integer");
-            printBoards();
-            inGame();
+            if(!(playerColor.equalsIgnoreCase("WHITE") || playerColor.equalsIgnoreCase("BLACK")))
+                invalidInput();
+            else {
+                JoinGameResult result = serverFacade.joinGame(gameNum, playerColor);
+                if(result.getMessage() == null) {
+                    System.out.println("Successfully joined game.");
+                    printBoards();
+                    inGame();
+                } else {
+                    System.out.println(result.getMessage());
+                }
+            }
         } catch(NumberFormatException ex) {
             invalidInput();
         }
-
     }
 
     static void observeGame() {
@@ -197,9 +203,14 @@ public class Main {
         String gameID = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
-            System.out.println("~Implement Observe Game~");
-            System.out.println("GameID: " + gameID);
-            System.out.println("Made sure that they only pass in a valid integer for gameID, but still need to make sure there is a game with that gameID");
+            JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR");
+            if(result.getMessage() == null) {
+                System.out.println("Successfully joined game.");
+                printBoards();
+                inGame();
+            } else {
+                System.out.println(result.getMessage());
+            }
             printBoards();
             inGame();
         } catch(NumberFormatException ex) {
