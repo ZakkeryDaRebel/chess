@@ -1,13 +1,20 @@
 import chess.*;
+import result.*;
 import ui.GameBoardUI;
 
 import java.util.Scanner;
 
 public class Main {
+
+    static ServerFacade serverFacade;
+
     public static void main(String[] args) {
 
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         System.out.println("♕ 240 Chess Client: " + piece);
+
+        //int port =
+        serverFacade = new ServerFacade(8080);
 
         Scanner scan = new Scanner(System.in);
         String input = "start";
@@ -93,8 +100,15 @@ public class Main {
         String password = scan.nextLine();
         System.out.println("Please enter your email: ");
         String email = scan.nextLine();
-        System.out.println("~Implement Register~");
+        RegisterResult result = serverFacade.registerUser(username, password, email);
+        try {
+            System.out.println("Successfully registered. You may now proceed to login.");
+        } catch(Exception ex)  {
+            System.out.println(result.getMessage());
+        }
+        /*System.out.println("~Implement Register~");
         System.out.println("Username: " + username + ", Password: " + password + ", Email: " + email);
+         */
     }
 
     static void invalidInput() {
