@@ -38,6 +38,7 @@ public class ServerFacadeTests {
     public void registerNewUser() {
         RegisterResult result = facade.registerUser("username", "password", "email");
         Assertions.assertNull(result.getMessage());
+        authToken = result.getAuthToken();
     }
 
     @Test
@@ -64,7 +65,7 @@ public class ServerFacadeTests {
 
     @Test
     public void loginSuccessful() {
-        registerNewUser();
+        logoutSuccessful();
         LoginResult result = facade.loginUser("username", "password");
         Assertions.assertNull(result.getMessage());
         authToken = result.getAuthToken();
@@ -78,14 +79,14 @@ public class ServerFacadeTests {
 
     @Test
     public void loginWrongPassword() {
-        registerNewUser();
+        logoutSuccessful();
         LoginResult result = facade.loginUser("username", "1234");
         Assertions.assertNotNull(result.getMessage());
     }
 
     @Test
     public void logoutSuccessful() {
-        loginSuccessful();
+        registerNewUser();
         LogoutResult result = facade.logoutUser(authToken);
         Assertions.assertNull(result.getMessage());
     }
@@ -99,7 +100,7 @@ public class ServerFacadeTests {
 
     @Test
     public void createGame() {
-        loginSuccessful();
+        registerNewUser();
         CreateGameResult result = facade.createGame("New Game", authToken);
         Assertions.assertNull(result.getMessage());
     }
@@ -113,7 +114,7 @@ public class ServerFacadeTests {
 
     @Test
     public void createGameWithoutLoggingIn() {
-        registerNewUser();
+        logoutSuccessful();
         CreateGameResult result = facade.createGame("New Game", "abcdefghijklmnopqrstuvwxyz");
         Assertions.assertNotNull(result.getMessage());
     }

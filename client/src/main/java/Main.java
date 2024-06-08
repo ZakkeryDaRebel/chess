@@ -30,7 +30,7 @@ public class Main {
                 helpExplainOptions(loggedIn);
             } else if(!loggedIn) {
                 if(input.equalsIgnoreCase("register") || input.equals("3")) {
-                    registerNewUser();
+                    loggedIn = registerNewUser();
                 } else if(input.equalsIgnoreCase("login") || input.equals("4")) {
                     loggedIn = loginUser();
                 } else {
@@ -94,7 +94,7 @@ public class Main {
         }
     }
 
-    static void registerNewUser() {
+    static boolean registerNewUser() {
         Scanner scan = new Scanner(System.in);
         System.out.println("\nPlease enter your username: ");
         String username = scan.nextLine();
@@ -104,10 +104,14 @@ public class Main {
         String email = scan.nextLine();
         RegisterResult result = serverFacade.registerUser(username, password, email);
 
-        if(result.getAuthToken() == null)
+        if(result.getAuthToken() == null) {
             System.out.println(result.getMessage());
-        else
-            System.out.println("Successfully registered. You may now proceed to login.");
+            return false;
+        } else {
+            System.out.println("Successfully registered.");
+            authToken = result.getAuthToken();
+            return true;
+        }
     }
 
     static void invalidInput() {
@@ -212,8 +216,6 @@ public class Main {
             } else {
                 System.out.println(result.getMessage());
             }
-            printBoards();
-            inGame();
         } catch(NumberFormatException ex) {
             invalidInput();
         }
