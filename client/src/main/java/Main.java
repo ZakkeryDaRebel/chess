@@ -2,7 +2,8 @@ import chess.*;
 import clienttoserver.ServerFacade;
 import model.GameData;
 import result.*;
-import ui.GameBoardUI;
+import ui.GamePlayUI;
+
 import java.util.Scanner;
 
 public class Main {
@@ -22,7 +23,7 @@ public class Main {
         String input = "start";
         boolean loggedIn = false;
 
-        while(!(input.equalsIgnoreCase("quit") || input.equals("2"))) {
+        while(!(input.equalsIgnoreCase("quit") || (input.equals("2") && !loggedIn))) {
             System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             if(input.equals("start")) {
                 chessClientStartUp();
@@ -37,15 +38,15 @@ public class Main {
                     invalidInput();
                 }
             } else { //loggedIn = true
-                if(input.equalsIgnoreCase("logout") || input.equals("3")) {
+                if(input.equalsIgnoreCase("logout") || input.equals("2")) {
                     loggedIn = logoutUser();
-                } else if(input.equalsIgnoreCase("create game") || input.equals("4")) {
+                } else if(input.equalsIgnoreCase("create game") || input.equals("3")) {
                     createGame();
-                } else if(input.equalsIgnoreCase("list games") || input.equals("5")) {
+                } else if(input.equalsIgnoreCase("list games") || input.equals("4")) {
                     listGames();
-                } else if(input.equalsIgnoreCase("play game") || input.equals("6")) {
+                } else if(input.equalsIgnoreCase("play game") || input.equals("5")) {
                     joinGame();
-                } else if(input.equalsIgnoreCase("observe game") || input.equals("7")) {
+                } else if(input.equalsIgnoreCase("observe game") || input.equals("6")) {
                     observeGame();
                 } else {
                     invalidInput();
@@ -66,31 +67,31 @@ public class Main {
 
     static void listOptions(boolean loggedIn) {
         System.out.println("\n 1. Help");
-        System.out.println(" 2. Quit");
         if(!loggedIn) {
+            System.out.println(" 2. Quit");
             System.out.println(" 3. Register");
             System.out.println(" 4. Login");
         } else {
-            System.out.println(" 3. Logout");
-            System.out.println(" 4. Create Game");
-            System.out.println(" 5. List Games");
-            System.out.println(" 6. Play Game");
-            System.out.println(" 7. Observe Game");
+            System.out.println(" 2. Logout");
+            System.out.println(" 3. Create Game");
+            System.out.println(" 4. List Games");
+            System.out.println(" 5. Play Game");
+            System.out.println(" 6. Observe Game");
         }
     }
 
     static void helpExplainOptions(boolean loggedIn) {
         System.out.println("\nEntering 1 or help will bring up this explanation again.");
-        System.out.println("Entering 2 or quit will close down the program");
         if(!loggedIn) {
+            System.out.println("Entering 2 or quit will close down the program");
             System.out.println("Entering 3 or register will allow you to create a new user, you just need to input a username, password, and email.");
             System.out.println("Entering 4 or login will allow you to login an existing user, you just need to input your username and password.");
         } else {
-            System.out.println("Entering 3 or logout will allow you to logout, no need to input anything.");
-            System.out.println("Entering 4 or create game will allow you to create a new game, you just need to input a game name.");
-            System.out.println("Entering 5 or list games will allow you to see all the created games.");
-            System.out.println("Entering 6 or play game will allow you to join a game to play, you just need to input the gameID and team color you want to play.");
-            System.out.println("Entering 7 or observe game will allow you to join a game to observe, you just need to input the gameID you want to watch.");
+            System.out.println("Entering 2 or logout will allow you to logout, no need to input anything.");
+            System.out.println("Entering 3 or create game will allow you to create a new game, you just need to input a game name.");
+            System.out.println("Entering 4 or list games will allow you to see all the created games.");
+            System.out.println("Entering 5 or play game will allow you to join a game to play, you just need to input the gameID and team color you want to play.");
+            System.out.println("Entering 6 or observe game will allow you to join a game to observe, you just need to input the gameID you want to watch.");
         }
     }
 
@@ -170,7 +171,7 @@ public class Main {
         } else {
             System.out.println("List of games: ");
             for(GameData game : result.getGames()) {
-                System.out.println("Game ID: " + game.gameID() + ", Game Name: " + game.gameName());
+                System.out.println(game.gameID() + ". Game Name: " + game.gameName());
                 System.out.println("  White Username: " + ((game.whiteUsername() == null) ? "<Available>" : game.whiteUsername()));
                 System.out.println("  Black Username: " + ((game.blackUsername() == null) ? "<Available>" : game.blackUsername()) + "\n");
             }
@@ -179,7 +180,7 @@ public class Main {
 
     static void joinGame() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the gameID of the game you would like to join: ");
+        System.out.println("\nPlease enter the number of the game you would like to join: ");
         String gameID = scan.nextLine();
         System.out.println("Please enter which color you would like to play as (WHITE or BLACK)");
         String playerColor = scan.nextLine();
@@ -190,9 +191,9 @@ public class Main {
             else {
                 JoinGameResult result = serverFacade.joinGame(gameNum, playerColor, authToken);
                 if(result.getMessage() == null) {
-                    System.out.println("Successfully joined game.");
-                    printBoards();
-                    inGame();
+                    GamePlayUI gameUI = new GamePlayUI(gameNum, playerColor);
+                    if(gameUI.tryConnectToGame())
+                        gameUI.inGame(false);
                 } else {
                     System.out.println(result.getMessage());
                 }
@@ -204,15 +205,17 @@ public class Main {
 
     static void observeGame() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("\nPlease enter the gameID of the game you would like to observe: ");
+        System.out.println("\nPlease enter the number of the game you would like to observe: ");
         String gameID = scan.nextLine();
         try {
             int gameNum = Integer.parseInt(gameID);
+
+            //I might need to get rid of this joinGame command
             JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
             if(result.getMessage() == null) {
-                System.out.println("Successfully joined game.");
-                printBoards();
-                inGame();
+                GamePlayUI gameUI = new GamePlayUI(gameNum, "SPECTATOR");
+                if(gameUI.tryConnectToGame())
+                    gameUI.inGame(true);
             } else {
                 System.out.println(result.getMessage());
             }
@@ -220,23 +223,5 @@ public class Main {
             invalidInput();
         }
 
-    }
-
-    static void printBoards() {
-        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
-        GameBoardUI gameBoard = new GameBoardUI(newBoard);
-        System.out.println("White board: ");
-        gameBoard.printWhiteSideBoard();
-        System.out.println("\nBlack board: ");
-        gameBoard.printBlackSideBoard();
-    }
-
-    static void inGame() {
-        Scanner scan = new Scanner(System.in);
-        String input = "start";
-        while(!input.equalsIgnoreCase("quit")) {
-            System.out.println("When you are ready to leave the game, please enter 'quit'");
-            input = scan.nextLine();
-        }
     }
 }
