@@ -1,16 +1,18 @@
 package dataaccess;
 
 import model.*;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.eclipse.jetty.websocket.api.Session;
 
 public class DataBase {
 
     AuthDAO authDataBase;
     UserDAO userDataBase;
     GameDAO gameDataBase;
+    HashMap<Integer, ArrayList<Session>> sessionMap;
 
     public DataBase() {
         /*authDataBase = new MemoryAuthDAO();
@@ -22,6 +24,8 @@ public class DataBase {
         authDataBase = new SQLAuthDAO();
         userDataBase = new SQLUserDAO();
         gameDataBase = new SQLGameDAO();
+
+        sessionMap = new HashMap<>();
     }
 
     public void createTables() {
@@ -177,5 +181,21 @@ public class DataBase {
 
     public void updateGame(GameData newGame) throws DataAccessException{
         gameDataBase.updateGame(newGame.gameID(), newGame);
+    }
+
+    public void addSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        sessionList.add(session);
+        sessionMap.put(gameID, sessionList);
+    }
+
+    public ArrayList<Session> getSessionList(Integer gameID) {
+        return sessionMap.get(gameID);
+    }
+
+    public void removeSession(Integer gameID, Session session) {
+        ArrayList<Session> sessionList = sessionMap.get(gameID);
+        sessionList.remove(session);
+        sessionMap.put(gameID, sessionList);
     }
 }

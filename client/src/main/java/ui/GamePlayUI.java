@@ -25,6 +25,10 @@ public class GamePlayUI extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
+    public void onMessage(String message) {
+        System.out.println(message);
+    }
+
 
 
     public boolean tryConnectToGame() {
@@ -63,16 +67,41 @@ public class GamePlayUI extends Endpoint {
                     listGameExplanations();
                 } else if (input.equals("2") || input.equalsIgnoreCase("redraw chess board") || input.equals("redraw")) {
                     System.out.println("Need to implement Redraw Chess Board");
+                    try {
+                        send("Redraw Chess Board Message");
+                    } catch(Exception ex) {
+                        System.out.println("Redraw Chess Board Message Sending Error");
+                    }
                 } else if (input.equals("3") || input.equalsIgnoreCase("leave game") || input.equals("leave")) {
                     System.out.println("Need to implement Leave Game");
                     System.out.println("For now, I just will have you leave the game, but your username stays");
+                    try {
+                        send("Leave Game Message");
+                    } catch(Exception ex) {
+                        System.out.println("Leave Game Message Sending Error");
+                    }
                     stop = true;
                 } else if (input.equals("4") || input.equalsIgnoreCase("make move")) {
                     System.out.println("Need to implement make move");
+                    try {
+                        send("Make Move Message");
+                    } catch(Exception ex) {
+                        System.out.println("Make Move Message Sending Error");
+                    }
                 } else if (input.equals("5") || input.equalsIgnoreCase("resign")) {
                     System.out.println("Need to inplement resign");
+                    try {
+                        send("Resign Message");
+                    } catch(Exception ex) {
+                        System.out.println("Resign Message Sending Error");
+                    }
                 } else if (input.equals("6") || input.equalsIgnoreCase("highlight legal moves") || input.equalsIgnoreCase("highlight")) {
                     System.out.println("Need to implement highlight legal moves");
+                    try {
+                        send("Highlight Legal Moves Message");
+                    } catch(Exception ex) {
+                        System.out.println("Highlight Legal Moves Message Sending Error");
+                    }
                 }
             }
         } else {
