@@ -46,7 +46,7 @@ public class Server {
     public void onMessage(Session session, String message) throws Exception {
         System.out.printf("Received: %s", message);
         session.getRemote().sendString("WebSocket response: " + message);
-
+        /*
         try {
             UserGameCommand command = Serializer.fromJson(message, UserGameCommand.class);
 
@@ -68,8 +68,6 @@ public class Server {
             ex.printStackTrace();
             sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
         }
-
+        */
     }
-
-
 }
