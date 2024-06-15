@@ -2,20 +2,24 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessPiece;
+import com.google.gson.Gson;
+import websocket.commands.*;
+import websocket.messages.*;
 import java.util.Scanner;
 import javax.websocket.*;
 import java.net.URI;
-import java.util.Scanner;
 
 public class GamePlayUI extends Endpoint {
 
     private Integer gameID;
     private String teamColor;
     public Session session;
+    private String authToken;
 
-    public GamePlayUI(Integer gameNum, String teamColor) {
+    public GamePlayUI(Integer gameNum, String teamColor, String token) {
         gameID = gameNum;
         this.teamColor = teamColor;
+        authToken = token;
     }
 
     public void send(String msg) throws Exception {
@@ -25,10 +29,6 @@ public class GamePlayUI extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
-    public void onMessage(String message) {
-        System.out.println(message);
-    }
-
 
 
     public boolean tryConnectToGame() {
@@ -36,10 +36,27 @@ public class GamePlayUI extends Endpoint {
             URI uri = new URI("ws://localhost:8080/ws");
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, uri);
+            String json = new Gson().toJson(new ConnectCommand(authToken, gameID));
+            send(json);
 
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+
                 public void onMessage(String message) {
-                    System.out.println(message);
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    switch(serverMessage.getServerMessageType()) {
+                        case NOTIFICATION -> {
+                            NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
+                            System.out.println(notification.getMessage());
+                        }
+                        case ERROR -> {
+                            ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                            System.out.println(errorMessage.getErrorMessage());
+                        }
+                        case LOAD_GAME -> {
+                            LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
+                            System.out.println("Load Game Message, GameID: " + loadMessage.getGame().gameID());
+                        }
+                    }
                 }
             });
         } catch(Exception ex) {
@@ -68,7 +85,7 @@ public class GamePlayUI extends Endpoint {
                 } else if (input.equals("2") || input.equalsIgnoreCase("redraw chess board") || input.equals("redraw")) {
                     System.out.println("Need to implement Redraw Chess Board");
                     try {
-                        send("Redraw Chess Board Message");
+                        //send("Redraw Chess Board Message");
                     } catch(Exception ex) {
                         System.out.println("Redraw Chess Board Message Sending Error");
                     }
@@ -76,7 +93,8 @@ public class GamePlayUI extends Endpoint {
                     System.out.println("Need to implement Leave Game");
                     System.out.println("For now, I just will have you leave the game, but your username stays");
                     try {
-                        send("Leave Game Message");
+                        String json = new Gson().toJson(new LeaveGameCommand(authToken, gameID));
+                        send(json);
                     } catch(Exception ex) {
                         System.out.println("Leave Game Message Sending Error");
                     }

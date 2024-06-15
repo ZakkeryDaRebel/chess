@@ -185,6 +185,8 @@ public class DataBase {
 
     public void addSession(Integer gameID, Session session) {
         ArrayList<Session> sessionList = sessionMap.get(gameID);
+        if(sessionList == null)
+            sessionList = new ArrayList<>();
         sessionList.add(session);
         sessionMap.put(gameID, sessionList);
     }

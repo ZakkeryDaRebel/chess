@@ -191,7 +191,7 @@ public class Main {
             else {
                 JoinGameResult result = serverFacade.joinGame(gameNum, playerColor, authToken);
                 if(result.getMessage() == null) {
-                    GamePlayUI gameUI = new GamePlayUI(gameNum, playerColor);
+                    GamePlayUI gameUI = new GamePlayUI(gameNum, playerColor, authToken);
                     if(gameUI.tryConnectToGame())
                         gameUI.inGame(false);
                 } else {
@@ -213,7 +213,7 @@ public class Main {
             //I might need to get rid of this joinGame command
             JoinGameResult result = serverFacade.joinGame(gameNum, "SPECTATOR", authToken);
             if(result.getMessage() == null) {
-                GamePlayUI gameUI = new GamePlayUI(gameNum, "SPECTATOR");
+                GamePlayUI gameUI = new GamePlayUI(gameNum, "SPECTATOR", authToken);
                 if(gameUI.tryConnectToGame())
                     gameUI.inGame(true);
             } else {
