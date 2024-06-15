@@ -145,7 +145,7 @@ public class Server {
         ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
         for(Session sessionFromList : sessionList) {
             if(!sessionFromList.equals(session))
-                sendMessage(sessionFromList.getRemote(), new NotificationMessage(username + " has left the game"));
+                notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has left the game"), "NOT_ROOT");
         }
     }
 
