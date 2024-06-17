@@ -5,7 +5,7 @@ import chess.ChessPiece;
 
 public class GameBoardUI {
 
-    private ChessPiece[][] board;
+    private final ChessPiece[][] board;
     private final String[] letters;
 
     public GameBoardUI(ChessPiece[][] board) {
@@ -168,13 +168,5 @@ public class GameBoardUI {
         } else {
             System.out.print(" K ");
         }
-    }
-
-    public ChessPiece[][] getBoard() {
-        return board;
-    }
-
-    public void setBoard(ChessPiece[][] board) {
-        this.board = board;
     }
 }

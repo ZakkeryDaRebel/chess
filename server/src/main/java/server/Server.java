@@ -31,11 +31,6 @@ public class Server {
 
         Spark.webSocket("/ws", Server.class);
 
-        //Create DAOs to pass through
-        //database = new DataBase();
-
-
-
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res) -> (new RegisterHandler(database)).handle(req,res));
         Spark.post("/session", (req, res) -> (new LoginHandler(database)).handle(req,res));
@@ -182,16 +177,18 @@ public class Server {
     }
 
     public void notifySessions(ArrayList<Session> sessionList, Session rootUser, ServerMessage message, String notifyWay) {
-        if(notifyWay.equals("ROOT"))
-            sendMessage(rootUser.getRemote(), message);
-        else if(notifyWay.equals("NOT_ROOT")) {
-            for(Session session : sessionList) {
-                if(!session.equals(rootUser))
-                    sendMessage(session.getRemote(), message);
+        switch (notifyWay) {
+            case "ROOT" -> sendMessage(rootUser.getRemote(), message);
+            case "NOT_ROOT" -> {
+                for (Session session : sessionList) {
+                    if (!session.equals(rootUser))
+                        sendMessage(session.getRemote(), message);
+                }
             }
-        } else if(notifyWay.equals("ALL")) {
-            for(Session session : sessionList) {
-                sendMessage(session.getRemote(), message);
+            case "ALL" -> {
+                for (Session session : sessionList) {
+                    sendMessage(session.getRemote(), message);
+                }
             }
         }
     }

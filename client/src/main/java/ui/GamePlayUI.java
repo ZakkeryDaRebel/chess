@@ -1,8 +1,9 @@
 package ui;
 
-import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPiece;
+import chess.ChessPosition;
 import com.google.gson.Gson;
 import model.GameData;
 import websocket.commands.*;
@@ -13,10 +14,10 @@ import java.net.URI;
 
 public class GamePlayUI extends Endpoint {
 
-    private Integer gameID;
-    private String teamColor;
+    private final Integer gameID;
+    private final String teamColor;
     public Session session;
-    private String authToken;
+    private final String authToken;
     private GameData gameData;
     private boolean loadedGame;
 
@@ -44,32 +45,29 @@ public class GamePlayUI extends Endpoint {
             this.session = container.connectToServer(this, uri);
             String json = new Gson().toJson(new ConnectCommand(authToken, gameID));
 
-            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-                @Override
-                public void onMessage(String message) {
-                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                    switch(serverMessage.getServerMessageType()) {
-                        case NOTIFICATION -> {
-                            NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
-                            System.out.println(notification.getMessage());
-                            editGameData(notification.getMessage());
-                        }
-                        case ERROR -> {
-                            ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-                            errorFormat();
-                            System.out.println(errorMessage.getErrorMessage());
-                            normalFormat();
-                        }
-                        case LOAD_GAME -> {
-                            LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
-                            gameData = loadMessage.getGame();
-                            if(!loadedGame) {
-                                printBoards();
-                                listGameOptions();
-                                loadedGame = true;
-                            } else {
-                                System.out.println("An update has been made, please refresh the board");
-                            }
+            this.session.addMessageHandler((MessageHandler.Whole<String>) message -> {
+                ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                switch(serverMessage.getServerMessageType()) {
+                    case NOTIFICATION -> {
+                        NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
+                        System.out.println(notification.getMessage());
+                        editGameData(notification.getMessage());
+                    }
+                    case ERROR -> {
+                        ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                        errorFormat();
+                        System.out.println(errorMessage.getErrorMessage());
+                        normalFormat();
+                    }
+                    case LOAD_GAME -> {
+                        LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
+                        gameData = loadMessage.getGame();
+                        if(!loadedGame) {
+                            printBoards();
+                            listGameOptions();
+                            loadedGame = true;
+                        } else {
+                            System.out.println("An update has been made, please refresh the board");
                         }
                     }
                 }
@@ -84,7 +82,7 @@ public class GamePlayUI extends Endpoint {
     public void  inGame(boolean isObserver) {
         System.out.println("\nSuccessfully joined game.");
         Scanner scan = new Scanner(System.in);
-        String input = "start";
+        String input;
         boolean stop = false;
 
         //printBoards();
@@ -106,12 +104,7 @@ public class GamePlayUI extends Endpoint {
                     }
                     break;
                 } else if (input.equals("4") || input.equalsIgnoreCase("make move") || input.equalsIgnoreCase("move")) {
-                    System.out.println("Need to implement make move");
-                    try {
-                        send("Make Move Message");
-                    } catch(Exception ex) {
-                        System.out.println("Make Move Message Sending Error");
-                    }
+                    makeMove();
                 } else if (input.equals("5") || input.equalsIgnoreCase("resign")) {
                     try {
                         String json = new Gson().toJson(new ResignCommand(authToken, gameID));
@@ -208,13 +201,13 @@ public class GamePlayUI extends Endpoint {
         String username;
         GameData newGame;
         if(message.endsWith("joined the game as White")) {
-            username = message.substring(0,message.length()-25);
+            username = getUsername(message, 25);
             newGame = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(),gameData.game());
         } else if(message.endsWith("joined the game as Black")) {
-            username = message.substring(0,message.length()-25);
+            username = getUsername(message, 25);
             newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
         } else if(message.endsWith(" has left the game")) {
-            username = message.substring(0,message.length()-18);
+            username = getUsername(message, 18);
             if(gameData.whiteUsername().equals(username))
                 newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game());
             else if(gameData.blackUsername().equals(username))
@@ -229,6 +222,89 @@ public class GamePlayUI extends Endpoint {
         else
             return;
         gameData = newGame;
+    }
+
+    public String getUsername(String message, int cutOffAmount) {
+        return message.substring(0,message.length()-cutOffAmount);
+    }
+
+    public void makeMove() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please input starting position");
+        String startPos = scan.nextLine();
+        System.out.println("Please input end position");
+        String endPos = scan.nextLine();
+
+        int startRow;
+        int startCol;
+        int endRow;
+        int endCol;
+
+        try {
+            startRow = Integer.parseInt(String.valueOf(startPos.charAt(1)));
+            endRow = Integer.parseInt(String.valueOf(endPos.charAt(1)));
+        } catch(Exception ex) {
+            System.out.println("Invalid move");
+            return;
+        }
+
+        switch (startPos.charAt(0)) {
+            case 'a' -> startCol = 1;
+            case 'b' -> startCol = 2;
+            case 'c' -> startCol = 3;
+            case 'd' -> startCol = 4;
+            case 'e' -> startCol = 5;
+            case 'f' -> startCol = 6;
+            case 'g' -> startCol = 7;
+            case 'h' -> startCol = 8;
+            default -> {
+                System.out.println("Invalid move");
+                return;
+            }
+        }
+
+        switch(endPos.charAt(0)) {
+            case 'a' -> endCol = 1;
+            case 'b' -> endCol = 2;
+            case 'c' -> endCol = 3;
+            case 'd' -> endCol = 4;
+            case 'e' -> endCol = 5;
+            case 'f' -> endCol = 6;
+            case 'g' -> endCol = 7;
+            case 'h' -> endCol = 8;
+            default -> {
+                System.out.println("Invalid move");
+                return;
+            }
+        }
+
+        String promotionInput;
+        ChessPiece.PieceType pawnPromotion;
+        if((gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)).getPieceType() == ChessPiece.PieceType.PAWN) && (endRow == 8)) {
+            System.out.println("Please input pawn promotion (Queen, Rook, Bishop, or Knight)");
+            promotionInput = scan.nextLine();
+            if(promotionInput.equalsIgnoreCase("QUEEN"))
+                pawnPromotion = ChessPiece.PieceType.QUEEN;
+            else if(promotionInput.equalsIgnoreCase("ROOK"))
+                pawnPromotion = ChessPiece.PieceType.ROOK;
+            else if(promotionInput.equalsIgnoreCase("BISHOP"))
+                pawnPromotion = ChessPiece.PieceType.BISHOP;
+            else if(promotionInput.equalsIgnoreCase("KNIGHT"))
+                pawnPromotion = ChessPiece.PieceType.KNIGHT;
+            else {
+                System.out.println("Invalid move");
+                return;
+            }
+        } else
+            pawnPromotion = null;
+
+        try {
+            ChessMove move = new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(endRow, endCol), pawnPromotion);
+            String json = new Gson().toJson(new MakeMoveCommand(authToken, gameID, move));
+            send(json);
+        } catch(Exception ex) {
+            System.out.println("Make Move Message Sending Error");
+        }
     }
 
     public void errorFormat() {
