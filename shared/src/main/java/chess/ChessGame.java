@@ -97,25 +97,25 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         if(isGameOver())
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Game is over, no more moves can be made");
 
         if(move == null)
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move");
 
         //First check to see if the move is valid
         ChessPosition checkPos = move.getEndPosition();
         if((checkPos.getRow() < 1) || (checkPos.getRow() > 8) || (checkPos.getColumn() < 1) || (checkPos.getColumn() > 8)) {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move (move is off the board)");
         }
         //Get a copy of the piece at the starting position
         ChessBoard moveBoard = getCopy();
         ChessPiece piece = moveBoard.getPiece(move.getStartPosition());
 
         if(moveBoard.getPiece(move.getStartPosition()) == null)
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("There is no piece at the starting position");
 
         if(!checkCase && (moveBoard.getPiece(move.getStartPosition()).getTeamColor() != colorTurn))
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("It is not your turn");
 
 
         if(piece.pieceMoves(moveBoard, move.getStartPosition()).contains(move)) {
@@ -131,7 +131,7 @@ public class ChessGame {
                 moveBoard.addPiece(move.getEndPosition(), new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
             }
         } else {
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Not a valid move for this piece");
         }
 
         setBoard(moveBoard);
@@ -142,7 +142,7 @@ public class ChessGame {
                 gameOver = true;
             }
         } else
-            throw new InvalidMoveException();
+            throw new InvalidMoveException("Invalid move, this move will put you in check");
         checkCase = false;
     }
 
