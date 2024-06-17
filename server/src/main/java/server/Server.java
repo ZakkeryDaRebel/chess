@@ -1,6 +1,7 @@
 package server;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import dataaccess.*;
 import handler.*;
@@ -127,7 +128,27 @@ public class Server {
     }
 
     public void makeMove(Session session, String username, MakeMoveCommand command) {
+        try {
+            ChessMove move = command.getMove();
+            GameData game = database.getGame(command.getGameID());
+            ChessGame.TeamColor color = game.game().getTeamTurn();
+            game.game().makeMove(move);
+            database.updateGame(game);
 
+            //LOAD_GAME Message
+            notifySessions(database.getSessionList(command.getGameID()), session, new LoadGameMessage(game), "ALL");
+            //Notify a move has been made
+            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has made a move"), "NOT_ROOT");
+            if(game.game().isInCheckmate(game.game().getTeamTurn())) {
+                notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE) ? game.blackUsername() : game.whiteUsername())), "ALL");
+            } else if(game.game().isInStalemate(game.game().getTeamTurn())) {
+                notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(((color == ChessGame.TeamColor.WHITE) ? game.blackUsername() : game.whiteUsername()) + " is in Stalemate"), "ALL");
+            } else if(game.game().isInCheck(game.game().getTeamTurn())) {
+                notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has Checked " + ((color == ChessGame.TeamColor.WHITE) ? game.blackUsername() : game.whiteUsername())), "ALL");
+            }
+        } catch(Exception ex) {
+            sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
+        }
     }
 
     public void leaveGame(Session session, String username, LeaveGameCommand command) {

@@ -44,35 +44,37 @@ public class GamePlayUI extends Endpoint {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, uri);
             String json = new Gson().toJson(new ConnectCommand(authToken, gameID));
-
-            this.session.addMessageHandler((MessageHandler.Whole<String>) message -> {
-                ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
-                switch(serverMessage.getServerMessageType()) {
-                    case NOTIFICATION -> {
-                        NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
-                        System.out.println(notification.getMessage());
-                        editGameData(notification.getMessage());
-                    }
-                    case ERROR -> {
-                        ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-                        errorFormat();
-                        System.out.println(errorMessage.getErrorMessage());
-                        normalFormat();
-                    }
-                    case LOAD_GAME -> {
-                        LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
-                        gameData = loadMessage.getGame();
-                        if(!loadedGame) {
-                            printBoards();
-                            listGameOptions();
-                            loadedGame = true;
-                        } else {
-                            System.out.println("An update has been made, please refresh the board");
+            send(json);
+            this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+                @Override
+                public void onMessage(String message) {
+                    ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+                    switch(serverMessage.getServerMessageType()) {
+                        case NOTIFICATION -> {
+                            NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
+                            System.out.println(notification.getMessage());
+                            editGameData(notification.getMessage());
+                        }
+                        case ERROR -> {
+                            ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                            errorFormat();
+                            System.out.println(errorMessage.getErrorMessage());
+                            normalFormat();
+                        }
+                        case LOAD_GAME -> {
+                            LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
+                            gameData = loadMessage.getGame();
+                            if(!loadedGame) {
+                                printBoards();
+                                listGameOptions();
+                                loadedGame = true;
+                            } else {
+                                System.out.println("An update has been made, please refresh the board");
+                            }
                         }
                     }
                 }
             });
-            send(json);
         } catch(Exception ex) {
             return false;
         }
