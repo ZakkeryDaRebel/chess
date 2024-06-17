@@ -37,7 +37,6 @@ public class GamePlayUI extends Endpoint {
     }
 
 
-
     public boolean tryConnectToGame() {
         try {
             URI uri = new URI("ws://localhost:8080/ws");
@@ -115,12 +114,7 @@ public class GamePlayUI extends Endpoint {
                         System.out.println("Resign Message Sending Error");
                     }
                 } else if (input.equals("6") || input.equalsIgnoreCase("highlight legal moves") || input.equalsIgnoreCase("highlight")) {
-                    System.out.println("Need to implement highlight legal moves");
-                    try {
-                        send("Highlight Legal Moves Message");
-                    } catch(Exception ex) {
-                        System.out.println("Highlight Legal Moves Message Sending Error");
-                    }
+                    printValidMoves();
                 }
                 listGameOptions();
                 System.out.println("\nPlease input your selection: ");
@@ -186,10 +180,42 @@ public class GamePlayUI extends Endpoint {
         GameBoardUI ui = new GameBoardUI(gameData.game().getBoard().getBoard());
         printInfo();
         if(teamColor.equalsIgnoreCase("BLACK")) {
-            ui.printBlackSideBoard();
+            ui.printBlackSideBoard(false);
+        } else {
+            ui.printWhiteSideBoard(false);
         }
-        else {
-            ui.printWhiteSideBoard();
+    }
+
+    public void printValidMoves() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Please input the position of the piece you would like to see the valid moves of");
+        String startPos = scan.nextLine();
+
+        int startCol;
+        int startRow;
+
+        try {
+            startRow = Integer.parseInt(String.valueOf(startPos.charAt(1)));
+        } catch(Exception ex) {
+            System.out.println("Invalid move");
+            return;
+        }
+
+        if(charToInt(startPos.charAt(0)) == -1) {
+            System.out.println("Invalid move");
+            return;
+        } else {
+            startCol = charToInt(startPos.charAt(0));
+        }
+
+        GameBoardUI ui = new GameBoardUI(gameData.game().getBoard().getBoard());
+        printInfo();
+        ui.setValidMoves(gameData.game().validMoves(new ChessPosition(startRow, startCol)));
+        ui.setSelectedPiece(new ChessPosition(startRow, startCol));
+        if(teamColor.equalsIgnoreCase("BLACK")) {
+            ui.printBlackSideBoard(true);
+        } else {
+            ui.printWhiteSideBoard(true);
         }
     }
 
@@ -250,35 +276,18 @@ public class GamePlayUI extends Endpoint {
             return;
         }
 
-        switch (startPos.charAt(0)) {
-            case 'a' -> startCol = 1;
-            case 'b' -> startCol = 2;
-            case 'c' -> startCol = 3;
-            case 'd' -> startCol = 4;
-            case 'e' -> startCol = 5;
-            case 'f' -> startCol = 6;
-            case 'g' -> startCol = 7;
-            case 'h' -> startCol = 8;
-            default -> {
-                System.out.println("Invalid move");
-                return;
-            }
+        if(charToInt(startPos.charAt(0)) == -1) {
+            System.out.println("Invalid move");
+            return;
+        } else {
+            startCol = charToInt(startPos.charAt(0));
         }
 
-        switch(endPos.charAt(0)) {
-            case 'a' -> endCol = 1;
-            case 'b' -> endCol = 2;
-            case 'c' -> endCol = 3;
-            case 'd' -> endCol = 4;
-            case 'e' -> endCol = 5;
-            case 'f' -> endCol = 6;
-            case 'g' -> endCol = 7;
-            case 'h' -> endCol = 8;
-            default -> {
-                System.out.println("Invalid move");
-                return;
-            }
-        }
+        if(charToInt(endPos.charAt(0)) == -1) {
+            System.out.println("Invalid move");
+            return;
+        } else
+            endCol = charToInt(endPos.charAt(0));
 
         String promotionInput;
         ChessPiece.PieceType pawnPromotion;
@@ -306,6 +315,23 @@ public class GamePlayUI extends Endpoint {
             send(json);
         } catch(Exception ex) {
             System.out.println("Make Move Message Sending Error");
+        }
+    }
+
+    public int charToInt(Character col) {
+        switch (col) {
+            case 'a' -> { return 1; }
+            case 'b' -> { return 2; }
+            case 'c' -> { return 3; }
+            case 'd' -> { return 4; }
+            case 'e' -> { return 5; }
+            case 'f' -> { return 6; }
+            case 'g' -> { return 7; }
+            case 'h' -> { return 8; }
+            default -> {
+                System.out.println("Invalid move");
+                return -1;
+            }
         }
     }
 
