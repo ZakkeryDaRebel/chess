@@ -40,13 +40,13 @@ public class Main {
             } else { //loggedIn = true
                 if(input.equalsIgnoreCase("logout") || input.equals("2")) {
                     loggedIn = logoutUser();
-                } else if(input.equalsIgnoreCase("create game") || input.equals("3")) {
+                } else if(input.equalsIgnoreCase("create game") || input.equals("3") || input.equalsIgnoreCase("create")) {
                     createGame();
-                } else if(input.equalsIgnoreCase("list games") || input.equals("4")) {
+                } else if(input.equalsIgnoreCase("list games") || input.equals("4") || input.equalsIgnoreCase("list")) {
                     listGames();
-                } else if(input.equalsIgnoreCase("play game") || input.equals("5")) {
+                } else if(input.equalsIgnoreCase("play game") || input.equals("5") || input.equalsIgnoreCase("play")) {
                     joinGame();
-                } else if(input.equalsIgnoreCase("observe game") || input.equals("6")) {
+                } else if(input.equalsIgnoreCase("observe game") || input.equals("6") || input.equalsIgnoreCase("observe")) {
                     observeGame();
                 } else {
                     invalidInput();

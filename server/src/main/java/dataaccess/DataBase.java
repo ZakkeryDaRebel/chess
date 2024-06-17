@@ -15,10 +15,6 @@ public class DataBase {
     HashMap<Integer, ArrayList<Session>> sessionMap;
 
     public DataBase() {
-        /*authDataBase = new MemoryAuthDAO();
-        userDataBase = new MemoryUserDAO();
-        gameDataBase = new MemoryGameDAO();*/
-
         createTables();
 
         authDataBase = new SQLAuthDAO();

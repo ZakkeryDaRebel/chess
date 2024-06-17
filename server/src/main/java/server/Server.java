@@ -1,5 +1,6 @@
 package server;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.*;
 import handler.*;
@@ -146,19 +147,29 @@ public class Server {
             else
                 throw new Error("Not in Game");
             database.updateGame(newGame);
+            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has left the game"), "NOT_ROOT");
         } catch(Exception ex) {
             System.out.println("NOT IN GAME!!!");
         }
         //sendMessage
-        ArrayList<Session> sessionList = database.getSessionList(command.getGameID());
-        for(Session sessionFromList : sessionList) {
-            if(!sessionFromList.equals(session))
-                notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has left the game"), "NOT_ROOT");
-        }
+
     }
 
     public void resign(Session session, String username, ResignCommand command) {
-
+        try {
+            GameData game = database.getGame(command.getGameID());
+            if(game.game().isGameOver()) {
+                sendMessage(session.getRemote(), new ErrorMessage("The game is over, no more moves or resignations can be made"));
+                return;
+            }
+            ChessGame resignGame = game.game();
+            resignGame.setGameOver(true);
+            GameData newGame = new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), resignGame);
+            database.updateGame(newGame);
+            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has resigned the game"), "ALL");
+        } catch(Exception ex) {
+            System.out.println("Failed to resign");
+        }
     }
 
     public void sendMessage(RemoteEndpoint endpoint, ServerMessage message) {
@@ -177,6 +188,10 @@ public class Server {
             for(Session session : sessionList) {
                 if(!session.equals(rootUser))
                     sendMessage(session.getRemote(), message);
+            }
+        } else if(notifyWay.equals("ALL")) {
+            for(Session session : sessionList) {
+                sendMessage(session.getRemote(), message);
             }
         }
     }

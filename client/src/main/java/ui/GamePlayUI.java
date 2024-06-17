@@ -52,6 +52,7 @@ public class GamePlayUI extends Endpoint {
                         case NOTIFICATION -> {
                             NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
                             System.out.println(notification.getMessage());
+                            editGameData(notification.getMessage());
                         }
                         case ERROR -> {
                             ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
@@ -89,7 +90,7 @@ public class GamePlayUI extends Endpoint {
         //printBoards();
 
         if(!isObserver) {
-            while (!stop) {
+            while (true) {
                 input = scan.nextLine();
 
                 if (input.equals("1") || input.equalsIgnoreCase("help")) {
@@ -103,8 +104,8 @@ public class GamePlayUI extends Endpoint {
                     } catch(Exception ex) {
                         System.out.println("Leave Game Message Sending Error");
                     }
-                    stop = true;
-                } else if (input.equals("4") || input.equalsIgnoreCase("make move")) {
+                    break;
+                } else if (input.equals("4") || input.equalsIgnoreCase("make move") || input.equalsIgnoreCase("move")) {
                     System.out.println("Need to implement make move");
                     try {
                         send("Make Move Message");
@@ -112,9 +113,9 @@ public class GamePlayUI extends Endpoint {
                         System.out.println("Make Move Message Sending Error");
                     }
                 } else if (input.equals("5") || input.equalsIgnoreCase("resign")) {
-                    System.out.println("Need to inplement resign");
                     try {
-                        send("Resign Message");
+                        String json = new Gson().toJson(new ResignCommand(authToken, gameID));
+                        send(json);
                     } catch(Exception ex) {
                         System.out.println("Resign Message Sending Error");
                     }
@@ -179,8 +180,8 @@ public class GamePlayUI extends Endpoint {
         System.out.println("Input 2 or redraw chess board to redraw the chess board.\n" +
                 "  (Best after being notified that a move has been made.)");
         System.out.println("Input 3 or leave game to leave the game and let others take your place in the game");
-        System.out.println("Input 4 or make move to make a move when it is your turn. Example move: c7c8->Queen\n" +
-                "  (c7 is the starting position, c8 is the end position, and ->Queen is the promotion)");
+        System.out.println("Input 4 or make move to make a move when it is your turn. Example move: c7 c8 Queen\n" +
+                "  (c7 is the starting position, c8 is the end position, and Queen is the pawn promotion)");
         System.out.println("Input 5 or resign to resign the game and have your opponent win.");
         System.out.println("Input 6 or highlight legal moves. You can input a position where a piece is, like d6\n" +
                 "  (This will highlight all possible moves from the starting position.");
@@ -201,6 +202,33 @@ public class GamePlayUI extends Endpoint {
         System.out.println("\nGame number: " + gameData.gameID() + ", Game name: " + gameData.gameName());
         System.out.println("White username: " + ((gameData.whiteUsername() == null) ? "<Empty>" : gameData.whiteUsername()) + ", Black username: " + ((gameData.blackUsername() == null) ? "<Empty>" : gameData.blackUsername()));
         System.out.println("Current game condition: " + ((gameData.game().isGameOver()) ? "Finished" : "Ongoing"));
+    }
+
+    public void editGameData(String message) {
+        String username;
+        GameData newGame;
+        if(message.endsWith("joined the game as White")) {
+            username = message.substring(0,message.length()-25);
+            newGame = new GameData(gameData.gameID(), username, gameData.blackUsername(), gameData.gameName(),gameData.game());
+        } else if(message.endsWith("joined the game as Black")) {
+            username = message.substring(0,message.length()-25);
+            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), username, gameData.gameName(), gameData.game());
+        } else if(message.endsWith(" has left the game")) {
+            username = message.substring(0,message.length()-18);
+            if(gameData.whiteUsername().equals(username))
+                newGame = new GameData(gameData.gameID(), null, gameData.blackUsername(), gameData.gameName(), gameData.game());
+            else if(gameData.blackUsername().equals(username))
+                newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
+            else
+                return;
+        } else if(message.endsWith("resigned the game")) {
+            ChessGame resignGame = new ChessGame();
+            resignGame.setBoard(gameData.game().getBoard());
+            newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), resignGame);
+        }
+        else
+            return;
+        gameData = newGame;
     }
 
     public void errorFormat() {

@@ -281,6 +281,10 @@ public class ChessGame {
         return gameOver;
     }
 
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
     @Override
     public String toString() {
         return "ChessGame{" +
