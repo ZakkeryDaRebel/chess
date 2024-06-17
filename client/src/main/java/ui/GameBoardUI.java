@@ -5,8 +5,8 @@ import chess.ChessPiece;
 
 public class GameBoardUI {
 
-    ChessPiece[][] board;
-    String[] letters;
+    private ChessPiece[][] board;
+    private final String[] letters;
 
     public GameBoardUI(ChessPiece[][] board) {
         this.board = board;
@@ -168,5 +168,13 @@ public class GameBoardUI {
         } else {
             System.out.print(" K ");
         }
+    }
+
+    public ChessPiece[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(ChessPiece[][] board) {
+        this.board = board;
     }
 }

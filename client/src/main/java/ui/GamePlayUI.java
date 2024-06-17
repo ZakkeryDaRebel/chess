@@ -1,8 +1,10 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
+import model.GameData;
 import websocket.commands.*;
 import websocket.messages.*;
 import java.util.Scanner;
@@ -15,17 +17,21 @@ public class GamePlayUI extends Endpoint {
     private String teamColor;
     public Session session;
     private String authToken;
+    private GameData gameData;
+    private boolean loadedGame;
 
     public GamePlayUI(Integer gameNum, String teamColor, String token) {
         gameID = gameNum;
         this.teamColor = teamColor;
         authToken = token;
+        loadedGame = false;
     }
 
     public void send(String msg) throws Exception {
         this.session.getBasicRemote().sendText(msg);
     }
 
+    @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) {
     }
 
@@ -37,10 +43,9 @@ public class GamePlayUI extends Endpoint {
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, uri);
             String json = new Gson().toJson(new ConnectCommand(authToken, gameID));
-            send(json);
 
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-
+                @Override
                 public void onMessage(String message) {
                     ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
                     switch(serverMessage.getServerMessageType()) {
@@ -50,48 +55,48 @@ public class GamePlayUI extends Endpoint {
                         }
                         case ERROR -> {
                             ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                            errorFormat();
                             System.out.println(errorMessage.getErrorMessage());
+                            normalFormat();
                         }
                         case LOAD_GAME -> {
                             LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
-                            System.out.println("Load Game Message, GameID: " + loadMessage.getGame().gameID());
+                            gameData = loadMessage.getGame();
+                            if(!loadedGame) {
+                                printBoards();
+                                listGameOptions();
+                                loadedGame = true;
+                            } else {
+                                System.out.println("An update has been made, please refresh the board");
+                            }
                         }
                     }
                 }
             });
+            send(json);
         } catch(Exception ex) {
             return false;
         }
-
         return true;
     }
 
     public void  inGame(boolean isObserver) {
-        System.out.println("Successfully joined game.");
+        System.out.println("\nSuccessfully joined game.");
         Scanner scan = new Scanner(System.in);
         String input = "start";
         boolean stop = false;
 
-        printBoards();
+        //printBoards();
 
         if(!isObserver) {
             while (!stop) {
-                listGameOptions();
-                System.out.println("\nPlease input your selection: ");
                 input = scan.nextLine();
 
                 if (input.equals("1") || input.equalsIgnoreCase("help")) {
                     listGameExplanations();
                 } else if (input.equals("2") || input.equalsIgnoreCase("redraw chess board") || input.equals("redraw")) {
-                    System.out.println("Need to implement Redraw Chess Board");
-                    try {
-                        //send("Redraw Chess Board Message");
-                    } catch(Exception ex) {
-                        System.out.println("Redraw Chess Board Message Sending Error");
-                    }
+                    printBoards();
                 } else if (input.equals("3") || input.equalsIgnoreCase("leave game") || input.equals("leave")) {
-                    System.out.println("Need to implement Leave Game");
-                    System.out.println("For now, I just will have you leave the game, but your username stays");
                     try {
                         String json = new Gson().toJson(new LeaveGameCommand(authToken, gameID));
                         send(json);
@@ -121,18 +126,43 @@ public class GamePlayUI extends Endpoint {
                         System.out.println("Highlight Legal Moves Message Sending Error");
                     }
                 }
+                listGameOptions();
+                System.out.println("\nPlease input your selection: ");
             }
         } else {
-            while(!input.equalsIgnoreCase("quit")) {
-                if(input.equalsIgnoreCase("refresh")) {
-                    System.out.println("Still need to implement refresh board");
-                }
-                System.out.println("When you are ready to leave, please enter quit");
-                System.out.println("Enter refresh when you want to refresh the board");
+            while(!stop) {
+                listObserveOptions();
                 System.out.println("\nPlease input your selection: ");
                 input = scan.nextLine();
+
+                if(input.equals("1") || input.equalsIgnoreCase("help")) {
+                    listObserveExplanations();
+                } else if(input.equals("2") || input.equalsIgnoreCase("quit")) {
+                    try {
+                        String json = new Gson().toJson(new LeaveGameCommand(authToken, gameID));
+                        send(json);
+                    } catch(Exception ex) {
+                        System.out.println("Leave Game Message Sending Error");
+                    }
+                    stop = true;
+                } else if(input.equals("3") || input.equalsIgnoreCase("redraw chess board") || input.equalsIgnoreCase("redraw")) {
+                    printBoards();
+                }
             }
         }
+    }
+
+    static void listObserveOptions() {
+        System.out.println("\n 1. Help");
+        System.out.println(" 2. Quit");
+        System.out.println(" 3. Redraw Chess Board");
+    }
+
+    static void listObserveExplanations() {
+        System.out.println("\nInput 1 or help to show this list again");
+        System.out.println("Input 2 or quit to leave the game");
+        System.out.println("Input 3 or redraw chess board to redraw the chess board.\n" +
+                "  (Best after being notified that a move has been made.)");
     }
 
     static void listGameOptions() {
@@ -157,16 +187,27 @@ public class GamePlayUI extends Endpoint {
     }
 
     public void printBoards() {
-        ChessPiece[][] newBoard = new ChessGame().getBoard().getBoard();
-        GameBoardUI gameBoard = new GameBoardUI(newBoard);
-
+        GameBoardUI ui = new GameBoardUI(gameData.game().getBoard().getBoard());
+        printInfo();
         if(teamColor.equalsIgnoreCase("BLACK")) {
-            System.out.println("\nBlack board: ");
-            gameBoard.printBlackSideBoard();
+            ui.printBlackSideBoard();
         }
         else {
-            System.out.println("White board: ");
-            gameBoard.printWhiteSideBoard();
+            ui.printWhiteSideBoard();
         }
+    }
+
+    public void printInfo() {
+        System.out.println("\nGame number: " + gameData.gameID() + ", Game name: " + gameData.gameName());
+        System.out.println("White username: " + ((gameData.whiteUsername() == null) ? "<Empty>" : gameData.whiteUsername()) + ", Black username: " + ((gameData.blackUsername() == null) ? "<Empty>" : gameData.blackUsername()));
+        System.out.println("Current game condition: " + ((gameData.game().isGameOver()) ? "Finished" : "Ongoing"));
+    }
+
+    public void errorFormat() {
+
+    }
+
+    public void normalFormat() {
+
     }
 }

@@ -13,11 +13,14 @@ public class ChessGame {
     private TeamColor colorTurn;
     private boolean checkCase;
     private ChessBoard newGame;
+    private boolean gameOver;
+
     public ChessGame() {
         colorTurn = TeamColor.WHITE;
         newGame = new ChessBoard();
         newGame.resetBoard();
         checkCase = false;
+        gameOver = false;
     }
 
     /**
@@ -93,6 +96,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if(isGameOver())
+            throw new InvalidMoveException();
+
         if(move == null)
             throw new InvalidMoveException();
 
@@ -132,6 +138,9 @@ public class ChessGame {
         if(!isInCheck(moveBoard.getPiece(move.getEndPosition()).getTeamColor())) {
             setBoard(moveBoard);
             changeTeamTurn();
+            if(isInCheckmate(getTeamTurn())) {
+                gameOver = true;
+            }
         } else
             throw new InvalidMoveException();
         checkCase = false;
@@ -266,6 +275,10 @@ public class ChessGame {
 
     public void isCheckCase() {
         checkCase = true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     @Override

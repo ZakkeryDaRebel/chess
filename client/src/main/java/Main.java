@@ -160,7 +160,7 @@ public class Main {
         if(result.getGameID() == null) {
             System.out.println(result.getMessage());
         } else {
-            System.out.println("Successfully created " + gameName + " on Game ID " + result.getGameID());
+            System.out.println("Successfully created \"" + gameName + "\", can be found with game number " + result.getGameID());
         }
     }
 

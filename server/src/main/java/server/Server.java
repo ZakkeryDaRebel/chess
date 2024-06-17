@@ -106,17 +106,25 @@ public class Server {
 
     public void connect(Session session, String username, ConnectCommand command) {
         database.addSession(command.getGameID(), session);
+        String color;
         //Add username to database
         try {
             GameData game = database.getGame(command.getGameID());
-            if (!game.whiteUsername().equals(username) && !game.blackUsername().equals(username))
-                sendMessage(session.getRemote(), new ErrorMessage("Error: Username not found in gameID"));
+
+            if((game.whiteUsername() != null ) && game.whiteUsername().equals(username))
+                color = "White";
+            else if((game.blackUsername() != null) && game.blackUsername().equals(username))
+                color = "Black";
+            else
+                color = "an Observer";
         } catch(Exception ex) {
             sendMessage(session.getRemote(), new ErrorMessage("Error: " + ex.getMessage()));
+            return;
         }
         //Notify all other people
         try {
-            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " joined the game"), "NOT_ROOT");
+            notifySessions(database.getSessionList(command.getGameID()), session, new LoadGameMessage(database.getGame(command.getGameID())), "ROOT");
+            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " joined the game as " + color), "NOT_ROOT");
         } catch(Exception ex) {
             System.out.println("Error trying to get the database");
         }
