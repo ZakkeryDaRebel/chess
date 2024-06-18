@@ -69,7 +69,7 @@ public class Server {
 
             // Throws a custom UnauthorizedException. Yours may work differently.
             AuthData auth = database.getAuth(command.getAuthString());
-            String username = getUsername(command.getAuthString()).username();
+            String username = auth.username();
 
             //This implements a map that organizes all the sessions. GameID to an arraylist of all the authTokens
             //Put this inside of the connect method as this is the only time info is added into the map
