@@ -2,6 +2,7 @@ package server;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import com.google.gson.Gson;
 import dataaccess.*;
 import handler.*;
@@ -130,6 +131,11 @@ public class Server {
     public void makeMove(Session session, String username, MakeMoveCommand command) {
         try {
             ChessMove move = command.getMove();
+            String stringMove = getStringVersion(move);
+            if(stringMove == null) {
+                sendMessage(session.getRemote(), new ErrorMessage("Invalid move"));
+                return;
+            }
             GameData game = database.getGame(command.getGameID());
             ChessGame.TeamColor color = game.game().getTeamTurn();
             if(!username.equals(game.whiteUsername()) && !username.equals(game.blackUsername())) {
@@ -147,7 +153,7 @@ public class Server {
             //LOAD_GAME Message
             notifySessions(database.getSessionList(command.getGameID()), session, new LoadGameMessage(game), "ALL");
             //Notify a move has been made
-            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has made a move"), "NOT_ROOT");
+            notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has made a move: " + stringMove), "NOT_ROOT");
             if(game.game().isInCheckmate(game.game().getTeamTurn())) {
                 notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has Checkmated " + ((color == ChessGame.TeamColor.WHITE) ? game.blackUsername() : game.whiteUsername())), "ALL");
             } else if(game.game().isInStalemate(game.game().getTeamTurn())) {
@@ -224,6 +230,40 @@ public class Server {
                     sendMessage(session.getRemote(), message);
                 }
             }
+        }
+    }
+
+    public String getStringVersion(ChessMove move) {
+
+        String startPos = intToChar(move.getStartPosition().getColumn()) + String.valueOf(move.getStartPosition().getRow());
+        String endPos = intToChar(move.getEndPosition().getColumn()) + String.valueOf(move.getEndPosition().getRow());
+        String promotion = pieceToString(move.getPromotionPiece());
+
+        return startPos + " to " + endPos + ((promotion == null) ? "" : promotion);
+    }
+
+    public Character intToChar(int col) {
+        switch(col) {
+            case 1 -> { return 'a'; }
+            case 2 -> { return 'b'; }
+            case 3 -> { return 'c'; }
+            case 4 -> { return 'd'; }
+            case 5 -> { return 'e'; }
+            case 6 -> { return 'f'; }
+            case 7 -> { return 'g'; }
+            case 8 -> { return 'h'; }
+            default -> { return null; }
+        }
+    }
+
+    public String pieceToString(ChessPiece.PieceType piece) {
+        switch(piece) {
+            case null -> { return null; }
+            case QUEEN -> { return "promoting to a Queen"; }
+            case ROOK -> { return "promoting to a Rook"; }
+            case BISHOP -> { return "promoting to a Bishop"; }
+            case KNIGHT -> { return "promoting to a Knight"; }
+            default -> { return null; }
         }
     }
 }

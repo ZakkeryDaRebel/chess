@@ -51,25 +51,25 @@ public class GamePlayUI extends Endpoint {
                     switch(serverMessage.getServerMessageType()) {
                         case NOTIFICATION -> {
                             NotificationMessage notification = new Gson().fromJson(message, NotificationMessage.class);
+                            System.out.printf(EscapeSequences.SET_TEXT_COLOR_YELLOW);
                             System.out.println(notification.getMessage());
+                            System.out.printf(EscapeSequences.RESET_TEXT_COLOR);
                             editGameData(notification.getMessage());
                         }
                         case ERROR -> {
                             ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-                            errorFormat();
+                            System.out.printf(EscapeSequences.SET_TEXT_COLOR_RED);
                             System.out.println(errorMessage.getErrorMessage());
-                            normalFormat();
+                            System.out.printf(EscapeSequences.RESET_TEXT_COLOR);
                         }
                         case LOAD_GAME -> {
                             LoadGameMessage loadMessage = new Gson().fromJson(message, LoadGameMessage.class);
                             gameData = loadMessage.getGame();
-                            if(!loadedGame) {
-                                printBoards();
+                            printBoards();
+                            if(teamColor.equals("SPECTATOR"))
+                                listObserveOptions();
+                            else
                                 listGameOptions();
-                                loadedGame = true;
-                            } else {
-                                System.out.println("An update has been made, please refresh the board");
-                            }
                         }
                     }
                 }
@@ -115,6 +115,8 @@ public class GamePlayUI extends Endpoint {
                     }
                 } else if (input.equals("6") || input.equalsIgnoreCase("highlight legal moves") || input.equalsIgnoreCase("highlight")) {
                     printValidMoves();
+                } else {
+                    System.out.println("Invalid option, please enter 1 or help to see your explanations for your options.");
                 }
                 listGameOptions();
                 System.out.println("\nPlease input your selection: ");
@@ -137,6 +139,10 @@ public class GamePlayUI extends Endpoint {
                     stop = true;
                 } else if(input.equals("3") || input.equalsIgnoreCase("redraw chess board") || input.equalsIgnoreCase("redraw")) {
                     printBoards();
+                } else if(input.equals("4") || input.equalsIgnoreCase("highlight") || input.equalsIgnoreCase("highlight legal moves")) {
+                    printValidMoves();
+                } else {
+                    System.out.println("Invalid option, please enter 1 or help to see your explanations for your options.");
                 }
             }
         }
@@ -146,6 +152,7 @@ public class GamePlayUI extends Endpoint {
         System.out.println("\n 1. Help");
         System.out.println(" 2. Quit");
         System.out.println(" 3. Redraw Chess Board");
+        System.out.println(" 4. Highlight legal moves");
     }
 
     static void listObserveExplanations() {
@@ -153,6 +160,8 @@ public class GamePlayUI extends Endpoint {
         System.out.println("Input 2 or quit to leave the game");
         System.out.println("Input 3 or redraw chess board to redraw the chess board.\n" +
                 "  (Best after being notified that a move has been made.)");
+        System.out.println("Input 4 or highlight legal moves. You can input a position where a piece is, like d6\n" +
+                           "  (This will highlight all possible moves from the starting position.)");
     }
 
     static void listGameOptions() {
@@ -173,7 +182,7 @@ public class GamePlayUI extends Endpoint {
                 "  (c7 is the starting position, c8 is the end position, and Queen is the pawn promotion)");
         System.out.println("Input 5 or resign to resign the game and have your opponent win.");
         System.out.println("Input 6 or highlight legal moves. You can input a position where a piece is, like d6\n" +
-                "  (This will highlight all possible moves from the starting position.");
+                "  (This will highlight all possible moves from the starting position.)");
     }
 
     public void printBoards() {
@@ -242,9 +251,10 @@ public class GamePlayUI extends Endpoint {
                 newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), null, gameData.gameName(), gameData.game());
             else
                 return;
-        } else if(message.endsWith("resigned the game")) {
+        } else if(message.endsWith("has resigned the game")) {
             ChessGame resignGame = new ChessGame();
             resignGame.setBoard(gameData.game().getBoard());
+            resignGame.setGameOver(true);
             newGame = new GameData(gameData.gameID(), gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), resignGame);
         }
         else
@@ -291,7 +301,7 @@ public class GamePlayUI extends Endpoint {
 
         String promotionInput;
         ChessPiece.PieceType pawnPromotion;
-        if((gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)).getPieceType() == ChessPiece.PieceType.PAWN) && (endRow == 8)) {
+        if((gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)) != null) && (gameData.game().getBoard().getPiece(new ChessPosition(startRow, startCol)).getPieceType() == ChessPiece.PieceType.PAWN) && (endRow == 8)) {
             System.out.println("Please input pawn promotion (Queen, Rook, Bishop, or Knight)");
             promotionInput = scan.nextLine();
             if(promotionInput.equalsIgnoreCase("QUEEN"))
@@ -333,13 +343,5 @@ public class GamePlayUI extends Endpoint {
                 return -1;
             }
         }
-    }
-
-    public void errorFormat() {
-
-    }
-
-    public void normalFormat() {
-
     }
 }
