@@ -132,6 +132,15 @@ public class Server {
             ChessMove move = command.getMove();
             GameData game = database.getGame(command.getGameID());
             ChessGame.TeamColor color = game.game().getTeamTurn();
+            if(!username.equals(game.whiteUsername()) && !username.equals(game.blackUsername())) {
+                sendMessage(session.getRemote(), new ErrorMessage("You cannot move pieces as the observer"));
+                return;
+            }
+            ChessGame.TeamColor playerColor = ((game.whiteUsername().equals(username)) ? ChessGame.TeamColor.WHITE : ChessGame.TeamColor.BLACK);
+            if(game.game().getBoard().getPiece(move.getStartPosition()).getTeamColor() != playerColor) {
+                sendMessage(session.getRemote(), new ErrorMessage("You cannot move the other team's pieces"));
+                return;
+            }
             game.game().makeMove(move);
             database.updateGame(game);
 
@@ -156,12 +165,12 @@ public class Server {
         try {
             GameData game = database.getGame(command.getGameID());
             GameData newGame;
-            if(game.blackUsername().equals(username))
+            if((game.blackUsername() != null) && game.blackUsername().equals(username))
                 newGame = new GameData(game.gameID(), game.whiteUsername(), null, game.gameName(), game.game());
-            else if(game.whiteUsername().equals(username))
+            else if((game.whiteUsername() != null) && game.whiteUsername().equals(username))
                 newGame = new GameData(game.gameID(), null, game.blackUsername(), game.gameName(), game.game());
             else
-                throw new Error("Not in Game");
+                newGame = game;
             database.updateGame(newGame);
             notifySessions(database.getSessionList(command.getGameID()), session, new NotificationMessage(username + " has left the game"), "NOT_ROOT");
         } catch(Exception ex) {
@@ -174,6 +183,10 @@ public class Server {
     public void resign(Session session, String username, ResignCommand command) {
         try {
             GameData game = database.getGame(command.getGameID());
+            if(!username.equals(game.whiteUsername()) && !username.equals(game.blackUsername())) {
+                sendMessage(session.getRemote(), new ErrorMessage("You can't resign as the observer"));
+                return;
+            }
             if(game.game().isGameOver()) {
                 sendMessage(session.getRemote(), new ErrorMessage("The game is over, no more moves or resignations can be made"));
                 return;
