@@ -14,6 +14,8 @@ public class ChessBoard implements Cloneable {
     public ChessBoard() {
     }
 
+    //test
+
     /**
      * Adds a chess piece to the chessboard
      *
