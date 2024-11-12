@@ -27,7 +27,7 @@ public class Main {
             System.out.println("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             if(input.equals("start")) {
                 chessClientStartUp();
-            } else if(input.equals("help") || input.equals("1")) {
+            } else if(input.equalsIgnoreCase("help") || input.equals("1")) {
                 helpExplainOptions(loggedIn);
             } else if(!loggedIn) {
                 if(input.equalsIgnoreCase("register") || input.equals("3")) {
