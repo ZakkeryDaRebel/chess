@@ -51,15 +51,6 @@ public class Server {
         Spark.awaitStop();
     }
 
-    public AuthData getUsername(String authToken) {
-        try {
-            return database.getAuth(authToken);
-        } catch(Exception ex) {
-            System.out.println("ERROR! CAN'T GET AUTH!");
-            return null;
-        }
-    }
-
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws Exception {
         System.out.printf("Received: %s\n", message);
