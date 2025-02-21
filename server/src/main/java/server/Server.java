@@ -34,13 +34,13 @@ public class Server {
         Spark.webSocket("/ws", Server.class);
 
         // Register your endpoints and handle exceptions here.
-        Spark.post("/user", (req, res) -> (new RegisterHandler(database)).handle(req,res));
-        Spark.post("/session", (req, res) -> (new LoginHandler(database)).handle(req,res));
-        Spark.delete("/session", (req, res) -> (new LogoutHandler(database)).handle(req, res));
-        Spark.get("/game", (req, res) -> (new ListGamesHandler(database)).handle(req, res));
-        Spark.post("/game", (req, res) -> (new CreateGameHandler(database)).handle(req, res));
-        Spark.put("/game", (req, res) -> (new JoinGameHandler(database)).handle(req, res));
-        Spark.delete("/db", (req, res) -> (new ClearAllHandler(database)).handle(req, res));
+        Spark.post("/user", new RegisterHandler(database));
+        Spark.post("/session", new LoginHandler(database));
+        Spark.delete("/session", new LogoutHandler(database));
+        Spark.get("/game", new ListGamesHandler(database));
+        Spark.post("/game", new CreateGameHandler(database));
+        Spark.put("/game", new JoinGameHandler(database));
+        Spark.delete("/db", new ClearAllHandler(database));
 
         Spark.awaitInitialization();
         return Spark.port();
